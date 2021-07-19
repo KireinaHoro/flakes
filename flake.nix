@@ -1,5 +1,5 @@
 {
-  description = "nix drv set by KireinaHoro";
+  description = "KireinaHoro's Nix universe";
 
   inputs = rec {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
