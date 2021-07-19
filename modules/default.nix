@@ -1,3 +1,5 @@
+self:
+
 {
-  commonConfigurations = import ./common.nix;
+  commonConfigurations = import ./common.nix self;
 }

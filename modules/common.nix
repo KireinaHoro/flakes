@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+self: { config, pkgs, lib, ... }:
 
 {
   networking.domain = "jsteward.moe";
@@ -11,6 +11,8 @@
     ];
   };
   services.openssh.enable = true;
+
+  system.configurationRevision = lib.mkIf (self ? rev) self.rev;
 
   nix = {
     package = pkgs.nixFlakes;

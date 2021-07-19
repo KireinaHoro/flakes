@@ -29,7 +29,7 @@
       nativeBuildInputs = [ deploy-rs.deploy-rs ];
     };
   }) // {
-    nixosModules = import ./modules;
+    nixosModules = import ./modules self;
     overlay = this.overlay;
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
