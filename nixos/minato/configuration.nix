@@ -12,7 +12,6 @@
 
   networking = {
     hostName = "minato";
-    domain = "jsteward.moe";
     useDHCP = false;
     interfaces.enp0s25.useDHCP = true;
 
@@ -27,21 +26,9 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  users.users.jsteward = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    shell = pkgs.zsh;
-  };
+  users.users.jsteward.shell = pkgs.zsh;
 
-  nix = {
-    package = pkgs.nixFlakes;
-    binaryCaches = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-    gc = { automatic = true; dates = "03:15"; };
-  };
-
+  nix.binaryCaches = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
   environment.systemPackages = with pkgs; [
     vim wget tmux git zsh htop bat ripgrep # basic utils
     mtr iptables dig # networking

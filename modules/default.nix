@@ -1,0 +1,3 @@
+{
+  commonConfigurations = import ./common.nix;
+}

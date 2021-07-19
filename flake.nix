@@ -10,6 +10,7 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
   with builtins;
+  with nixpkgs.lib;
   let
     this = import ./pkgs { inherit nixpkgs; };
   in flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: let
@@ -28,7 +29,7 @@
       nativeBuildInputs = [ deploy-rs.deploy-rs ];
     };
   }) // {
-    #nixosModules = import ./modules;
+    nixosModules = import ./modules;
     overlay = this.overlay;
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
