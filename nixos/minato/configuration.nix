@@ -16,7 +16,6 @@
     useDHCP = false;
     interfaces.enp0s25.useDHCP = true;
 
-    # TODO properly configure firewall
     firewall.enable = false;
 
     proxy = {
@@ -31,7 +30,7 @@
 
   nix.binaryCaches = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
   environment.systemPackages = with pkgs; [
-    gnupg mtr iptables dig
+    gnupg mtr dig
   ];
 
   programs = {
@@ -60,6 +59,7 @@
   services.udev.packages = [ pkgs.yubikey-personalization ];
   services.pcscd.enable = true;
 
+  # allow jsteward to use local smartcard over SSH
   security.polkit.extraConfig = ''
     /* allow jsteward to access PC/SC smartcards */
     polkit.addRule(function(action, subject) {
@@ -74,16 +74,5 @@
       }
     });
   '';
-
-  services.gravity = let raitSecret = config.sops.secrets.rait.path; in rec {
-    enable = true;
-    config = raitSecret;
-    netnsAddress = "2a0c:b641:69c:cd00::2/56";
-    address = "2a0c:b641:69c:cd00::1/56";
-    subnet = "2a0c:b641:69c:cd00::/56";
-    group = 54;
-    prefixLength = 56;
-    postStart = [];
-  };
 }
 

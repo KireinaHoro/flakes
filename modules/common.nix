@@ -26,4 +26,6 @@ self: { config, pkgs, lib, ... }:
     vim wget tmux htop ripgrep bat git
   ];
   environment.variables.EDITOR = "vim";
+
+  systemd.network.enable = true;
 }
