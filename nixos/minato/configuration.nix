@@ -26,11 +26,18 @@
 
   nix.binaryCaches = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
   environment.systemPackages = with pkgs; [
-    vim wget tmux git zsh htop bat ripgrep # basic utils
-    mtr iptables dig # networking
+    gnupg mtr iptables dig
   ];
-  programs.mtr.enable = true;
-  programs.zsh.enable = true;
+
+  programs = {
+    mtr.enable = true;
+    zsh.enable = true;
+    ssh.startAgent = false;
+    gnupg.agent = {
+      enable = true;
+      pinentryFlavor = "curses";
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

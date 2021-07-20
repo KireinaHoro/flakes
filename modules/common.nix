@@ -21,4 +21,8 @@ self: { config, pkgs, lib, ... }:
     '';
     gc = { automatic = true; dates = "03:15"; };
   };
+
+  environment.systemPackages = with pkgs; [
+    vim wget tmux htop ripgrep bat git
+  ];
 }
