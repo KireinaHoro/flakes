@@ -25,4 +25,5 @@ self: { config, pkgs, lib, ... }:
   environment.systemPackages = with pkgs; [
     vim wget tmux htop ripgrep bat git
   ];
+  environment.variables.EDITOR = "vim";
 }
