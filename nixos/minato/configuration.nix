@@ -50,5 +50,23 @@
   # maintenance
   system.autoUpgrade.enable = true;
   system.autoUpgrade.allowReboot = true;
+
+  services.udev.packages = [ pkgs.yubikey-personalization ];
+  services.pcscd.enable = true;
+
+  security.polkit.extraConfig = ''
+    /* allow jsteward to access PC/SC smartcards */
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.debian.pcsc-lite.access_pcsc" && subject.user == "jsteward") {
+        return polkit.Result.YES;
+      }
+    });
+
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.debian.pcsc-lite.access_card" && subject.user == "jsteward") {
+        return polkit.Result.YES;
+      }
+    });
+  '';
 }
 
