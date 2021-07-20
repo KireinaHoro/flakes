@@ -8,8 +8,7 @@ nixpkgs.lib.nixosSystem {
     ./hardware.nix
     ./networking.nix
 
-    gravity
-    divi
+    gravity divi ivi
     { nixpkgs.overlays = [ self.overlay ]; }
     inputs.sops-nix.nixosModules.sops
   ];
