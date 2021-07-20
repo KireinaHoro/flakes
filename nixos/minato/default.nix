@@ -7,5 +7,6 @@ nixpkgs.lib.nixosSystem {
     ./configuration.nix
     ./hardware.nix
     { nixpkgs.overlays = [ self.overlay ]; }
+    inputs.sops-nix.nixosModules.sops
   ];
 }
