@@ -12,7 +12,7 @@ self: { config, pkgs, lib, ... }:
   };
   services.openssh.enable = true;
 
-  system.configurationRevision = if self ? rev then self.rev else throw "Refusing to build from a dirty Git tree!";
+  system.configurationRevision = if self ? rev then self.rev else "dirty";
 
   nix = {
     package = pkgs.nixFlakes;
