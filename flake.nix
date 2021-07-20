@@ -17,7 +17,7 @@
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
-      overlays = [ inputs.deploy-rs.overlay ];
+      overlays = [ inputs.deploy-rs.overlay self.overlay ];
     };
   in rec {
     packages = this.packages pkgs // { deploy-rs = pkgs.deploy-rs.deploy-rs; };
