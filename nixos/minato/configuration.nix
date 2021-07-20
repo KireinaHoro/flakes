@@ -74,5 +74,16 @@
       }
     });
   '';
+
+  services.gravity = let raitSecret = config.sops.secrets.rait.path; in rec {
+    enable = true;
+    config = raitSecret;
+    netnsAddress = "2a0c:b641:69c:cd00::2/56";
+    address = "2a0c:b641:69c:cd00::1/56";
+    subnet = "2a0c:b641:69c:cd00::/56";
+    group = 54;
+    prefixLength = 56;
+    postStart = [];
+  };
 }
 
