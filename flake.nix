@@ -17,16 +17,26 @@
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
-      overlays = [ inputs.deploy-rs.overlay self.overlay ];
+      overlays = [
+        inputs.deploy-rs.overlay
+        inputs.sops-nix.overlay
+        self.overlay
+      ];
     };
   in rec {
-    packages = this.packages pkgs // { deploy-rs = pkgs.deploy-rs.deploy-rs; };
+    packages = this.packages pkgs;
     checks = packages // (inputs.deploy-rs.lib.${system}.deployChecks {
       nodes = pkgs.lib.filterAttrs (name: cfg: cfg.profiles.system.path.system == system) self.deploy.nodes;
     });
     legacyPackages = pkgs;
     devShell = with pkgs; mkShell {
-      nativeBuildInputs = [ deploy-rs.deploy-rs ];
+      # import sops keys
+      sopsPGPKeyDirs = [ "./keys/hosts" "./keys/users" ];
+
+      nativeBuildInputs = [
+        deploy-rs.deploy-rs
+        sops-import-keys-hook
+      ];
     };
   }) // {
     nixosModules = import ./modules self;

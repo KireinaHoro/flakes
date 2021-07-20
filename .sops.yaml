@@ -1,0 +1,9 @@
+keys:
+  - &jsteward EEE87C527B2D913A8CBAD48C725079137D8A5B65
+  - &minato 9491a58334d9aa0d35f02b532a88523d1e5812ba
+creation_rules:
+  - path_regex: minato/secrets\.yaml$
+    key_groups:
+      - pgp:
+        - *jsteward
+        - *minato
