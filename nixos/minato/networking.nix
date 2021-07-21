@@ -33,9 +33,7 @@ in
         networkConfig = { IPv6PrivacyExtensions = true; };
         # in combination with chinaLocalNat
         routingPolicyRules = [
-          # differentiate between ipv4 and ipv6 rules
-          { routingPolicyRuleConfig = { From = "0.0.0.0/0"; FirewallMark = 333; }; }
-          { routingPolicyRuleConfig = { From = "::/0"; FirewallMark = 333; }; }
+          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = 333; }; }
         ];
       };
 
