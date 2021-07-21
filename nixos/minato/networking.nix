@@ -1,14 +1,56 @@
 { config, pkgs, ... }:
 
+with pkgs.lib;
+
 let
   iviDiviPrefix = "2a0c:b641:69c:cd0";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/56";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp0s25";
   prefixLength = 56;
+
+  injectNetworkNames = mapAttrs (name: n: n // { inherit name; });
+  injectNetdevNames = mapAttrs (Name: nd: recursiveUpdate nd { netdevConfig = { inherit Name; }; });
 in
 
 {
+  networking = {
+    hostName = "minato";
+    useDHCP = false;
+    firewall.enable = false;
+
+    proxy = {
+      default = "http://192.168.0.13:7890/";
+      noProxy = "127.0.0.1,localhost,internal.domain";
+    };
+  };
+
+  # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
+  systemd.network = {
+    networks = injectNetworkNames {
+      enp0s25 = {
+        DHCP = "ipv4";
+        vlan = [ "enp0s25.200" ];
+        networkConfig = { IPv6PrivacyExtensions = true; };
+      };
+      "enp0s25.200" = {
+        address = [ "10.172.208.254/24" ];
+        networkConfig = {
+          DHCPServer = true;
+          IPForward = true;
+        };
+        dhcpServerConfig = {
+          EmitDNS = true;
+          DNS = "8.8.8.8,8.8.4.4";
+          PoolOffset = 1; # excludes IVI address
+        };
+      };
+    };
+    netdevs = injectNetdevNames {
+      "enp0s25.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
+    };
+  };
+
   services.gravity = rec {
     enable = true;
     config = raitSecret;

@@ -11,19 +11,6 @@
 
   time.timeZone = "Asia/Shanghai";
 
-  networking = {
-    hostName = "minato";
-    useDHCP = false;
-    interfaces.enp0s25.useDHCP = true;
-
-    firewall.enable = false;
-
-    proxy = {
-      default = "http://192.168.0.15:7890/";
-      noProxy = "127.0.0.1,localhost,internal.domain";
-    };
-  };
-
   i18n.defaultLocale = "en_US.UTF-8";
 
   users.users.jsteward.shell = pkgs.zsh;
