@@ -18,11 +18,6 @@ in
     hostName = "minato";
     useDHCP = false;
     firewall.enable = false;
-
-    proxy = {
-      default = "http://192.168.0.13:7890/";
-      noProxy = "127.0.0.1,localhost,internal.domain";
-    };
   };
 
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
