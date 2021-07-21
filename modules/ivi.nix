@@ -51,7 +51,7 @@ in
           { routeConfig = { Destination = "0.0.0.0/0"; Table = 3500; }; }
         ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; }; }
+          { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; }; }
         ];
       };
     };

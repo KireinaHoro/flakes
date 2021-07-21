@@ -4,6 +4,7 @@ with pkgs.lib;
 
 let
   iviDiviPrefix = "2a0c:b641:69c:cd0";
+  localPrefix = "2a0c:b641:69c:cde0";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/56";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp0s25";
@@ -31,17 +32,28 @@ in
         vlan = [ "enp0s25.200" ];
         networkConfig = { IPv6PrivacyExtensions = true; };
       };
+
       "enp0s25.200" = {
-        address = [ "10.172.208.254/24" ];
+        address = [ "10.172.208.254/24" "${localPrefix}::1/64" ];
         networkConfig = {
           DHCPServer = true;
           IPForward = true;
+          IPv6SendRA = true;
         };
         dhcpServerConfig = {
-          EmitDNS = true;
-          DNS = "8.8.8.8,8.8.4.4";
+          DNS = [ "8.8.8.8" "8.8.4.4" ];
           PoolOffset = 1; # excludes IVI address
         };
+        ipv6SendRAConfig = {
+          OtherInformation = true;
+          EmitDNS = true;
+          DNS = [ "2001:4860:4860::8888" "2001:4860:4860::8844" ];
+          EmitDomains = false;
+        };
+        ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
+        routingPolicyRules = [
+          { routingPolicyRuleConfig = { From = "${localPrefix}::/64"; Table = 3500; }; }
+        ];
       };
     };
     netdevs = injectNetdevNames {

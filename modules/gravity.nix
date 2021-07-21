@@ -67,6 +67,7 @@ in
           "${iproute2}/bin/ip link add ${cfg.link} address 00:00:00:00:00:01 group ${toString cfg.group} type veth peer host address 00:00:00:00:00:02 netns ${cfg.netns}"
           "${iproute2}/bin/ip link set ${cfg.link} up"
           "${iproute2}/bin/ip route add ${cfg.route} via fe80::200:ff:fe00:2 dev ${cfg.link}"
+          "${iproute2}/bin/ip route add default via fe80::200:ff:fe00:2 dev ${cfg.link} table 3500"
           "${iproute2}/bin/ip addr add ${cfg.address} dev ${cfg.link}"
 
           "${iproute2}/bin/ip -n ${cfg.netns} link set host up"
