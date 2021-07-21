@@ -31,6 +31,12 @@ in
         DHCP = "ipv4";
         vlan = [ "enp0s25.200" ];
         networkConfig = { IPv6PrivacyExtensions = true; };
+        # in combination with chinaLocalNat
+        routingPolicyRules = [
+          # differentiate between ipv4 and ipv6 rules
+          { routingPolicyRuleConfig = { From = "0.0.0.0/0"; FirewallMark = 333; }; }
+          { routingPolicyRuleConfig = { From = "::/0"; FirewallMark = 333; }; }
+        ];
       };
 
       "enp0s25.200" = {
@@ -84,5 +90,11 @@ in
     prefix6 = "2a0c:b641:69c:cd05:0:5";
     defaultMap = "2a0c:b641:69c:f254:0:4::/96";
     inherit prefixLength;
+  };
+
+  services.chinaLocalNat = {
+    enable = true;
+    inherit ifName;
+    prefix6 = "2a0c:b641:69c::/48";
   };
 }
