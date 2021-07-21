@@ -52,6 +52,7 @@ in
         ];
         routingPolicyRules = [
           { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; }; }
+          { routingPolicyRuleConfig = { To = "${cfg.prefix4}/24"; }; }
         ];
       };
     };
