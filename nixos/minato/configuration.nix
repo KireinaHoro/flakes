@@ -16,9 +16,7 @@
   users.users.jsteward.shell = pkgs.zsh;
 
   nix.binaryCaches = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
-  environment.systemPackages = with pkgs; [
-    gnupg mtr dig
-  ];
+  environment.systemPackages = with pkgs; [ gnupg dig ];
 
   programs = {
     mtr.enable = true;

@@ -14,6 +14,9 @@ let
 in
 
 {
+  # networking utils
+  environment.systemPackages = with pkgs; [ mtr tcpdump ];
+
   networking = {
     hostName = "minato";
     useDHCP = false;
