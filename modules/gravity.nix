@@ -60,6 +60,8 @@ in
     };
   };
   config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [ wireguard-tools ];
+
     systemd.services.gravity = {
       serviceConfig = with pkgs;{
         ExecStartPre = [
