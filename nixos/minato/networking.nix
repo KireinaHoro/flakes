@@ -16,7 +16,7 @@ in
 
 {
   # networking utils
-  environment.systemPackages = with pkgs; [ mtr tcpdump ];
+  environment.systemPackages = with pkgs; [ mtr tcpdump socat ];
 
   networking = {
     hostName = "minato";
