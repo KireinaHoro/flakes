@@ -33,7 +33,7 @@ in
         networkConfig = { IPv6PrivacyExtensions = true; };
         # in combination with chinaLocalNat
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = 333; }; }
+          { routingPolicyRuleConfig = { Family = "ipv4"; FirewallMark = 333; }; }
         ];
       };
 
@@ -92,9 +92,8 @@ in
     };
 
     chinaLocalNat = {
-      enable = true;
+      enableV4 = true;
       inherit ifName;
-      prefix6 = "2a0c:b641:69c::/48";
     };
 
     squid = {
