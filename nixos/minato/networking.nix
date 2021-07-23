@@ -26,10 +26,11 @@ in
   # FIXME merge masquerade into networkd configuration
   networking.nftables = {
     ruleset = ''
-      table ip local-wan {
+      table inet local-wan {
         chain filter {
           type filter hook forward priority 100;
           oifname "enp0s25" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
+          oifname "enp0s25" ip6 saddr != ${localPrefix}::/64 log prefix "Unknown source to WAN: " drop
         }
         chain nat {
           type nat hook postrouting priority 100;
@@ -55,7 +56,7 @@ in
         };
         # chinaRoute packets lookup main
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { Family = "ipv4"; FirewallMark = 333; }; }
+          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = 333; }; }
         ];
       };
 
@@ -117,7 +118,13 @@ in
       inherit prefixLength;
     };
 
-    chinaRoute = { enableV4 = true; };
+    chinaRoute = {
+      enableV4 = true;
+      enableV6 = true;
+      prefix6 = "${localPrefix}::/64";
+      whitelistV6 = [ "2001:da8:201::/48" ]; # PKU shall still go to seki via gravity
+    };
+
     chinaDNS = {
       enable = true;
       ifName = "enp0s25.200";
