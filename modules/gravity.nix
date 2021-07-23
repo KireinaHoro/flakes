@@ -54,6 +54,11 @@ in
       description = "route to gravity";
       default = "2a0c:b641:69c::/48";
     };
+    fwmark = mkOption {
+      type = types.int;
+      description = "fwmark for IPv6 gravity wireguard packets";
+      default = 56;
+    };
     subnet = mkOption {
       type = types.str;
       description = "route to local subnet";
@@ -69,7 +74,6 @@ in
           "${ip} netns add ${cfg.netns}"
           "${ip} link add ${cfg.link} address 00:00:00:00:00:01 group ${toString cfg.group} type veth peer host address 00:00:00:00:00:02 netns ${cfg.netns}"
           "${ip} link set ${cfg.link} up"
-          "${ip} route add ${cfg.route} via fe80::200:ff:fe00:2 dev ${cfg.link}"
           "${ip} route add default via fe80::200:ff:fe00:2 dev ${cfg.link} table 3500"
           "${ip} addr add ${cfg.address} dev ${cfg.link}"
 
@@ -79,6 +83,8 @@ in
           "${ip} -n ${cfg.netns} route add ${cfg.subnet} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
           "${ip} -n ${cfg.netns} addr add ${cfg.subnet} dev lo"
 
+          "${ip} -6 rule add fwmark ${toString cfg.fwmark} lookup main pref 50"
+          "${ip} -6 rule add fwmark ${toString cfg.fwmark} blackhole pref 51"
         ];
         ExecStart = "${ip} netns exec ${cfg.netns} ${babeld}/bin/babeld -c ${writeText "babeld.conf" ''
           random-id true
@@ -97,6 +103,8 @@ in
         ExecStopPost = [
           "${ip} netns del ${cfg.netns}"
           "${ip} link del ${cfg.link}"
+          "${ip} -6 rule del pref 50"
+          "${ip} -6 rule del pref 51"
         ];
         Restart = "always";
         RestartSec = 5;

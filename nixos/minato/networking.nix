@@ -81,7 +81,12 @@ in
         };
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { From = "${localPrefix}::/64"; Table = 3500; }; }
+          { routingPolicyRuleConfig = {
+            From = "${localPrefix}::/64";
+            IncomingInterface = "enp0s25.200";
+            Table = 3500;
+            Priority = 100;
+          }; }
         ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = 3500; }; }) publicDNS;
       };
     };
