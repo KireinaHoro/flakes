@@ -30,8 +30,12 @@ in
       enp0s25 = {
         DHCP = "ipv4";
         vlan = [ "enp0s25.200" ];
-        networkConfig = { IPv6PrivacyExtensions = true; };
-        # in combination with chinaLocalNat
+        # chinaRoute packets NAT
+        networkConfig = {
+          IPv6PrivacyExtensions = true;
+          IPMasquerade = true; # this is subject to change; see https://github.com/systemd/systemd/pull/18007
+        };
+        # chinaRoute packets lookup main
         routingPolicyRules = [
           { routingPolicyRuleConfig = { Family = "ipv4"; FirewallMark = 333; }; }
         ];
@@ -91,10 +95,7 @@ in
       inherit prefixLength;
     };
 
-    chinaLocalNat = {
-      enableV4 = true;
-      inherit ifName;
-    };
+    chinaRoute = { enableV4 = true; };
 
     squid = {
       enable = true;

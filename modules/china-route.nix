@@ -1,16 +1,12 @@
 { config, pkgs, lib, ... }:
 with lib;
 let
-  cfg = config.services.chinaLocalNat;
+  cfg = config.services.chinaRoute;
 in
 {
-  options.services.chinaLocalNat = {
-    enableV4 = mkEnableOption "NAT China IPv4 addresses locally";
-    enableV6 = mkEnableOption "NAT China IPv6 addresses locally";
-    ifName = mkOption {
-      type = types.str;
-      description = "local output interface name";
-    };
+  options.services.chinaRoute = {
+    enableV4 = mkEnableOption "mark China IPv4 dst packets with mark 333";
+    enableV6 = mkEnableOption "mark China IPv6 dst packets with mark 333";
     prefix6 = mkOption {
       type = types.str;
       description = "nat66 allowed source prefix";
@@ -23,7 +19,7 @@ in
         ${if cfg.enableV4 then ''include "${pkgs.chnroute}/chnroute-v4"'' else ""}
         ${if cfg.enableV6 then ''include "${pkgs.chnroute}/chnroute-v6"'' else ""}
 
-        table inet china-local-nat {
+        table inet china-route {
           ${if cfg.enableV4 then ''
             set chnv4 {
               type ipv4_addr; flags constant, interval
@@ -39,11 +35,6 @@ in
           chain forward {
             type filter hook forward priority 0;
             ip saddr 10.160.0.0/12 tcp flags syn / syn,rst tcp option maxseg size set 1360
-          }
-          chain postrouting {
-            type nat hook postrouting priority 100;
-            ${if cfg.enableV4 then ''oifname "${cfg.ifName}" ip saddr 10.160.0.0/12 masquerade'' else ""}
-            ${if cfg.enableV6 then ''oifname "${cfg.ifName}" ip6 saddr ${cfg.prefix6} masquerade'' else ""}
           }
           chain prerouting {
             type filter hook prerouting priority 0;

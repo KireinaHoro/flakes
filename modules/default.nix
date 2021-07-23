@@ -5,5 +5,5 @@ self:
   gravity = import ./gravity.nix;
   divi = import ./divi.nix;
   ivi = import ./ivi.nix;
-  chinaLocalNat = import ./china-local-nat.nix;
+  chinaRoute = import ./china-route.nix;
 }
