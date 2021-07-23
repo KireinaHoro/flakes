@@ -40,7 +40,7 @@
     };
   }) // {
     nixosModules = import ./modules self;
-    overlay = this.overlay;
+    overlay = nixpkgs.lib.composeExtensions this.overlay (final: _: import ./functions.nix final);
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
     deploy.nodes = {};

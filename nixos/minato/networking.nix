@@ -10,9 +10,6 @@ let
   ifName = "enp0s25";
   prefixLength = 56;
 
-  injectNetworkNames = mapAttrs (name: n: n // { inherit name; });
-  injectNetdevNames = mapAttrs (Name: nd: recursiveUpdate nd { netdevConfig = { inherit Name; }; });
-
   publicDNS = [ "8.8.8.8" "8.8.4.4" ];
 in
 
@@ -44,7 +41,7 @@ in
 
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
   systemd.network = {
-    networks = injectNetworkNames {
+    networks = pkgs.injectNetworkNames {
       enp0s25 = {
         DHCP = "ipv4";
         vlan = [ "enp0s25.200" ];
@@ -90,7 +87,7 @@ in
         ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = 3500; }; }) publicDNS;
       };
     };
-    netdevs = injectNetdevNames {
+    netdevs = pkgs.injectNetdevNames {
       "enp0s25.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
     };
   };
@@ -102,7 +99,6 @@ in
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";
-      group = 54;
       inherit prefixLength;
     };
 
