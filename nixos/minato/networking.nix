@@ -12,6 +12,8 @@ let
 
   injectNetworkNames = mapAttrs (name: n: n // { inherit name; });
   injectNetdevNames = mapAttrs (Name: nd: recursiveUpdate nd { netdevConfig = { inherit Name; }; });
+
+  publicDNS = [ "8.8.8.8" "8.8.4.4" ];
 in
 
 {
@@ -68,7 +70,7 @@ in
           IPv6SendRA = true;
         };
         dhcpServerConfig = {
-          DNS = [ "8.8.8.8" "8.8.4.4" ];
+          DNS = [ "10.172.208.254" "8.8.8.8" ];
           PoolOffset = 1; # excludes IVI address
         };
         ipv6SendRAConfig = {
@@ -80,7 +82,7 @@ in
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
         routingPolicyRules = [
           { routingPolicyRuleConfig = { From = "${localPrefix}::/64"; Table = 3500; }; }
-        ];
+        ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = 3500; }; }) publicDNS;
       };
     };
     netdevs = injectNetdevNames {
@@ -115,6 +117,12 @@ in
     };
 
     chinaRoute = { enableV4 = true; };
+    chinaDNS = {
+      enable = true;
+      ifName = "enp0s25.200";
+      servers = publicDNS;
+      chinaServer = "192.168.0.1";
+    };
 
     squid = {
       enable = true;

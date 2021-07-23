@@ -6,4 +6,5 @@ self:
   divi = import ./divi.nix;
   ivi = import ./ivi.nix;
   chinaRoute = import ./china-route.nix;
+  chinaDNS = import ./china-dns.nix;
 }
