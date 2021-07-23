@@ -24,6 +24,22 @@ in
     firewall.enable = false;
   };
 
+  # FIXME merge masquerade into networkd configuration
+  networking.nftables = {
+    ruleset = ''
+      table ip local-wan {
+        chain filter {
+          type filter hook forward priority 100;
+          oifname "enp0s25" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
+        }
+        chain nat {
+          type nat hook postrouting priority 100;
+          oifname "enp0s25" masquerade;
+        }
+      }
+    '';
+  };
+
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
   systemd.network = {
     networks = injectNetworkNames {
@@ -33,7 +49,10 @@ in
         # chinaRoute packets NAT
         networkConfig = {
           IPv6PrivacyExtensions = true;
-          IPMasquerade = true; # this is subject to change; see https://github.com/systemd/systemd/pull/18007
+          # FIXME we cannot use this until systemd v248. ref:
+          # IPv6 masquerade: https://github.com/systemd/systemd/commit/b1b4e9204c8260956825e2b9733c95903e215e31
+          # nft backend: https://github.com/systemd/systemd/commit/a8af734e75431d676b25afb49ac317036e6825e6
+          # IPMasquerade = "ipv4";
         };
         # chinaRoute packets lookup main
         routingPolicyRules = [
