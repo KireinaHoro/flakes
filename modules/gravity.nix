@@ -73,6 +73,7 @@ in
       };
       networks = pkgs.injectNetworkNames {
         ${cfg.link} = {
+          linkConfig = { RequiredForOnline = false; };
           address = [ cfg.address ];
           routes = [ { routeConfig = { Destination = "::/0"; Gateway = "fe80::200:ff:fe00:2"; Table = 3500; }; } ];
           routingPolicyRules = [
