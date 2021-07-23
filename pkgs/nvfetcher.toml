@@ -1,3 +1,7 @@
 [rait]
 src.git = "https://gitlab.com/NickCao/RAIT"
 fetch.git = "https://gitlab.com/NickCao/RAIT"
+
+[dnsmasq-china-list]
+src.git = "https://github.com/felixonmars/dnsmasq-china-list"
+fetch.git = "https://github.com/felixonmars/dnsmasq-china-list"
