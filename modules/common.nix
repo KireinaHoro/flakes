@@ -28,5 +28,4 @@ self: { config, pkgs, lib, ... }:
   environment.variables.EDITOR = "vim";
 
   systemd.network.enable = true;
-  systemd.services."systemd-networkd-wait-online".enable = false;
 }
