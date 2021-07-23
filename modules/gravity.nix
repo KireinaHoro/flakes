@@ -2,6 +2,7 @@
 with lib;
 let
   cfg = config.services.gravity;
+  ip = "${pkgs.iproute2}/bin/ip";
 in
 {
   options.services.gravity = {
@@ -65,20 +66,21 @@ in
     systemd.services.gravity = {
       serviceConfig = with pkgs;{
         ExecStartPre = [
-          "${iproute2}/bin/ip netns add ${cfg.netns}"
-          "${iproute2}/bin/ip link add ${cfg.link} address 00:00:00:00:00:01 group ${toString cfg.group} type veth peer host address 00:00:00:00:00:02 netns ${cfg.netns}"
-          "${iproute2}/bin/ip link set ${cfg.link} up"
-          "${iproute2}/bin/ip route add ${cfg.route} via fe80::200:ff:fe00:2 dev ${cfg.link}"
-          "${iproute2}/bin/ip route add default via fe80::200:ff:fe00:2 dev ${cfg.link} table 3500"
-          "${iproute2}/bin/ip addr add ${cfg.address} dev ${cfg.link}"
+          "${ip} netns add ${cfg.netns}"
+          "${ip} link add ${cfg.link} address 00:00:00:00:00:01 group ${toString cfg.group} type veth peer host address 00:00:00:00:00:02 netns ${cfg.netns}"
+          "${ip} link set ${cfg.link} up"
+          "${ip} route add ${cfg.route} via fe80::200:ff:fe00:2 dev ${cfg.link}"
+          "${ip} route add default via fe80::200:ff:fe00:2 dev ${cfg.link} table 3500"
+          "${ip} addr add ${cfg.address} dev ${cfg.link}"
 
-          "${iproute2}/bin/ip -n ${cfg.netns} link set host up"
-          "${iproute2}/bin/ip -n ${cfg.netns} link set lo up"
-          "${iproute2}/bin/ip -n ${cfg.netns} addr add ${cfg.netnsAddress} dev host"
-          "${iproute2}/bin/ip -n ${cfg.netns} route add ${cfg.subnet} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
-          "${iproute2}/bin/ip -n ${cfg.netns} addr add ${cfg.subnet} dev lo"
+          "${ip} -n ${cfg.netns} link set host up"
+          "${ip} -n ${cfg.netns} link set lo up"
+          "${ip} -n ${cfg.netns} addr add ${cfg.netnsAddress} dev host"
+          "${ip} -n ${cfg.netns} route add ${cfg.subnet} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
+          "${ip} -n ${cfg.netns} addr add ${cfg.subnet} dev lo"
+
         ];
-        ExecStart = "${iproute2}/bin/ip netns exec ${cfg.netns} ${babeld}/bin/babeld -c ${writeText "babeld.conf" ''
+        ExecStart = "${ip} netns exec ${cfg.netns} ${babeld}/bin/babeld -c ${writeText "babeld.conf" ''
           random-id true
           local-path-readwrite ${cfg.socket}
           state-file ""
@@ -93,8 +95,8 @@ in
         ] ++ cfg.postStart;
         ExecReload = "${rait}/bin/rait sync -c ${cfg.config}";
         ExecStopPost = [
-          "${iproute2}/bin/ip netns del ${cfg.netns}"
-          "${iproute2}/bin/ip link del ${cfg.link}"
+          "${ip} netns del ${cfg.netns}"
+          "${ip} link del ${cfg.link}"
         ];
         Restart = "always";
         RestartSec = 5;
