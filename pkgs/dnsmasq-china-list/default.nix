@@ -1,9 +1,7 @@
-{ source, pkgs, lib }:
+{ source, pkgs, lib, server ? "114.114.114.114" }:
 
 pkgs.stdenv.mkDerivation rec {
   inherit (source) pname version src;
-
-  server = "114.114.114.114";
 
   buildPhase = ''
     make dnsmasq SERVER=${server}

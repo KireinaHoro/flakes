@@ -2,9 +2,9 @@
 with lib;
 let
   cfg = config.services.chinaDNS;
-  chinaList = pkgs.dnsmasq-china-list.overrideAttrs (_: {
+  chinaList = pkgs.dnsmasq-china-list.override {
     server = cfg.chinaServer;
-  });
+  };
 in
 {
   options.services.chinaDNS = {
