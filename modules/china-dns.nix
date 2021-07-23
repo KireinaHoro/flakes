@@ -36,5 +36,9 @@ in
         conf-dir=${chinaList}/dnsmasq
       '';
     };
+    systemd.services.dnsmasq = {
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+    };
   };
 }
