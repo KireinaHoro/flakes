@@ -18,14 +18,20 @@ self: { config, pkgs, lib, ... }:
     package = pkgs.nixFlakes;
     extraOptions = ''
       experimental-features = nix-command flakes
+      keep-outputs = true
+      keep-derivations = true
     '';
     gc = { automatic = true; dates = "03:15"; };
   };
 
-  environment.systemPackages = with pkgs; [
-    vim wget tmux htop ripgrep bat git
-  ];
-  environment.variables.EDITOR = "vim";
+  environment = {
+    systemPackages = with pkgs; [
+      vim wget tmux htop ripgrep bat git
+      direnv nix-direnv
+    ];
+    variables.EDITOR = "vim";
+    pathsToLink = [ "/share/nix-direnv" ];
+  };
 
   systemd.network.enable = true;
 }

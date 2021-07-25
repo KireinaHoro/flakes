@@ -30,6 +30,7 @@
     });
     legacyPackages = pkgs;
     devShell = with pkgs; mkShell {
+      sources = attrValues self.inputs;
       # import sops keys
       sopsPGPKeyDirs = [ "./keys/hosts" "./keys/users" ];
 
@@ -40,7 +41,7 @@
     };
   }) // {
     nixosModules = import ./modules self;
-    overlay = nixpkgs.lib.composeExtensions this.overlay (final: _: import ./functions.nix final);
+    overlay = nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix);
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
     deploy.nodes = {};
