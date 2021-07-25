@@ -105,6 +105,8 @@ in
   };
 
   services = {
+    vnstat = { enable = true; };
+
     gravity = rec {
       enable = true;
       config = raitSecret;
