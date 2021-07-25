@@ -40,17 +40,6 @@ in
     '';
   };
 
-  # disable checksum offloading for enp0s25
-  systemd.services.ethtool = with pkgs; {
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${ethtool}/bin/ethtool -K enp0s25 rx off tx off";
-    };
-    before = [ "network-pre.target" ];
-    wants = [ "network-pre.target" ];
-    wantedBy = [ "multi-user.target" ];
-  };
-
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
   systemd.network = {
     networks = pkgs.injectNetworkNames {
