@@ -8,7 +8,7 @@ nixpkgs.lib.nixosSystem {
     ./hardware.nix
     ./networking.nix
 
-    gravity divi ivi chinaRoute chinaDNS
+    gravity divi ivi chinaRoute chinaDNS localResolver
     { nixpkgs.overlays = [ self.overlay ]; }
     inputs.sops-nix.nixosModules.sops
   ];

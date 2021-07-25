@@ -23,22 +23,9 @@ in
     };
   };
   config = mkIf cfg.enable {
-    services.dnsmasq = {
-      enable = true;
-      inherit (cfg) servers;
-      resolveLocalQueries = false;
-      extraConfig = ''
-        interface=${cfg.ifName}
-        bind-interfaces
-        no-resolv
-        log-queries
-        log-facility=local0
-        conf-dir=${chinaList}/dnsmasq
-      '';
-    };
-    systemd.services.dnsmasq = {
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
+    services.localResolver = {
+      inherit (cfg) servers ifName enable;
+      configDirs = [ "${chinaList}/dnsmasq" ];
     };
   };
 }
