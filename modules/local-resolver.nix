@@ -17,6 +17,7 @@ in
       type = types.listOf types.str;
       description = "list of configuration file directories for resolver config";
     };
+    logQueries = mkEnableOption "log all queries";
     extraConfig = mkOption {
       type = types.str;
       description = "additional config for dnsmasq";
@@ -32,8 +33,10 @@ in
         interface=${cfg.ifName}
         bind-interfaces
         no-resolv
-        log-queries
-        log-facility=local0
+        ${if cfg.logQueries then ''
+          log-queries
+          log-facility=local0
+        '' else ""}
         ${concatStrings (map (c: "conf-dir=${c}\n") cfg.configDirs)}
         ${cfg.extraConfig}
       '';
