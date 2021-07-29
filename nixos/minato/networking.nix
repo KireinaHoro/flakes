@@ -10,7 +10,7 @@ let
   ifName = "enp0s25";
   prefixLength = 56;
 
-  publicDNS = [ "8.8.8.8" "8.8.4.4" ];
+  publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
 in
 
 {
