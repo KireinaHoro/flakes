@@ -133,7 +133,10 @@ in
       servers = publicDNS;
       chinaServer = "192.168.0.1";
     };
-    localResolver.extraConfig = "server=/suki.moe/${config.services.chinaDNS.chinaServer}";
+    localResolver = {
+      logQueries = true;
+      extraConfig = "server=/suki.moe/${config.services.chinaDNS.chinaServer}";
+    };
 
     squid = {
       enable = true;
