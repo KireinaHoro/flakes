@@ -38,8 +38,11 @@
   system.stateVersion = "21.05"; # Did you read the comment?
 
   # maintenance
-  system.autoUpgrade.enable = true;
-  system.autoUpgrade.allowReboot = true;
+  system.autoUpgrade = {
+    enable = true;
+    allowReboot = true;
+    flake = "github:KireinaHoro/flakes";
+  };
 
   services.udev.packages = [ pkgs.yubikey-personalization ];
   services.pcscd.enable = true;
