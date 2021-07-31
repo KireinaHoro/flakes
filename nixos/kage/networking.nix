@@ -41,8 +41,7 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "ipv4";
-        # chinaRoute packets NAT
+        DHCP = "yes";
         networkConfig = {
           IPv6PrivacyExtensions = true;
           # FIXME we cannot use this until systemd v248. ref:
