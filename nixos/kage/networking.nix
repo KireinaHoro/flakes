@@ -57,6 +57,8 @@ in
   services = {
     vnstat = { enable = true; };
 
+    openssh.passwordAuthentication = false;
+
     /*
     gravity = rec {
       enable = true;
