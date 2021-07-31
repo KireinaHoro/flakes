@@ -41,9 +41,13 @@
     };
   }) // {
     nixosModules = import ./modules self;
-    overlay = nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix);
+    overlay = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
-    deploy.nodes = {};
+    deploy.nodes = genAttrs [ "kage" ] (n: {
+      sshUser = "root";
+      hostname = "${n}.jsteward.moe";
+      profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.${n};
+    });
   };
 }
