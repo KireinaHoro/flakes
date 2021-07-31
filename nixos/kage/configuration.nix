@@ -10,7 +10,7 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  users.users.jsteward.shell = pkgs.zsh;
+  users.users.root.openssh.authorizedKeys.keys = config.users.users.jsteward.openssh.authorizedKeys.keys;
 
   environment.systemPackages = with pkgs; [ dig ];
 

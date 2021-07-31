@@ -5,7 +5,7 @@ with pkgs.lib;
 let
   iviDiviPrefix = "2a0c:b641:69c:cd0";
   localPrefix = "2a0c:b641:69c:cde0";
-  gravityAddr = last: "${iviDiviPrefix}0::${last}/${prefixLength}";
+  gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp0s25";
   prefixLength = 56;
