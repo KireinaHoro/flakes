@@ -5,7 +5,7 @@ with pkgs.lib;
 let
   iviDiviPrefix = "2a0c:b641:69c:cd0";
   localPrefix = "2a0c:b641:69c:cde0";
-  gravityAddr = last: "${iviDiviPrefix}0::${last}/56";
+  gravityAddr = last: "${iviDiviPrefix}0::${last}/${prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp0s25";
   prefixLength = 56;
@@ -29,12 +29,12 @@ in
       table inet local-wan {
         chain filter {
           type filter hook forward priority 100;
-          oifname "enp0s25" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
-          oifname "enp0s25" ip6 saddr != ${localPrefix}::/64 log prefix "Unknown source to WAN: " drop
+          oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
+          oifname "${ifName}" ip6 saddr != ${localPrefix}::/64 log prefix "Unknown source to WAN: " drop
         }
         chain nat {
           type nat hook postrouting priority 100;
-          oifname "enp0s25" masquerade;
+          oifname "${ifName}" masquerade;
         }
       }
     '';
@@ -43,9 +43,9 @@ in
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
   systemd.network = {
     networks = pkgs.injectNetworkNames {
-      enp0s25 = {
+      ${ifName} = {
         DHCP = "ipv4";
-        vlan = [ "enp0s25.200" ];
+        vlan = [ "${ifName}.200" ];
         # chinaRoute packets NAT
         networkConfig = {
           IPv6PrivacyExtensions = true;
@@ -60,7 +60,7 @@ in
         ];
       };
 
-      "enp0s25.200" = {
+      "${ifName}.200" = {
         address = [ "10.172.208.254/24" "${localPrefix}::1/64" ];
         networkConfig = {
           DHCPServer = true;
@@ -81,7 +81,7 @@ in
         routingPolicyRules = [
           { routingPolicyRuleConfig = {
             From = "${localPrefix}::/64";
-            IncomingInterface = "enp0s25.200";
+            IncomingInterface = "${ifName}.200";
             Table = 3500;
             Priority = 100;
           }; }
@@ -89,7 +89,7 @@ in
       };
     };
     netdevs = pkgs.injectNetdevNames {
-      "enp0s25.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
+      "${ifName}.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
     };
   };
 
@@ -129,7 +129,7 @@ in
 
     chinaDNS = {
       enable = true;
-      ifName = "enp0s25.200";
+      ifName = "${ifName}.200";
       servers = publicDNS;
       chinaServer = "192.168.0.1";
     };
