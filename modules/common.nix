@@ -41,4 +41,6 @@ self: { config, pkgs, lib, ... }:
   };
 
   systemd.network.enable = true;
+
+  programs.mosh.enable = true;
 }
