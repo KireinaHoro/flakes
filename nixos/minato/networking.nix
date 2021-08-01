@@ -115,7 +115,7 @@ in
     ivi = {
       enable = true;
       prefix4 = "10.172.208.0";
-      prefix6 = "2a0c:b641:69c:cd05:0:5";
+      prefix6 = "${iviDiviPrefix}5:0:5";
       defaultMap = "2a0c:b641:69c:f254:0:4::/96";
       inherit prefixLength;
     };

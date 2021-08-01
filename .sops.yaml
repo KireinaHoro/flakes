@@ -3,12 +3,12 @@ keys:
   - &minato 9491a58334d9aa0d35f02b532a88523d1e5812ba
   - &kage d28319a43aaf6d8ec8817126ad3951f005b24533
 creation_rules:
-  - path_regex: ^nixos/minato/secrets\.yaml$
+  - path_regex: nixos/minato/secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
         - *minato
-  - path_regex: ^nixos/kage/secrets\.yaml$
+  - path_regex: nixos/kage/secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
