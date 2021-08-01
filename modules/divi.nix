@@ -52,8 +52,12 @@ in
           { addressConfig = { Address = "10.208.0.1/12"; PreferredLifetime = 0; }; }
           { addressConfig = { Address = cfg.address; PreferredLifetime = 0; }; }
         ];
+        networkConfig = { IPForward = true; };
         routes = [
           { routeConfig = { Destination = cfg.prefix; }; }
+        ];
+        routingPolicyRules = [
+          { routingPolicyRuleConfig = { To = cfg.prefix; Priority = 150; }; }
         ];
       };
     };

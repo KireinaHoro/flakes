@@ -59,6 +59,7 @@ in
             Table = 3500;
             Priority = 100;
           }; }
+          { routingPolicyRuleConfig = { To = "${cfg.prefix6}::/96"; Priority = 150; }; }
         ];
       };
     };

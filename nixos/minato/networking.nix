@@ -85,6 +85,7 @@ in
             Table = 3500;
             Priority = 100;
           }; }
+          { routingPolicyRuleConfig = { To = "${localPrefix}::/64"; Priority = 100; }; }
         ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = 3500; }; }) publicDNS;
       };
     };
