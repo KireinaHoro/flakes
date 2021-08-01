@@ -11,3 +11,12 @@ Packages local to this flake are at `pkgs/` and are managed by `nvfetcher`.  Sta
 ### Squid
 
 Squid requires the cache dirs to be populated with `squid -z` before first launch.  As on NixOS the configuration files are generated, use `systemctl status squid` to find the location of the configuration file.  Use `nix shell .#squid` to bring the `squid` binary into `PATH`.
+
+### Blog
+
+Remember to [update the lock file](https://t.me/c/1415471266/1015) for blog input after updating the blog flake:
+
+```bash
+nix flake lock --update-input blog
+deploy .#kage
+```

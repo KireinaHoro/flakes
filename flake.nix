@@ -6,6 +6,13 @@
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     flake-utils = { url = "github:numtide/flake-utils"; inputs.nixpkgs.follows = "nixpkgs"; };
+    blog = {
+      url = "github:KireinaHoro/jsteward.moe";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
@@ -20,6 +27,7 @@
       overlays = [
         inputs.deploy-rs.overlay
         inputs.sops-nix.overlay
+        inputs.blog.overlay
         self.overlay
       ];
     };

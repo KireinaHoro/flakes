@@ -21,6 +21,10 @@ in
     hostName = "minato";
     useDHCP = false;
     firewall.enable = false;
+    proxy = {
+      default = "http://kage.g.jsteward.moe:3128";
+      noProxy = "127.0.0.1,localhost";
+    };
   };
 
   # FIXME merge masquerade into networkd configuration

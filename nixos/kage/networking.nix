@@ -53,6 +53,11 @@ in
     };
   };
 
+  security.acme = {
+    acceptTerms = true;
+    email = "i+acme@jsteward.moe";
+  };
+
   services = {
     vnstat = { enable = true; };
 
@@ -100,6 +105,23 @@ in
         negative_ttl 0
         icp_port 3130
       '';
+    };
+
+    nginx = {
+      enable = true;
+      virtualHosts = {
+        "jsteward.moe" = {
+          forceSSL = true;
+          enableACME = true;
+          serverAliases = [ "aria2.jsteward.moe" ];
+          locations."/" = { root = pkgs.jstewardMoe; };
+        };
+        "aria2.jsteward.moe" = {
+          forceSSL = true;
+          useACMEHost = "jsteward.moe";
+          locations."/" = { root = "/var/www"; };
+        };
+      };
     };
   };
 }
