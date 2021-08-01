@@ -41,7 +41,7 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "yes";
+        DHCP = "ipv4";
         networkConfig = {
           IPv6PrivacyExtensions = true;
           # FIXME we cannot use this until systemd v248. ref:
