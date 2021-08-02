@@ -132,20 +132,20 @@ in
               exit 0
             fi
 
-            src=$3
+            src="$3"
             while true; do
-              dir=$(${coreutils}/bin/dirname $src)
+              dir=$(${coreutils}/bin/dirname "$src")
               if [[ "$dir" == "${downloads}" ]]; then
                 tgt="gdrive:archive/Uncategorized/''${src##*/}"
-                info "Uploading $src..."
+                info "Uploading $1 $src..."
                 ${rc} copyto "$src" "$tgt" &>> ${log} || err "Failed to run rclone"
-                info "$3 moved as $tgt"
+                info "$1 $3 moved as $tgt"
                 ${coreutils}/bin/rm -rf "$src" &>> ${log}
                 exit 0
               elif [[ "$dir" == "/" || "$dir" == "." ]]; then
-                err "$3 not under ${downloads}"
+                err "$1 $3 not under ${downloads}"
               else
-                src=$dir
+                src="$dir"
               fi
             done
           '';
@@ -157,6 +157,7 @@ in
         --max-concurrent-downloads=4
         --max-connection-per-server=16
         --on-download-complete=${mvcompleted}
+        --on-bt-download-complete=${mvcompleted}
       '';
     };
 
