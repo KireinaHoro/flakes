@@ -111,6 +111,44 @@ in
       enable = true;
       extraArguments = with pkgs; let
           ariaHome = "/var/lib/aria2";
+          downloads = "${ariaHome}/Downloads";
+          log = "${ariaHome}/mvcompleted.log";
+          rc = "${rclone}/bin/rclone --verbose --config=${ariaHome}/rclone.conf";
+          mvcompleted = writeScript "mvcompleted" ''
+            #!${bash}/bin/bash
+
+            set -eu
+
+            err() {
+              echo $(${coreutils}/bin/date) ERR:  $@ >> ${log}
+              exit 1
+            }
+            info() {
+              echo $(${coreutils}/bin/date) INFO: $@ >> ${log}
+            }
+
+            if [[ "$2" == "0" ]]; then
+              info "No file to move for $1"
+              exit 0
+            fi
+
+            src=$3
+            while true; do
+              dir=$(${coreutils}/bin/dirname $src)
+              if [[ "$dir" == "${downloads}" ]]; then
+                tgt="gdrive:archive/Uncategorized/''${src##*/}"
+                info "Uploading $src..."
+                ${rc} copyto "$src" "$tgt" &>> ${log} || err "Failed to run rclone"
+                info "$3 moved as $tgt"
+                ${coreutils}/bin/rm -rf "$src" &>> ${log}
+                exit 0
+              elif [[ "$dir" == "/" || "$dir" == "." ]]; then
+                err "$3 not under ${downloads}"
+              else
+                src=$dir
+              fi
+            done
+          '';
         in replaceStrings [ "\n" ] [ " " ] ''
         --continue=true
         --input-file=${ariaHome}/aria2.session
@@ -118,6 +156,7 @@ in
         --seed-ratio=0.1
         --max-concurrent-downloads=4
         --max-connection-per-server=16
+        --on-download-complete=${mvcompleted}
       '';
     };
 
