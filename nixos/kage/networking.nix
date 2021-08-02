@@ -109,10 +109,11 @@ in
 
     aria2 = {
       enable = true;
-      rpcSecret = "KvKgM+pFgnhFTjePkYhp6Aasc08marb1qvFiaLfl1qdytL8Jeph1+aRCq9WKZvMOXLzfqFUOTPXZXGYEmkXlSQ==";
-      extraArguments = replaceStrings ["\n"] [" "] ''
+      extraArguments = with pkgs; let
+          ariaHome = "/var/lib/aria2";
+        in replaceStrings [ "\n" ] [ " " ] ''
         --continue=true
-        --input-file=/var/lib/aria2/aria2.session
+        --input-file=${ariaHome}/aria2.session
         --max-connection-per-server=10
         --seed-ratio=0.1
         --max-concurrent-downloads=4
@@ -148,5 +149,14 @@ in
         };
       };
     };
+  };
+
+  systemd.services.aria2 = {
+    preStart = ''
+      ${pkgs.gnused}/bin/sed -i -e "s/rpc-secret.*$/rpc-secret=$RPC_SECRET/" /var/lib/aria2/aria2.conf
+    '';
+    serviceConfig.EnvironmentFile = [
+      config.sops.secrets.aria2-env.path
+    ];
   };
 }

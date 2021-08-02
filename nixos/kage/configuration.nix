@@ -3,7 +3,10 @@
 {
   sops = {
     defaultSopsFile = ./secrets.yaml;
-    secrets = { rait = {}; };
+    secrets = {
+      rait = {};
+      aria2-env = {};
+    };
   };
 
   time.timeZone = "Asia/Tokyo";
