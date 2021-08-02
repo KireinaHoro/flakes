@@ -107,6 +107,19 @@ in
       '';
     };
 
+    aria2 = {
+      enable = true;
+      rpcSecret = "KvKgM+pFgnhFTjePkYhp6Aasc08marb1qvFiaLfl1qdytL8Jeph1+aRCq9WKZvMOXLzfqFUOTPXZXGYEmkXlSQ==";
+      extraArguments = replaceStrings ["\n"] [" "] ''
+        --continue=true
+        --input-file=/var/lib/aria2/aria2.session
+        --max-connection-per-server=10
+        --seed-ratio=0.1
+        --max-concurrent-downloads=4
+        --max-connection-per-server=16
+      '';
+    };
+
     nginx = {
       enable = true;
       virtualHosts = {
@@ -119,7 +132,19 @@ in
         "aria2.jsteward.moe" = {
           forceSSL = true;
           useACMEHost = "jsteward.moe";
-          locations."/" = { root = "${pkgs.ariang}/dist/"; };
+          locations = {
+            "/" = { root = "${pkgs.ariang}/dist/"; };
+            "/jsonrpc" = {
+              proxyPass = "http://localhost:6800";
+              proxyWebsockets = true;
+              extraConfig = ''
+                proxy_set_header   Host $host;
+                proxy_set_header   X-Real-IP $remote_addr;
+                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header   X-Forwarded-Host $server_name;
+              '';
+            };
+          };
         };
       };
     };
