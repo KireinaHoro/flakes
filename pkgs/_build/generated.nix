@@ -3,14 +3,14 @@
 {
   ariang = {
     pname = "ariang";
-    version = "f826684b98c914758198d85841c7807886b15764";
+    version = "2c0c503097ad830a3848ed8e988cf767fb7a1c14";
     src = fetchgit {
       url = "https://github.com/KireinaHoro/AriaNg";
-      rev = "f826684b98c914758198d85841c7807886b15764";
+      rev = "2c0c503097ad830a3848ed8e988cf767fb7a1c14";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "0ilxa8xx6722ik7169r346i5ss3kkrv38pn47xxny0rydhz7vq4i";
+      sha256 = "18arazj1xv7lmdfib3gv5b6d5d68175livwqhwn0z0h0qrirb79g";
     };
     
   };

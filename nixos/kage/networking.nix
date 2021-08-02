@@ -119,7 +119,7 @@ in
         "aria2.jsteward.moe" = {
           forceSSL = true;
           useACMEHost = "jsteward.moe";
-          locations."/" = { root = "/var/www"; };
+          locations."/" = { root = "${pkgs.ariang}/dist/"; };
         };
       };
     };
