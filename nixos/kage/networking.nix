@@ -153,7 +153,7 @@ in
         --continue=true
         --input-file=${ariaHome}/aria2.session
         --max-connection-per-server=10
-        --seed-ratio=0.1
+        --seed-time=0
         --max-concurrent-downloads=4
         --max-connection-per-server=16
         --on-download-complete=${mvcompleted}
