@@ -3,7 +3,10 @@
 {
   sops = {
     defaultSopsFile = ./secrets.yaml;
-    secrets = { rait = {}; };
+    secrets = {
+      rait = {};
+      remote-access-priv = {};
+    };
   };
 
   boot.loader.systemd-boot.enable = true;

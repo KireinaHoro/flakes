@@ -5,6 +5,7 @@ with pkgs.lib;
 let
   iviDiviPrefix = "2a0c:b641:69c:cd0";
   localPrefix = "2a0c:b641:69c:cde0";
+  remoteAccessPrefix = "2a0c:b641:69c:cdc0";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp0s25";
@@ -42,6 +43,27 @@ in
         }
       }
     '';
+  };
+
+  networking.wireguard.interfaces = {
+    remote-access = {
+      listenPort = 31675;
+      privateKeyFile = config.sops.secrets.remote-access-priv.path;
+      peers = [
+        { # pixel 4
+          publicKey = "zXU3IYwRdNnjEitP/WjS+v8q7KnPbYumwx3qEw0uGzM=";
+          allowedIPs = [ "10.172.220.2/32" "${remoteAccessPrefix}::2/128" ];
+        }
+        { # thinkpad
+          publicKey = "q4zeQsdAgfMu+z8F0QlmtlcUz75VqSONIq+Mz6Ja40U=";
+          allowedIPs = [ "10.172.220.3/32" "${remoteAccessPrefix}::3/128" ];
+        }
+        { # m1 macbook
+          publicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
+          allowedIPs = [ "10.172.220.4/32" "${remoteAccessPrefix}::4/128" ];
+        }
+      ];
+    };
   };
 
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
@@ -91,6 +113,18 @@ in
           }; }
           { routingPolicyRuleConfig = { To = "${localPrefix}::/64"; Priority = 100; }; }
         ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = 3500; }; }) publicDNS;
+      };
+      remote-access = {
+        address = [ "10.172.220.1/24" "${remoteAccessPrefix}::1/64" ];
+        routingPolicyRules = [
+          { routingPolicyRuleConfig = {
+            From = "${remoteAccessPrefix}::/64";
+            IncomingInterface = "remote-access";
+            Table = 3500;
+            Priority = 100;
+          }; }
+          { routingPolicyRuleConfig = { To = "${remoteAccessPrefix}::/64"; Priority = 100; }; }
+        ];
       };
     };
     netdevs = pkgs.injectNetdevNames {
