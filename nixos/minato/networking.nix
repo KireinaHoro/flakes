@@ -65,14 +65,14 @@ in
       };
 
       "${ifName}.200" = {
-        address = [ "10.172.208.254/24" "${localPrefix}::1/64" ];
+        address = [ "10.172.222.254/24" "${localPrefix}::1/64" ];
         networkConfig = {
           DHCPServer = true;
           IPForward = true;
           IPv6SendRA = true;
         };
         dhcpServerConfig = {
-          DNS = [ "10.172.208.254" ];
+          DNS = [ "10.172.222.254" ];
           PoolOffset = 1; # excludes IVI address
         };
         ipv6SendRAConfig = {
