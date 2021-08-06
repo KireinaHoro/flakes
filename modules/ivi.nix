@@ -2,6 +2,7 @@
 with lib;
 let
   cfg = config.services.ivi;
+  prefix4Length = cfg.prefixLength - 36;
 in
 {
   options.services.ivi = {
@@ -34,7 +35,7 @@ in
           ipv4-addr 10.160.0.2
           ipv6-addr ${cfg.prefix6}::2
           map 0.0.0.0/0 ${cfg.defaultMap}
-          map ${cfg.prefix4}/${toString (cfg.prefixLength - 36)} ${cfg.prefix6}:${cfg.prefix4}/${toString (cfg.prefixLength + 60)}
+          map ${cfg.prefix4}/${toString prefix4Length} ${cfg.prefix6}:${cfg.prefix4}/${toString (cfg.prefixLength + 60)}
         ''}";
       };
       after = [ "network.target" ];
@@ -52,7 +53,7 @@ in
         ];
         routingPolicyRules = [
           { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; }; }
-          { routingPolicyRuleConfig = { To = "${cfg.prefix4}/24"; }; }
+          { routingPolicyRuleConfig = { To = "${cfg.prefix4}/${toString prefix4Length}"; }; }
           { routingPolicyRuleConfig = {
             Family = "ipv6";
             IncomingInterface = "ivi";
