@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy flakes
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./
+      - name: checkout local action
+        uses: actions/checkout@v2
+      - name: deploy flake
+        uses: ./
         id: hello
         with:
           flake: 'github:KireinaHoro/flakes'
