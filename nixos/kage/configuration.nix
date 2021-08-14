@@ -13,7 +13,10 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  users.users.root.openssh.authorizedKeys.keys = config.users.users.jsteward.openssh.authorizedKeys.keys;
+  users.users.root.openssh.authorizedKeys.keys =
+    config.users.users.jsteward.openssh.authorizedKeys.keys ++ [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOU5CKR/UjsY6euvwBG0yCpKJoC1aUH2Ff3WCEEjfeTF github-actions"
+    ];
 
   environment.systemPackages = with pkgs; [ dig ];
 

@@ -1,0 +1,13 @@
+name: 'Deploy flake with deploy-rs'
+inputs:
+  flake:
+    description: 'Flake to deploy'
+    required: true
+  privkey:
+    description: 'Private key for deploying'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.flake }} ${{ inputs.privkey }}

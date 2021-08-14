@@ -14,13 +14,6 @@ self: { config, pkgs, lib, ... }:
 
   system.configurationRevision = if self ? rev then self.rev else "dirty";
 
-  # maintenance
-  system.autoUpgrade = {
-    enable = true;
-    allowReboot = true;
-    flake = "github:KireinaHoro/flakes";
-  };
-
   nix = {
     package = pkgs.nixFlakes;
     extraOptions = ''
