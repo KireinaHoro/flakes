@@ -6,6 +6,9 @@ RUN nix-env -iA nixpkgs.nixUnstable
 RUN nix-env -iA nixpkgs.openssh
 RUN echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
 
+# build KireinaHoro flakes as base
+RUN nix build github:KireinaHoro/flakes\#nixosConfigurations.kage.config.system.build.toplevel
+
 COPY deploy.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

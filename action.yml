@@ -8,7 +8,7 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://kireinahoro/flakes-ci:v1'
   args:
     - ${{ inputs.flake }}
     - ${{ inputs.privkey }}
