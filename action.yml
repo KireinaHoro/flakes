@@ -10,4 +10,5 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.flake }} ${{ inputs.privkey }}
+    - ${{ inputs.flake }}
+    - ${{ inputs.privkey }}
