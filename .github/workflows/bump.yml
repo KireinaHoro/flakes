@@ -28,6 +28,5 @@ jobs:
       - name: trigger new deployment
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: KireinaHoro/flakes
+          token: ${{ secrets.ACTIONS_PAT }}
           event-type: deploy_flakes
