@@ -13,8 +13,7 @@ jobs:
       - name: checkout local action
         uses: actions/checkout@v2
       - name: deploy flake
-        uses: ./
-        id: hello
+        uses: ./actions/deploy
         with:
           flake: 'github:KireinaHoro/flakes'
           privkey: ${{ secrets.ACTIONS_PRIVKEY }}
