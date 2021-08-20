@@ -174,6 +174,7 @@ in
     };
     localResolver = {
       logQueries = true;
+      configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       extraConfig = "server=/suki.moe/${config.services.chinaDNS.chinaServer}";
     };
 
