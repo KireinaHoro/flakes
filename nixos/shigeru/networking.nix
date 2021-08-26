@@ -6,7 +6,7 @@ let
   iviDiviPrefix = "2a0c:b641:69c:ce1";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
-  ifName = "eth0";
+  ifName = "enp6s18";
   prefixLength = 60;
 in
 
