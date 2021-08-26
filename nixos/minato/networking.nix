@@ -31,6 +31,14 @@ in
   # FIXME merge masquerade into networkd configuration
   networking.nftables = {
     ruleset = ''
+      table inet gravity-access {
+        chain filter {
+          type filter hook forward priority 100;
+          meta nfproto ipv4 tcp flags syn / syn,rst tcp option maxseg size set 1360;
+          meta nfproto ipv6 tcp flags syn / syn,rst tcp option maxseg size set 1340;
+        }
+      }
+
       table inet local-wan {
         chain filter {
           type filter hook forward priority 100;
