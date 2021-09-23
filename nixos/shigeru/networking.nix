@@ -10,6 +10,7 @@ let
   ifName = "enp6s18";
   prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
+  chinaServer = "114.114.114.114";
 in
 
 {
@@ -78,6 +79,7 @@ in
             Table = 3500;
             Priority = 100;
           }; }
+          { routingPolicyRuleConfig = { To = chinaServer; Table = 3500; }; }
           { routingPolicyRuleConfig = {
             To = "${remoteAccessPrefix}::/64";
             Priority = 100;
@@ -97,7 +99,7 @@ in
       enable = true;
       ifName = "remote-access";
       servers = publicDNS;
-      chinaServer = "114.114.114.114";
+      inherit chinaServer;
     };
     localResolver = {
       logQueries = true;
@@ -125,7 +127,7 @@ in
       enable = true;
       prefix4 = "10.172.224.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
-      defaultMap = "2a0c:b641:69c:cd00:0:4::/96";
+      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       fwmark = 333;
       inherit prefixLength;
     };
