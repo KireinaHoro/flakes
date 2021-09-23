@@ -4,6 +4,7 @@ with pkgs.lib;
 
 let
   iviDiviPrefix = "2a0c:b641:69c:ce1";
+  remoteAccessPrefix = "2a0c:b641:69c:ce1f";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp6s18";
@@ -37,6 +38,27 @@ in
     '';
   };
 
+  networking.wireguard.interfaces = {
+    remote-access = {
+      listenPort = 31675;
+      privateKeyFile = config.sops.secrets.remote-access-priv.path;
+      peers = [
+        { # pixel 4
+          publicKey = "zXU3IYwRdNnjEitP/WjS+v8q7KnPbYumwx3qEw0uGzM=";
+          allowedIPs = [ "10.172.224.2/32" "${remoteAccessPrefix}::2/128" ];
+        }
+        { # thinkpad
+          publicKey = "q4zeQsdAgfMu+z8F0QlmtlcUz75VqSONIq+Mz6Ja40U=";
+          allowedIPs = [ "10.172.224.3/32" "${remoteAccessPrefix}::3/128" ];
+        }
+        { # m1 macbook
+          publicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
+          allowedIPs = [ "10.172.224.4/32" "${remoteAccessPrefix}::4/128" ];
+        }
+      ];
+    };
+  };
+
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
@@ -44,6 +66,22 @@ in
         gateway = [ "192.33.91.1" ];
         domains = [ "ethz.ch" ];
         dns = [ "129.132.98.12" "129.132.250.2" ];
+      };
+      remote-access = {
+        address = [ "10.172.224.1/24" "${remoteAccessPrefix}::1/64" ];
+        routingPolicyRules = [
+          { routingPolicyRuleConfig = {
+            From = "${remoteAccessPrefix}::/64";
+            IncomingInterface = "remote-access";
+            FirewallMark = 333;  # only redirect China-destined packets
+            Table = 3500;
+            Priority = 100;
+          }; }
+          { routingPolicyRuleConfig = {
+            To = "${remoteAccessPrefix}::/64";
+            Priority = 100;
+          }; }
+        ];
       };
     };
   };
@@ -69,11 +107,13 @@ in
       inherit ifName;
     };
 
+    # default to minato - back to China
     ivi = {
       enable = true;
       prefix4 = "10.172.224.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
-      defaultMap = "2a0c:b641:69c:f254:0:4::/96";
+      defaultMap = "2a0c:b641:69c:cd00:0:4::/96";
+      fwmark = 333;
       inherit prefixLength;
     };
 
