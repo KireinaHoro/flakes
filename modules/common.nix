@@ -29,6 +29,9 @@ self: { config, pkgs, lib, ... }:
       vim wget tmux htop ripgrep bat git
       direnv nix-direnv
     ];
+    interactiveShellInit = ''
+      eval "$(direnv hook bash)"
+    '';
     variables.EDITOR = "vim";
     pathsToLink = [ "/share/nix-direnv" ];
   };
