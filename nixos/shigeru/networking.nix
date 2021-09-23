@@ -46,7 +46,7 @@ in
       privateKeyFile = config.sops.secrets.remote-access-priv.path;
       peers = [
         { # pixel 4
-          publicKey = "zXU3IYwRdNnjEitP/WjS+v8q7KnPbYumwx3qEw0uGzM=";
+          publicKey = "xMQLxCBknaGfE5qomFCB3s9uzcvvbbvlU+D1uQtvryY=";
           allowedIPs = [ "10.172.224.2/32" "${remoteAccessPrefix}::2/128" ];
         }
         { # thinkpad
@@ -54,7 +54,7 @@ in
           allowedIPs = [ "10.172.224.3/32" "${remoteAccessPrefix}::3/128" ];
         }
         { # m1 macbook
-          publicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
+          publicKey = "sTmAuGsMebXGsOLGCrowonWEIDDSBnQxTZkAuVzIfU4=";
           allowedIPs = [ "10.172.224.4/32" "${remoteAccessPrefix}::4/128" ];
         }
       ];
