@@ -9,6 +9,7 @@ let
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp6s18";
   prefixLength = 60;
+  publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
 in
 
 {
@@ -90,6 +91,18 @@ in
     vnstat = { enable = true; };
 
     openssh.passwordAuthentication = false;
+
+    chinaRoute.enableV4 = true;
+    chinaDNS = {
+      enable = true;
+      ifName = "remote-access";
+      servers = publicDNS;
+      chinaServer = "114.114.114.114";
+    };
+    localResolver = {
+      logQueries = true;
+      configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
+    };
 
     gravity = rec {
       enable = true;
