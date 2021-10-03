@@ -59,7 +59,10 @@ in
         routingPolicyRules = [
           { routingPolicyRuleConfig = mapNullable (x: { FirewallMark = x; } //
             { From = "10.160.0.0/12"; Table = 3500; Priority = 100; }) cfg.fwmark; }
-          { routingPolicyRuleConfig = { To = "${cfg.prefix4}/${toString prefix4Length}"; }; }
+          { routingPolicyRuleConfig = {
+            To = "${cfg.prefix4}/${toString prefix4Length}";
+            Priority = 100;
+          }; }
           { routingPolicyRuleConfig = {
             Family = "ipv6";
             IncomingInterface = "ivi";
