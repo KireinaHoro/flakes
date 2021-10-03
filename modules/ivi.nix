@@ -57,8 +57,9 @@ in
           { routeConfig = { Destination = "0.0.0.0/0"; Table = 3500; }; }
         ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = mapNullable (x: { FirewallMark = x; } //
-            { From = "10.160.0.0/12"; Table = 3500; Priority = 100; }) cfg.fwmark; }
+          { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; } //
+            (if cfg.fwmark == null then {} else { FirewallMark = cfg.fwmark; });
+          }
           { routingPolicyRuleConfig = {
             To = "${cfg.prefix4}/${toString prefix4Length}";
             Priority = 100;
