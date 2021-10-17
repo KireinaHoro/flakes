@@ -5,11 +5,11 @@
     defaultSopsFile = ./secrets.yaml;
     secrets = {
       rait = {};
-      aria2-env = {};
+      remote-access-priv = {};
     };
   };
 
-  time.timeZone = "Asia/Tokyo";
+  time.timeZone = "Europe/Zurich";
 
   i18n.defaultLocale = "en_US.UTF-8";
 

@@ -12,6 +12,11 @@ in
       description = "nat46 ipv4 prefix";
       example = "10.172.208.0";
     };
+    fwmark = mkOption {
+      type = types.nullOr types.int;
+      description = "firewall mark for packets to ivi";
+      default = null;
+    };
     prefix6 = mkOption {
       type = types.str;
       description = "nat46 ipv6 prefix";
@@ -52,8 +57,13 @@ in
           { routeConfig = { Destination = "0.0.0.0/0"; Table = 3500; }; }
         ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; }; }
-          { routingPolicyRuleConfig = { To = "${cfg.prefix4}/${toString prefix4Length}"; }; }
+          { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; } //
+            (if cfg.fwmark == null then {} else { FirewallMark = cfg.fwmark; });
+          }
+          { routingPolicyRuleConfig = {
+            To = "${cfg.prefix4}/${toString prefix4Length}";
+            Priority = 100;
+          }; }
           { routingPolicyRuleConfig = {
             Family = "ipv6";
             IncomingInterface = "ivi";

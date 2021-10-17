@@ -16,14 +16,27 @@
   };
   dnsmasq-china-list = {
     pname = "dnsmasq-china-list";
-    version = "29427213ce3a3e1c49ec075c8b8da356d4017014";
+    version = "8b90486ff4000f333e02b9538c9beae21d8d44be";
     src = fetchgit {
       url = "https://github.com/felixonmars/dnsmasq-china-list";
-      rev = "29427213ce3a3e1c49ec075c8b8da356d4017014";
+      rev = "8b90486ff4000f333e02b9538c9beae21d8d44be";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "087s1r22pdb17fc8araq03afw0kr78xnmxk26yq2szrh384xdmqb";
+      sha256 = "0fmldv68g8jnacbayb1067h5q5lhhsqqpvjccs2iswa21z9bdvzf";
+    };
+    
+  };
+  hosts-blocklists = {
+    pname = "hosts-blocklists";
+    version = "b6e7cdf3dbd104a37b3969c31ac7be13b1f4ac43";
+    src = fetchgit {
+      url = "https://github.com/notracking/hosts-blocklists";
+      rev = "b6e7cdf3dbd104a37b3969c31ac7be13b1f4ac43";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "1gh62yvh94jxxf6mwkgyn1109dzbkwlqy2i6wl1fbj5h52d3jfaf";
     };
     
   };

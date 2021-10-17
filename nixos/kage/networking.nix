@@ -37,7 +37,6 @@ in
     '';
   };
 
-  # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {

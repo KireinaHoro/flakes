@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - master
+  repository_dispatch:
+    types: [deploy_flakes]
+
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+    name: Deploy flakes
+    steps:
+      - name: checkout local action
+        uses: actions/checkout@v2
+      - name: deploy flake
+        uses: ./actions/deploy
+        with:
+          flake: 'github:KireinaHoro/flakes'
+          privkey: ${{ secrets.ACTIONS_PRIVKEY }}
