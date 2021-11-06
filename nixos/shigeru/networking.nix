@@ -57,6 +57,14 @@ in
           publicKey = "sTmAuGsMebXGsOLGCrowonWEIDDSBnQxTZkAuVzIfU4=";
           allowedIPs = [ "10.172.224.4/32" "${remoteAccessPrefix}::4/128" ];
         }
+        { # Jindi iPhone
+          publicKey = "i3IJjP1h+z4YtIwY4df2uqUViWBtgL0lK3rGeGRIk3U=";
+          allowedIPs = [ "10.172.224.5/32" "${remoteAccessPrefix}::5/128" ];
+        }
+        { # Jindi Mac
+          publicKey = "8NvajLFSN+xSP86v67caUusYgAUqB1dbwTlutCpUjBI=";
+          allowedIPs = [ "10.172.224.6/32" "${remoteAccessPrefix}::6/128" ];
+        }
       ];
     };
   };
