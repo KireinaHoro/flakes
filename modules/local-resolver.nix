@@ -33,6 +33,7 @@ in
         interface=${cfg.ifName}
         bind-interfaces
         no-resolv
+        no-hosts
         ${if cfg.logQueries then ''
           log-queries
           log-facility=local0
