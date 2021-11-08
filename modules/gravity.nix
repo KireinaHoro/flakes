@@ -124,10 +124,8 @@ in
         RestartSec = 5;
       };
       startLimitIntervalSec = 0;
-      wants = [ "network-online.target" "sys-devices-virtual-net-gravity.device" ];
-      after = [ "network-online.target" "sys-devices-virtual-net-gravity.device" ];
-      # only start after networkd setting up the veth, or the `ip link set netns` will fail
-      requires = [ "sys-devices-virtual-net-gravity.device" ];
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
     };
   };
