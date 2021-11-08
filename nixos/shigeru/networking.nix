@@ -149,6 +149,16 @@ in
       defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       fwmark = gravityMark;
       inherit prefixLength;
+      # map PKU v4 to seki
+      extraConfig = concatStringsSep "\n" (map
+        ({prefix, len}: pkgs.genIviMap prefix "2a0c:b641:69c:cc04:0:4" len)
+        [ { prefix = "162.105.0.0"; len = 16; }
+          { prefix = "222.29.0.0"; len = 17; }
+          { prefix = "222.29.128.0"; len = 19; }
+          { prefix = "115.27.0.0"; len = 16; }
+          { prefix = "202.112.7.0"; len = 24; }
+          { prefix = "202.112.8.0"; len = 24; } ]
+      );
     };
 
     squid = {
