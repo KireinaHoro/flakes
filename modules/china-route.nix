@@ -7,8 +7,8 @@ let
 in
 {
   options.services.chinaRoute = {
-    enableV4 = mkEnableOption "mark China IPv4 dst packets with mark 333";
-    enableV6 = mkEnableOption "mark China IPv6 dst packets with mark 333";
+    enableV4 = mkEnableOption "mark China IPv4 dst packets with fwmark";
+    enableV6 = mkEnableOption "mark China IPv6 dst packets with fwmark";
     prefix6 = mkOption {
       type = types.str;
       description = "nat66 allowed source prefix";
@@ -22,6 +22,10 @@ in
       type = types.listOf types.str;
       description = "prefixes to exclude for v6";
       default = [];
+    };
+    fwmark = mkOption {
+      type = types.int;
+      description = "firewall mark for selected packets";
     };
   };
   config = mkIf (cfg.enableV4 || cfg.enableV6) {
@@ -63,8 +67,8 @@ in
           }
           chain prerouting {
             type filter hook prerouting priority 0;
-            ${if cfg.enableV4 then ''ip saddr 10.160.0.0/12 ip daddr @chnv4 ${if haveV4Whitelist then "ip daddr != @chnv4-nonat" else ""} mark set 333'' else ""}
-            ${if cfg.enableV6 then ''ip6 saddr ${cfg.prefix6} ip6 daddr @chnv6 ${if haveV6Whitelist then "ip6 daddr != @chnv6-nonat" else ""} mark set 333'' else ""}
+            ${if cfg.enableV4 then ''ip saddr 10.160.0.0/12 ip daddr @chnv4 ${if haveV4Whitelist then "ip daddr != @chnv4-nonat" else ""} mark set ${cfg.fwmark}'' else ""}
+            ${if cfg.enableV6 then ''ip6 saddr ${cfg.prefix6} ip6 daddr @chnv6 ${if haveV6Whitelist then "ip6 daddr != @chnv6-nonat" else ""} mark set ${cfg.fwmark}'' else ""}
           }
         }
       '';
