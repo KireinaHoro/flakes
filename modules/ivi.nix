@@ -45,7 +45,7 @@ in
           ipv4-addr 10.160.0.2
           ipv6-addr ${cfg.prefix6}::2
           map 0.0.0.0/0 ${cfg.defaultMap}
-          ${pkgs.genIviMap cfg.prefix4 cfg.prefix6 cfg.prefix4Length}
+          ${pkgs.genIviMap cfg.prefix4 cfg.prefix6 prefix4Length}
 
           ${cfg.extraConfig}
         ''}";

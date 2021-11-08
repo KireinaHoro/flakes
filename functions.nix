@@ -6,5 +6,5 @@ final: prev: with final.lib;
 
   nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
 
-  genIviMap = v4: v6: v4len: "map ${v4}/${toString v4len} ${v6}:${v4}/${toString (v4len + 60)}";
+  genIviMap = v4: v6: v4len: "map ${v4}/${toString v4len} ${v6}:${v4}/${toString (v4len + 96)}";
 }
