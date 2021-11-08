@@ -11,6 +11,8 @@ let
   prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   chinaServer = "114.114.114.114";
+  gravityTable = 3500;
+  gravityMark = 333;
 in
 
 {
@@ -83,14 +85,14 @@ in
           # local resolver for China DNS
           { routingPolicyRuleConfig = {
             To = chinaServer;
-            Table = 3500;
+            Table = gravityTable;
             Priority = 50;
           }; }
           { routingPolicyRuleConfig = {
             From = "${remoteAccessPrefix}::/64";
             IncomingInterface = "remote-access";
-            FirewallMark = 333;  # only redirect China-destined packets
-            Table = 3500;
+            FirewallMark = gravityMark;  # only redirect China-destined packets
+            Table = gravityTable;
             Priority = 100;
           }; }
           { routingPolicyRuleConfig = {
@@ -107,7 +109,10 @@ in
 
     openssh.passwordAuthentication = false;
 
-    chinaRoute.enableV4 = true;
+    chinaRoute = {
+      fwmark = gravityMark;
+      enableV4 = true;
+    };
     chinaDNS = {
       enable = true;
       ifName = "remote-access";
@@ -126,6 +131,7 @@ in
       address = gravityAddr "1";
       subnet = gravityAddr "";
       inherit prefixLength;
+      inherit gravityTable;
     };
 
     divi = {
@@ -141,8 +147,18 @@ in
       prefix4 = "10.172.224.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
       defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
-      fwmark = 333;
+      fwmark = gravityMark;
       inherit prefixLength;
+      # map PKU v4 to seki
+      extraConfig = concatStringsSep "\n" (map
+        ({prefix, len}: pkgs.genIviMap prefix "2a0c:b641:69c:cc04:0:4" len)
+        [ { prefix = "162.105.0.0"; len = 16; }
+          { prefix = "222.29.0.0"; len = 17; }
+          { prefix = "222.29.128.0"; len = 19; }
+          { prefix = "115.27.0.0"; len = 16; }
+          { prefix = "202.112.7.0"; len = 24; }
+          { prefix = "202.112.8.0"; len = 24; } ]
+      );
     };
 
     squid = {

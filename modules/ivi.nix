@@ -31,6 +31,11 @@ in
       type = types.int;
       description = "IPv6 subnet prefix length";
     };
+    extraConfig = mkOption {
+      type = types.str;
+      description = "extra config to insert";
+      default = "";
+    };
   };
   config = mkIf cfg.enable {
     systemd.services.ivi = {
@@ -40,7 +45,9 @@ in
           ipv4-addr 10.160.0.2
           ipv6-addr ${cfg.prefix6}::2
           map 0.0.0.0/0 ${cfg.defaultMap}
-          map ${cfg.prefix4}/${toString prefix4Length} ${cfg.prefix6}:${cfg.prefix4}/${toString (cfg.prefixLength + 60)}
+          ${pkgs.genIviMap cfg.prefix4 cfg.prefix6 prefix4Length}
+
+          ${cfg.extraConfig}
         ''}";
       };
       after = [ "network.target" ];

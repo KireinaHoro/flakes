@@ -12,6 +12,9 @@ let
   prefixLength = 56;
 
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
+
+  gravityMark = 333;
+  gravityTable = 3500;
 in
 
 {
@@ -90,7 +93,7 @@ in
         };
         # chinaRoute packets lookup main
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = 333; }; }
+          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = gravityMark; }; }
         ];
       };
 
@@ -116,11 +119,11 @@ in
           { routingPolicyRuleConfig = {
             From = "${localPrefix}::/64";
             IncomingInterface = "${ifName}.200";
-            Table = 3500;
+            Table = gravityTable;
             Priority = 100;
           }; }
           { routingPolicyRuleConfig = { To = "${localPrefix}::/64"; Priority = 100; }; }
-        ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = 3500; }; }) publicDNS;
+        ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = gravityTable; }; }) publicDNS;
       };
       remote-access = {
         address = [ "10.172.220.1/24" "${remoteAccessPrefix}::1/64" ];
@@ -128,7 +131,7 @@ in
           { routingPolicyRuleConfig = {
             From = "${remoteAccessPrefix}::/64";
             IncomingInterface = "remote-access";
-            Table = 3500;
+            Table = gravityTable;
             Priority = 100;
           }; }
           { routingPolicyRuleConfig = { To = "${remoteAccessPrefix}::/64"; Priority = 100; }; }
@@ -150,6 +153,7 @@ in
       address = gravityAddr "1";
       subnet = gravityAddr "";
       inherit prefixLength;
+      inherit gravityTable;
     };
 
     divi = {
@@ -172,6 +176,7 @@ in
       enableV6 = true;
       prefix6 = "${localPrefix}::/64";
       whitelistV6 = [ "2001:da8:201::/48" ]; # PKU shall still go to seki via gravity
+      fwmark = gravityMark;
     };
 
     chinaDNS = {
