@@ -2,8 +2,9 @@
 with lib;
 let
   cfg = config.services.chinaDNS;
-  chinaList = pkgs.dnsmasq-china-list.override {
-    server = cfg.chinaServer;
+  chinaList = with cfg; pkgs.dnsmasq-china-list.override {
+    server = chinaServer;
+    inherit accelAppleGoogle;
   };
 in
 {
@@ -20,6 +21,10 @@ in
     chinaServer = mkOption {
       type = types.str;
       default = "114.114.114.114";
+    };
+    accelAppleGoogle = mkOption {
+      type = types.bool;
+      default = true;
     };
   };
   config = mkIf cfg.enable {

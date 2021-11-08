@@ -118,6 +118,7 @@ in
       ifName = "remote-access";
       servers = publicDNS;
       inherit chinaServer;
+      accelAppleGoogle = false;
     };
     localResolver = {
       logQueries = true;

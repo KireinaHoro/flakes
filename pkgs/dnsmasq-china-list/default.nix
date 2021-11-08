@@ -1,4 +1,4 @@
-{ source, pkgs, lib, server ? "114.114.114.114" }:
+{ source, pkgs, lib, server ? "114.114.114.114", accelAppleGoogle ? true }:
 
 pkgs.stdenv.mkDerivation rec {
   inherit (source) pname version src;
@@ -9,7 +9,11 @@ pkgs.stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/dnsmasq
-    mv *.dnsmasq.conf $out/dnsmasq
+    ${if accelAppleGoogle then
+      "mv *.dnsmasq.conf $out/dnsmasq"
+      else
+      "mv accelerated-domains.china.dnsmasq.conf $out/dnsmasq"
+    }
   '';
 
   meta = with lib; {
