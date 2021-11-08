@@ -62,6 +62,7 @@ in
     gravityTable = mkOption {
       type = types.int;
       description = "routing table number for gravity routes in main netns";
+      default = 3500;
     };
   };
   config = mkIf cfg.enable {
