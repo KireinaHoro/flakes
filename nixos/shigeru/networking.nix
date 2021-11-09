@@ -52,7 +52,7 @@ in
           allowedIPs = [ "10.172.224.2/32" "${remoteAccessPrefix}::2/128" ];
         }
         { # thinkpad
-          publicKey = "q4zeQsdAgfMu+z8F0QlmtlcUz75VqSONIq+Mz6Ja40U=";
+          publicKey = "6zsHjlqznwa2BvieBnSEcJv65ouPY7GVaQiX82Ko22M=";
           allowedIPs = [ "10.172.224.3/32" "${remoteAccessPrefix}::3/128" ];
         }
         { # m1 macbook
