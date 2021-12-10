@@ -39,6 +39,18 @@ in
           oifname "${ifName}" masquerade;
         }
       }
+      table inet pku-v6 {
+        set pkuv6 {
+          type ipv6_addr
+          flags constant,interval
+          elements = { 2001:da8:201::/48,
+                       240c:c001::/32 }
+        }
+        chain prerouting {
+          type filter hook prerouting priority 0;
+          ip6 saddr ${remoteAccessPrefix}::/64 ip6 daddr @pkuv6 mark set ${toString gravityMark}
+        }
+      }
     '';
   };
 
@@ -91,7 +103,7 @@ in
           { routingPolicyRuleConfig = {
             From = "${remoteAccessPrefix}::/64";
             IncomingInterface = "remote-access";
-            FirewallMark = gravityMark;  # only redirect China-destined packets
+            FirewallMark = gravityMark;  # PKU IPv6
             Table = gravityTable;
             Priority = 100;
           }; }
