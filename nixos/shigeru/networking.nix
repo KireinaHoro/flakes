@@ -135,6 +135,11 @@ in
     localResolver = {
       logQueries = true;
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
+      # use ETH DNS for internal queries
+      extraConfig = ''
+        server=/ethz.ch/129.132.98.12
+        server=/ethz.ch/129.132.250.2
+      '';
     };
 
     gravity = rec {
