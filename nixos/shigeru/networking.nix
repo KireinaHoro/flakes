@@ -79,6 +79,10 @@ in
           publicKey = "8NvajLFSN+xSP86v67caUusYgAUqB1dbwTlutCpUjBI=";
           allowedIPs = [ "10.172.224.6/32" "${remoteAccessPrefix}::6/128" ];
         }
+        { # iphone 13 mini
+          publicKey = "qATZSr/NXq/yPyFX1I7k7F6wJeTMJv5yhSY4aa05n2w=";
+          allowedIPs = [ "10.172.224.7/32" "${remoteAccessPrefix}::7/128" ];
+        }
       ];
     };
   };
