@@ -40,6 +40,8 @@ in
         '' else ""}
         ${concatStrings (map (c: "conf-dir=${c}\n") cfg.configDirs)}
         ${cfg.extraConfig}
+
+        server=/gravity/2a0c:b641:69c:7864:0:5:0:3
       '';
     };
     systemd.services.dnsmasq = {
