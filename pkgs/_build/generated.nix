@@ -3,53 +3,53 @@
 {
   ariang = {
     pname = "ariang";
-    version = "2c0c503097ad830a3848ed8e988cf767fb7a1c14";
+    version = "0d4eb2d15ea71c76aff07236c2560984fb3ec690";
     src = fetchgit {
       url = "https://github.com/KireinaHoro/AriaNg";
-      rev = "2c0c503097ad830a3848ed8e988cf767fb7a1c14";
+      rev = "0d4eb2d15ea71c76aff07236c2560984fb3ec690";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "18arazj1xv7lmdfib3gv5b6d5d68175livwqhwn0z0h0qrirb79g";
+      sha256 = "17lmw2jj77569qqfiz0d34a8ln2di0i4vqinxswhvnsfcqzc8h3j";
     };
     
   };
   dnsmasq-china-list = {
     pname = "dnsmasq-china-list";
-    version = "8b90486ff4000f333e02b9538c9beae21d8d44be";
+    version = "98314a132c58e17c77d76a992465e55c89f73b0b";
     src = fetchgit {
       url = "https://github.com/felixonmars/dnsmasq-china-list";
-      rev = "8b90486ff4000f333e02b9538c9beae21d8d44be";
+      rev = "98314a132c58e17c77d76a992465e55c89f73b0b";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "0fmldv68g8jnacbayb1067h5q5lhhsqqpvjccs2iswa21z9bdvzf";
+      sha256 = "1g96mgaciyzqjsqzj3hvb2f9ldlargi1jjp5dad7glqay1i553nh";
     };
     
   };
   hosts-blocklists = {
     pname = "hosts-blocklists";
-    version = "b6e7cdf3dbd104a37b3969c31ac7be13b1f4ac43";
+    version = "06b7b6c7f5c9c682511b746df4ca19bb480fa20b";
     src = fetchgit {
       url = "https://github.com/notracking/hosts-blocklists";
-      rev = "b6e7cdf3dbd104a37b3969c31ac7be13b1f4ac43";
+      rev = "06b7b6c7f5c9c682511b746df4ca19bb480fa20b";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "1gh62yvh94jxxf6mwkgyn1109dzbkwlqy2i6wl1fbj5h52d3jfaf";
+      sha256 = "1p5w7101jw4rmk9q517xml4naw23zyggj6zfhifmg79nszpf4bv1";
     };
     
   };
   rait = {
     pname = "rait";
-    version = "19076c4a9e52c75c5b5a259f3b47bc3ef703eeb4";
+    version = "e84e803641ec3a2dce5670275ea8d5497608f483";
     src = fetchgit {
       url = "https://gitlab.com/NickCao/RAIT";
-      rev = "19076c4a9e52c75c5b5a259f3b47bc3ef703eeb4";
+      rev = "e84e803641ec3a2dce5670275ea8d5497608f483";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "020gz8z4sn60kv9jasq682s8abmdlz841fwvf7zc86ksb79z4m99";
+      sha256 = "18fs50kr8nmkhhb58i8wzki5rnx6qny207g07a2836z8gac4z95x";
     };
     
   };
