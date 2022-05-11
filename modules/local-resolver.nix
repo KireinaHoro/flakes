@@ -47,6 +47,9 @@ in
     systemd.services.dnsmasq = {
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
+      serviceConfig = {
+        TimeoutStartSec = "infinity";
+      };
     };
   };
 }
