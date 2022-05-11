@@ -26,7 +26,7 @@ in
     useDHCP = false;
     firewall.enable = false;
     proxy = {
-      default = "http://kage.g.jsteward.moe:3128";
+      default = "http://shigeru.g.jsteward.moe:3128";
       noProxy = "127.0.0.1,localhost,tsinghua.edu.cn";
     };
   };
