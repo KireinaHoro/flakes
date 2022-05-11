@@ -96,6 +96,8 @@ in
       serviceConfig = with pkgs;{
         ExecStartPre = [
           # FIXME move to networkd when netns support lands there
+          "networkctl reload"
+          "${coreutils}/bin/sleep 5"
           "${ip} netns add ${cfg.netns}"
           "${ip} link set host netns ${cfg.netns}"
 
