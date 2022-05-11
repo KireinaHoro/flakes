@@ -29,14 +29,14 @@
   };
   hosts-blocklists = {
     pname = "hosts-blocklists";
-    version = "06b7b6c7f5c9c682511b746df4ca19bb480fa20b";
+    version = "6e098dce9225681827520a0956c707ec59115e75";
     src = fetchgit {
       url = "https://github.com/notracking/hosts-blocklists";
-      rev = "06b7b6c7f5c9c682511b746df4ca19bb480fa20b";
+      rev = "6e098dce9225681827520a0956c707ec59115e75";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "1p5w7101jw4rmk9q517xml4naw23zyggj6zfhifmg79nszpf4bv1";
+      sha256 = "0jv0df9vavjl75yd13rpg16gw9g2zqcvkjwhq5202y7ga4qssglx";
     };
     
   };
