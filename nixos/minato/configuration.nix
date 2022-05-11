@@ -6,6 +6,7 @@
     secrets = {
       rait = {};
       remote-access-priv = {};
+      cf-global-apikey = {};
     };
   };
 

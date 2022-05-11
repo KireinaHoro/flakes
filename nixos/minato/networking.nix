@@ -210,5 +210,17 @@ in
         icp_port 3130
       '';
     };
+
+    ddclient = {
+      enable = true;
+      protocol = "cloudflare";
+      username = "xubin990510@gmail.com";
+      passwordFile = config.sops.secrets.cf-global-apikey.path;
+      zone = "jsteward.moe";
+      server = "api.cloudflare.com/client/v4";
+      domains = [ "minato.jsteward.moe" ];
+      ssl = true;
+      use = "cmd, cmd=\"${pkgs.curl}/bin/curl -s --noproxy '*' -k http://checkip6.spdyn.de\"";
+    };
   };
 }
