@@ -3,9 +3,9 @@
 with pkgs.lib;
 
 let
-  iviDiviPrefix = "2a0c:b641:69c:ce2";
+  iviDiviPrefix = "2a0c:b641:69c:cf1";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
-  # raitSecret = config.sops.secrets.rait.path;
+  raitSecret = config.sops.secrets.rait.path;
   ifName = "enp0s3";
   prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
@@ -41,7 +41,6 @@ in
 
     openssh.passwordAuthentication = false;
 
-    /*
     gravity = rec {
       enable = true;
       config = raitSecret;
@@ -51,6 +50,5 @@ in
       inherit prefixLength;
       inherit gravityTable;
     };
-    */
   };
 }

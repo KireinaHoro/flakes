@@ -4,7 +4,7 @@
   sops = {
     defaultSopsFile = ./secrets.yaml;
     secrets = {
-      # rait = {};
+      rait = {};
     };
   };
 
