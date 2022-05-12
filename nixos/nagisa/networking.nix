@@ -27,7 +27,11 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "yes";
+        DHCP = "ipv4";
+        networkConfig = {
+          LinkLocalAddressing = "ipv4";
+          IPv6AcceptRA = "no";
+        };
       };
     };
   };

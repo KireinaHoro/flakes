@@ -20,7 +20,7 @@
   with nixpkgs.lib;
   let
     this = import ./pkgs { inherit nixpkgs; };
-  in flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-darwin" ] (system: let
+  in flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: let
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
@@ -55,7 +55,8 @@
     deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" ] (n: {
       sshUser = "root";
       hostname = "${n}.jsteward.moe";
-      profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.${n};
+      profiles.system.path =
+        inputs.deploy-rs.lib.${self.nixosConfigurations.${n}.pkgs.system}.activate.nixos self.nixosConfigurations.${n};
     });
   };
 }
