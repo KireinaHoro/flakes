@@ -54,7 +54,7 @@ in
 
   security.acme = {
     acceptTerms = true;
-    email = "i+acme@jsteward.moe";
+    defaults.email = "i+acme@jsteward.moe";
   };
 
   services = {
