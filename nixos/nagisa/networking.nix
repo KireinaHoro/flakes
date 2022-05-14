@@ -47,6 +47,7 @@ in
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";
+      # defaultRoute = true;
       inherit prefixLength;
       inherit gravityTable;
     };
