@@ -92,6 +92,7 @@ in
             # Type="blackhole" is in systemd 248 https://github.com/systemd/systemd/commit/d7d1d18fd25e3d6c7f3d1841e0502fadb8cecbf9
             # { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.fwmark; Type = "blackhole"; Priority = 51; }; }
             { routingPolicyRuleConfig = { To = cfg.route; Table = cfg.gravityTable; Priority = 200; }; }
+            { routingPolicyRuleConfig = { From = cfg.route; Table = cfg.gravityTable; Priority = 200; }; }
           ] ++ (if cfg.defaultRoute then [
             { routingPolicyRuleConfig = { To = "::/0"; Table = cfg.gravityTable; Priority = 300; }; }
           ] else []);
