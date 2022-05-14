@@ -56,7 +56,7 @@ in
       enable = true;
       environmentFile = config.sops.secrets.webdav-env.path;
       settings = {
-        address = "[${gravityAddrSingle "1"}]"; # only listen in gravity
+        address = "localhost";
         port = 8080;
         scope = "/srv/shared";
         modify = false;
@@ -71,6 +71,34 @@ in
             ];
           }
         ];
+      };
+    };
+
+    nginx = {
+      enable = true;
+      virtualHosts = {
+        "nagisa.jsteward.moe" = {
+          forceSSL = true;
+          enableACME = true;
+          serverAliases = [ "nagisa.g.jsteward.moe" ];
+        };
+        "nagisa.g.jsteward.moe" = {
+          listen = [ { addr = "nagisa.g.jsteward.moe"; port = 8080; ssl = true; } ]; # only listen in gravity
+          forceSSL = true;
+          useACMEHost = "nagisa.jsteward.moe";
+          locations = {
+            "/" = {
+              proxyPass = "http://localhost:8080";
+              extraConfig = ''
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header REMOTE-HOST $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header Host $host;
+                proxy_redirect off;
+              '';
+            };
+          };
+        };
       };
     };
   };

@@ -52,11 +52,6 @@ in
     };
   };
 
-  security.acme = {
-    acceptTerms = true;
-    defaults.email = "i+acme@jsteward.moe";
-  };
-
   services = {
     vnstat = { enable = true; };
 
