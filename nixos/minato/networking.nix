@@ -105,7 +105,8 @@ in
           IPv6SendRA = true;
         };
         dhcpServerConfig = {
-          DNS = [ "10.172.222.254" ];
+          # DNS = [ "10.172.222.254" ];
+          DNS = [ "8.8.8.8" "8.8.4.4" ];
           PoolOffset = 1; # excludes IVI address
         };
         ipv6SendRAConfig = {
