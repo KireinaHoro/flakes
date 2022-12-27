@@ -3,14 +3,14 @@
 {
   ariang = {
     pname = "ariang";
-    version = "7e230113ca2b39a44aa26fedccf25bba00257333";
+    version = "4ed53e27f5df3b6971c70075bc2f9c7492249b1e";
     src = fetchgit {
       url = "https://github.com/KireinaHoro/AriaNg";
-      rev = "7e230113ca2b39a44aa26fedccf25bba00257333";
+      rev = "4ed53e27f5df3b6971c70075bc2f9c7492249b1e";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-E4yyjCH/S8s+ZlVPifpb6Xv5EratAZXVySUyM861hbs=";
+      sha256 = "sha256-0IAe4/zmL9z/6Fm5Fw183RFVknHUnzz0i9w0uQ1sh0k=";
     };
   };
   dnsmasq-china-list = {
