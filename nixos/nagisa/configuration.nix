@@ -5,6 +5,7 @@
     defaultSopsFile = ./secrets.yaml;
     secrets = {
       rait = {};
+      webdav-env = {};
     };
   };
 

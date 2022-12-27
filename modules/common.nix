@@ -41,5 +41,10 @@ self: { config, pkgs, lib, ... }:
 
   systemd.network.enable = true;
 
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "i+acme@jsteward.moe";
+  };
+
   programs.mosh.enable = true;
 }
