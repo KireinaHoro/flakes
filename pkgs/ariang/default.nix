@@ -1,5 +1,5 @@
 { source, pkgs, lib }: let
-  nodeDependencies = (pkgs.callPackage source.src {}).shell.nodeDependencies;
+  nodeDependencies = (pkgs.callPackage source.src { nodejs = pkgs."nodejs-14_x"; }).shell.nodeDependencies;
 in
 
 pkgs.stdenv.mkDerivation rec {
