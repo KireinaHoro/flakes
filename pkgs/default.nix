@@ -5,7 +5,7 @@ with nixpkgs.lib;
 
 let
   mapPackages = f: mapAttrs (name: _: f name)
-    (filterAttrs (k: v: v == "directory" && k != "_source") (readDir ./.));
+    (filterAttrs (k: v: v == "directory" && k != "_sources") (readDir ./.));
   getDebianPatches = p: map (x: p + "/patches/${x}")
     (filter (x: x != "") (splitString "\n" (readFile (p + "/patches/series"))));
 in {
