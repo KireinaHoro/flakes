@@ -234,10 +234,12 @@ in
         acl Suki_ports port 39992
         acl Suki_ports port 39901
 
-        http_access allow CONNECT Suki_ports
+        http_access allow CONNECT
+
+        # http_access allow CONNECT Suki_ports
 
         # Deny CONNECT to other than secure SSL ports
-        http_access deny CONNECT !SSL_ports
+        # http_access deny CONNECT !SSL_ports
 
         # Only allow cachemgr access from localhost
         http_access allow localhost manager
