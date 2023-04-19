@@ -6,9 +6,13 @@ inputs:
   privkey:
     description: 'Private key for deploying'
     required: true
+  host:
+    description: 'Host to deploy'
+    required: true
 runs:
   using: 'docker'
   image: 'docker://kireinahoro/flakes-ci:v1'
   args:
     - ${{ inputs.flake }}
     - ${{ inputs.privkey }}
+    - ${{ inputs.host }}

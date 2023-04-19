@@ -13,6 +13,17 @@ $ nix flake update
 $ cd pkgs && nvfetcher build
 ```
 
+The docker images for deploying over CI has the `kage` configuration built-in.  If too much stuff had changed, rebuild docker images:
+
+```shell
+$ cd ci-images
+$ podman pull nixos/nix
+$ podman build -t docker.io/kireinahoro/flakes-base:v1 . -f flake-lock --network=host
+$ podman push kireinahoro/flakes-base:v1
+$ podman build -t docker.io/kireinahoro/flakes-ci:v1 . -f deploy --network=host
+$ podman push kireinahoro/flakes-base:v1
+```
+
 ## Caveats
 
 ### Squid

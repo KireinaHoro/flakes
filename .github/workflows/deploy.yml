@@ -12,8 +12,9 @@ jobs:
     steps:
       - name: checkout local action
         uses: actions/checkout@v2
-      - name: deploy flake
+      - name: deploy flake on kage
         uses: ./actions/deploy
         with:
           flake: 'github:KireinaHoro/flakes'
           privkey: ${{ secrets.ACTIONS_PRIVKEY }}
+          host: kage
