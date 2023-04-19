@@ -9,7 +9,7 @@ nixpkgs.lib.nixosSystem {
     ./networking.nix
 
     gravity divi ivi
-    { nixpkgs.overlays = [ self.overlay inputs.blog.overlay ]; }
+    { nixpkgs.overlays = [ self.overlays.default inputs.blog.overlay ]; }
     inputs.sops-nix.nixosModules.sops
   ];
 }

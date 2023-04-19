@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
-    flake-utils = { url = "github:numtide/flake-utils"; inputs.nixpkgs.follows = "nixpkgs"; };
+    flake-utils.url = "github:numtide/flake-utils";
     blog = {
       url = "github:KireinaHoro/jsteward.moe";
       inputs = {
@@ -26,9 +26,9 @@
       config.allowUnfree = true;
       overlays = [
         inputs.deploy-rs.overlay
-        inputs.sops-nix.overlay
+        inputs.sops-nix.overlays.default
         inputs.blog.overlay
-        self.overlay
+        self.overlays.default
       ];
     };
   in rec {
@@ -49,7 +49,7 @@
     };
   }) // {
     nixosModules = import ./modules self;
-    overlay = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
+    overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
     deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" ] (n: {

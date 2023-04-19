@@ -3,7 +3,7 @@
 buildGoModule rec {
   inherit (source) pname version src;
 
-  vendorSha256 = "sha256-T/ufC4mEXRBKgsmIk8jSCQva5Td0rnFHx3UIVV+t08k=";
+  vendorSha256 = "sha256-EHkwSSuKrtS0px/a1TUBt13gBNGY8tlpm4sbsoZ1UsY=";
 
   subPackages = [ "cmd/rait" ];
 
