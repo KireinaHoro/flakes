@@ -105,7 +105,6 @@ in
         ExecStartPre = [
           # FIXME move to networkd when netns support lands there
           "networkctl reload"
-          "${coreutils}/bin/sleep 5"
           "${ip} netns add ${cfg.netns}"
           "${ip} link set host netns ${cfg.netns}"
 
@@ -129,7 +128,11 @@ in
           "${rait}/bin/rait up -c ${cfg.config}"
         ] ++ cfg.postStart;
         ExecReload = "${rait}/bin/rait sync -c ${cfg.config}";
-        ExecStopPost = [ "${ip} netns del ${cfg.netns}" ];
+        ExecStopPost = [
+          # restore host back to default namespace, or it will be deleted along with the netns
+          "${ip} -n ${cfg.netns} link set host netns 1"
+          "${ip} netns del ${cfg.netns}"
+        ];
         Restart = "always";
         RestartSec = 5;
       };
