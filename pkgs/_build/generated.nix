@@ -42,14 +42,14 @@
   };
   rait = {
     pname = "rait";
-    version = "3191186a959888d4ab34e6440367b9c60508341b";
+    version = "278188c8bae13165aa70b6a2fbbb99101fd6f4cd";
     src = fetchgit {
       url = "https://gitlab.com/NickCao/RAIT";
-      rev = "3191186a959888d4ab34e6440367b9c60508341b";
+      rev = "278188c8bae13165aa70b6a2fbbb99101fd6f4cd";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "069a3bxg9a03mqripkv94xd4j53mm0lv0n26pv7yv9skks8fq11j";
+      sha256 = "1l62269ldvia9lvp737z0v84q7cc32f5f9m40gcnm6fly7kjr3g9";
     };
     
   };
