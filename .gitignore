@@ -3,3 +3,4 @@ result*
 .tmp
 *.swp
 *.orig
+.DS_Store
