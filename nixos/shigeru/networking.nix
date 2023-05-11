@@ -83,6 +83,10 @@ in
           publicKey = "qATZSr/NXq/yPyFX1I7k7F6wJeTMJv5yhSY4aa05n2w=";
           allowedIPs = [ "10.172.224.7/32" "${remoteAccessPrefix}::7/128" ];
         }
+        { # desktop
+          publicKey = "YdM51psPpxUH7oV5mHmH6POa0h59xwW2cMuAE09deDw=";
+          allowedIPs = [ "10.172.224.8/32" "${remoteAccessPrefix}::8/128" ];
+        }
       ];
     };
   };
