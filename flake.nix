@@ -34,7 +34,7 @@
         inputs.deploy-rs.overlay
         inputs.sops-nix.overlays.default
         inputs.blog.overlay
-	inputs.rock5b-nixos.overlays.default
+        inputs.rock5b-nixos.overlays.default
         self.overlays.default
       ];
     };
@@ -59,7 +59,7 @@
     overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
-    deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" ] (n: {
+    deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" "iori" ] (n: {
       sshUser = "root";
       hostname = "${n}.jsteward.moe";
       profiles.system.path =
