@@ -6,7 +6,7 @@ let
   iviDiviPrefix = "2a0c:b641:69c:cf1";
   gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
   gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
-  wifiIfName = "wlP2p33s0";
+  ifName = "enP4p65s0";
   prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   chinaServer = "114.114.114.114";
@@ -20,18 +20,13 @@ in
 
   networking = {
     hostName = "iori";
-    # useDHCP = false;
-    wireless = {
-      enable = true;
-      networks."iPhone von Pengcheng".psk = "kejwy0-rokzyk-kYxcem";
-    };
+    useDHCP = false;
     firewall.enable = false;
   };
 
-/*
   systemd.network = {
     networks = pkgs.injectNetworkNames {
-      ${wifiIfName} = {
+      ${ifName} = {
         DHCP = "yes";
         networkConfig = {
           LinkLocalAddressing = "ipv4";
@@ -39,7 +34,7 @@ in
         };
       };
     };
-  }; */
+  };
 
   services = {
     # vnstat = { enable = true; };
