@@ -1,6 +1,11 @@
 {
   description = "KireinaHoro's Nix universe";
 
+  nixConfig = {
+    extra-substituters = ["https://rock5b-nixos.cachix.org"];
+    extra-trusted-public-keys = ["rock5b-nixos.cachix.org-1:bXHDewFS0d8pT90A+/YZan/3SjcyuPZ/QRgRSuhSPnA="];
+  };
+
   inputs = rec {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
@@ -13,6 +18,7 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    rock5b-nixos = { url = "github:aciceri/rock5b-nixos"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
@@ -28,6 +34,7 @@
         inputs.deploy-rs.overlay
         inputs.sops-nix.overlays.default
         inputs.blog.overlay
+        inputs.rock5b-nixos.overlays.default
         self.overlays.default
       ];
     };
@@ -52,7 +59,7 @@
     overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
     nixosConfigurations =
       mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
-    deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" ] (n: {
+    deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" "iori" ] (n: {
       sshUser = "root";
       hostname = "${n}.jsteward.moe";
       profiles.system.path =
