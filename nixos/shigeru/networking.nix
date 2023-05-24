@@ -147,7 +147,8 @@ in
       extraConfig = ''
         server=/ethz.ch/129.132.98.12
         server=/ethz.ch/129.132.250.2
-        server=/youtube.com/
+        server=/gravity/sin0.nichi.link
+        server=/gravity/sea0.nichi.link
       '';
     };
 
