@@ -38,10 +38,8 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        address = [ "192.168.0.2/24" ];
-        gateway = [ "192.168.0.1" ];
-        domains = [ "ethz.ch" ];
-        dns = [ "8.8.8.8" "8.8.4.4" ];
+        DHCP = "yes";
+        domains = [ "g.jsteward.moe" ];
       };
     };
   };
