@@ -7,7 +7,7 @@
 
     kernelPackages = with pkgs; lib.mkForce (linuxPackagesFor (
       linux-rock5b.override { argsOverride = old: {
-        structuredExtraConfig = with lib.kernel; {
+        structuredExtraConfig = with lib.kernel; old.structuredExtraConfig // {
           XHCI_HCD = module;
           XHCI_HCD_PLATFORM = module;
           OHCI_HCD = module;
@@ -31,7 +31,7 @@
           ROCKCHIP_MPP_AV1DEC = no;
           NTFS_FS = module;
           GPIO_ROCKCHIP = module;
-        } ++ old.structuredExtraConfig;
+        };
         kernelPatches = builtins.map (patch: { inherit patch; }) [
           ./patches/0000-Disable-CLOCK_ALLOW_WRITE_DEBUGFS.patch
           ./patches/0001-fix-rockchip-iomux-init-include.patch
