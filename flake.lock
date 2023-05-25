@@ -226,15 +226,15 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1679242046,
-        "narHash": "sha256-CeGpTKnPQ++m11CV7Iisppwx+8fNwJSW8Q1ML6NxSJY=",
-        "owner": "aciceri",
+        "lastModified": 1685046153,
+        "narHash": "sha256-kYxTWAzgKN1EU/F1ViojKwj+3QTjyAUC1cPlmolsasI=",
+        "owner": "KireinaHoro",
         "repo": "rock5b-nixos",
-        "rev": "e1099dd4a6be8018a5cc489fb2ee1d50e4e285a0",
+        "rev": "641906c7420ee26db5410104870a37ffc513526a",
         "type": "github"
       },
       "original": {
-        "owner": "aciceri",
+        "owner": "KireinaHoro",
         "repo": "rock5b-nixos",
         "type": "github"
       }
