@@ -15,6 +15,7 @@
           EHCI_HCD = module;
           EHCI_HCD_PLATFORM = module;
           DRM_ROCKCHIP = no;
+          ROCKCHIP_RKNPU = no;
           ROCKCHIP_VOP = no;
           ROCKCHIP_VOP2 = no;
           ROCKCHIP_MPP_RKVDEC = no;
@@ -30,7 +31,11 @@
           ROCKCHIP_MPP_AV1DEC = no;
           NTFS_FS = module;
           GPIO_ROCKCHIP = module;
-        }; }; }));
+        };
+        kernelPatches = builtins.map (patch: { inherit patch; }) [
+          ./patches/0000-Disable-CLOCK_ALLOW_WRITE_DEBUGFS.patch
+        ];
+      }; }));
     kernelModules = [];
     kernelParams = lib.mkAfter [
       "console=ttyFIQ0,115200n8"
