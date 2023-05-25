@@ -78,6 +78,9 @@ in
         ];
       };
     };
+    netdevs = pkgs.injectNetdevNames {
+      "${ifName}.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
+    };
   };
 
   services = {
