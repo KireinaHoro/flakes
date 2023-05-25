@@ -1,13 +1,49 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  boot.loader.grub.enable = false;
-  boot.loader.generic-extlinux-compatible.enable = true;
+  boot = {
+    loader.grub.enable = false;
+    loader.generic-extlinux-compatible.enable = true;
 
-  boot.initrd.availableKernelModules = lib.mkForce [ "usbhid" "md_mod" "raid0" "raid1" "raid10" "raid456" "ext2" "ext4" "sd_mod" "sr_mod" "mmc_block" "uhci_hcd" "ehci_hcd" "ehci_pci" "ohci_hcd" "ohci_pci" "xhci_hcd" "xhci_pci" "usbhid" "hid_generic" "hid_lenovo" "hid_apple" "hid_roccat" "hid_logitech_hidpp" "hid_logitech_dj" "hid_microsoft" "hid_cherry" ];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = [];
-  boot.extraModulePackages = [];
+    kernelPackages = with pkgs; lib.mkForce (linuxPackagesFor (
+      linux-rock5b.override { argsOverride = {
+        structuredExtraConfig = with lib.kernel; {
+          XHCI_HCD = module;
+          XHCI_HCD_PLATFORM = module;
+          OHCI_HCD = module;
+          OHCI_HCD_PLATFORM = module;
+          EHCI_HCD = module;
+          EHCI_HCD_PLATFORM = module;
+          DRM_ROCKCHIP = no;
+          ROCKCHIP_VOP = no;
+          ROCKCHIP_VOP2 = no;
+          ROCKCHIP_MPP_RKVDEC = no;
+          ROCKCHIP_MPP_RKVDEC2 = no;
+          ROCKCHIP_MPP_RKVENC = no;
+          ROCKCHIP_MPP_RKVENC2 = no;
+          ROCKCHIP_MPP_VDPU1 = no;
+          ROCKCHIP_MPP_VEPU1 = no;
+          ROCKCHIP_MPP_VDPU2 = no;
+          ROCKCHIP_MPP_VEPU2 = no;
+          ROCKCHIP_MPP_IEP2 = no;
+          ROCKCHIP_MPP_JPGDEC = no;
+          ROCKCHIP_MPP_AV1DEC = no;
+          NTFS_FS = module;
+          GPIO_ROCKCHIP = module;
+        }; }; }));
+    kernelModules = [];
+    kernelParams = lib.mkAfter [
+      "console=ttyFIQ0,115200n8"
+      "console=ttyS2,115200n8"
+      "earlycon=uart8250,mmio32,0xfeb50000"
+      "earlyprintk"
+    ];
+
+    initrd.availableKernelModules = lib.mkForce [ "ext4" "mmc_block" ];
+    initrd.kernelModules = [];
+
+    extraModulePackages = [];
+  };
 
   system.stateVersion = lib.traceSeq config.boot.initrd.availableKernelModules "23.05";
 

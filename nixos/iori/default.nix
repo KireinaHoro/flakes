@@ -13,6 +13,5 @@ nixpkgs.lib.nixosSystem {
     inputs.sops-nix.nixosModules.sops
 
     inputs.rock5b-nixos.nixosModules.apply-overlay
-    inputs.rock5b-nixos.nixosModules.kernel
   ];
 }
