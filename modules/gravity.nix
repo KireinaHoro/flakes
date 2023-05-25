@@ -100,8 +100,24 @@ in
       };
     };
 
+    systemd.timers."gravity-sync" = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = "15m";
+        OnUnitActiveSec = "15m";
+        Unit = "gravity-sync.service";
+      };
+    };
+    systemd.services."gravity-sync" = {
+      serviceConfig = with pkgs; {
+        Type = "oneshot";
+        User = "root";
+        ExecStart = "${rait}/bin/rait sync -c ${cfg.config}";
+      };
+    };
+
     systemd.services.gravity = {
-      serviceConfig = with pkgs;{
+      serviceConfig = with pkgs; {
         ExecStartPre = [
           # FIXME move to networkd when netns support lands there
           "networkctl reload"
