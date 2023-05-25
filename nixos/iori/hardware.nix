@@ -61,6 +61,10 @@
       device = "/dev/disk/by-label/iori-data";
       fsType = "xfs";
     };
+    "/tmp" = {
+      device = "/data/tmp";
+      options = [ "bind" ];
+    };
   };
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
