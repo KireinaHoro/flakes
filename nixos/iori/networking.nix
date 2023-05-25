@@ -58,7 +58,9 @@ in
         dhcpServerConfig = {
           # FIXME: run dnsmasq locally so we are standalone
           DNS = [ "10.172.224.1" ]; # shigeru
-          PoolOffset = 1; # excludes IVI address
+          # excludes IVI address (.1), ER-X (.253), Gateway (.254), Broadcast (.255)
+          PoolOffset = 1;
+          PoolSize = 252;
         };
         ipv6SendRAConfig = {
           OtherInformation = true;
