@@ -1,14 +1,12 @@
 { config, pkgs, ... }:
 
 {
-/*
   sops = {
     defaultSopsFile = ./secrets.yaml;
     secrets = {
       rait = {};
-      webdav-env = {};
     };
-  }; */
+  };
 
   time.timeZone = "Europe/Zurich";
 
