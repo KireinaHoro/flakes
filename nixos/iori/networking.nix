@@ -4,7 +4,11 @@ with pkgs.lib;
 
 let
   iviDiviPrefix = "2a0c:b641:69c:cb0";
+  iviPrefixV4 = "10.172.176"; # 0xcb0
+  # using 0xe for ER-X LAN
+  localPrefixV4 = "10.172.190"; # 0xcbe
   localPrefix = "2a0c:b641:69c:cbe";
+  # could then use e.g. 0xc for remote access
   gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
   gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
   ifName = "enP4p65s0";
@@ -49,7 +53,7 @@ in
         };
       };
       "${ifName}.200" = {
-        address = [ "10.172.190.254/24" "${localPrefix}::1/64" ];
+        address = [ "${localPrefixV4}.254/24" "${localPrefix}::1/64" ];
         networkConfig = {
           DHCPServer = true;
           IPForward = true;
@@ -70,12 +74,6 @@ in
         };
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = {
-            From = "${localPrefix}::/64";
-            IncomingInterface = "${ifName}.200";
-            Table = gravityTable;
-            Priority = 100;
-          }; }
           { routingPolicyRuleConfig = { To = "${localPrefix}::/64"; Priority = 100; }; }
         ];
       };
@@ -98,6 +96,29 @@ in
       defaultRoute = true; # we do not have IPv6
       inherit prefixLength;
       inherit gravityTable;
+    };
+
+    divi = {
+      enable = true;
+      prefix = "${iviDiviPrefix}4:0:4::/96";
+      address = "${iviDiviPrefix}4:0:5:0:3/128";
+      inherit ifName;
+    };
+
+    # mark dest China packets with gravityMark
+    chinaRoute = {
+      fwmark = gravityMark;
+      enableV4 = true;
+    };
+
+    # packets with gravityMark to minato - back to China
+    ivi = {
+      enable = true;
+      prefix4 = "${iviPrefixV4}.0";
+      prefix6 = "${iviDiviPrefix}5:0:5";
+      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
+      fwmark = gravityMark;
+      inherit prefixLength;
     };
 
     /* TODO: galleryd
