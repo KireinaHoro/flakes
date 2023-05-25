@@ -16,6 +16,10 @@
       device = "/dev/disk/by-label/NIXOS_ROOTFS";
       fsType = "ext4";
     };
+    "/data" = {
+      device = "/dev/disk/by-label/iori-data";
+      fsType = "xfs";
+    };
   };
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
