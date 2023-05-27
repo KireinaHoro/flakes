@@ -14,7 +14,9 @@
           OHCI_HCD_PLATFORM = module;
           EHCI_HCD = module;
           EHCI_HCD_PLATFORM = module;
-          DRM_ROCKCHIP = no;
+          DRM_ROCKCHIP = module;
+          # broken dependency tracking in rockchip kernel
+          TYPEC_DP_ALTMODE = module;
           ROCKCHIP_RKNPU = no;
           ROCKCHIP_VOP = no;
           ROCKCHIP_VOP2 = no;
@@ -31,11 +33,12 @@
           ROCKCHIP_MPP_AV1DEC = no;
           NTFS_FS = module;
           GPIO_ROCKCHIP = module;
+          VIDEO_ROCKCHIP_HDMIRX = no;
         };
-        kernelPatches = builtins.map (patch: { inherit patch; }) [
+        kernelPatches = (builtins.map (patch: { inherit patch; }) [
           ./patches/0000-Disable-CLOCK_ALLOW_WRITE_DEBUGFS.patch
           ./patches/0001-fix-rockchip-iomux-init-include.patch
-        ] ++ old.kernelPatches;
+        ]) ++ old.kernelPatches;
       }; }));
     kernelModules = [];
     kernelParams = lib.mkAfter [
