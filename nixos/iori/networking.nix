@@ -7,7 +7,7 @@ let
   iviPrefixV4 = "10.172.176"; # 0xcb0
   # using 0xe for ER-X LAN
   localPrefixV4 = "10.172.190"; # 0xcbe
-  localPrefix = "2a0c:b641:69c:cbe";
+  localPrefix = "2a0c:b641:69c:cbe0";
   # could then use e.g. 0xc for remote access
   gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
   gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
@@ -15,6 +15,19 @@ let
   prefixLength = 56;
   gravityTable = 3500;
   gravityMark = 333;
+  ethzV4Addrs = [
+    { prefix = "82.130.64.0"; len = 18; }
+    { prefix = "192.33.96.0"; len = 21; }
+    { prefix = "192.33.92.0"; len = 22; }
+    { prefix = "192.33.91.0"; len = 24; }
+    { prefix = "192.33.90.0"; len = 24; }
+    { prefix = "192.33.87.0"; len = 24; }
+    { prefix = "192.33.110.0"; len = 24; }
+    { prefix = "192.33.108.0"; len = 23; }
+    { prefix = "192.33.104.0"; len = 22; }
+    { prefix = "148.187.192.0"; len = 19; }
+    { prefix = "129.132.0.0"; len = 16; }
+  ];
 in
 
 {
@@ -61,6 +74,7 @@ in
         };
         dhcpServerConfig = {
           # FIXME: run dnsmasq locally so we are standalone
+          # XXX: using shigeru for ETHZ domains
           DNS = [ "10.172.224.1" ]; # shigeru
           # excludes IVI address (.1), ER-X (.253), Gateway (.254), Broadcast (.255)
           PoolOffset = 1;
@@ -68,8 +82,8 @@ in
         };
         ipv6SendRAConfig = {
           OtherInformation = true;
-          EmitDNS = true;
-          DNS = [ "2a0c:b641:69c:ce10::1" ]; # shigeru
+          EmitDNS = false;
+          # DNS = [ "2a0c:b641:69c:ce10::1" ];
           EmitDomains = false;
         };
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
@@ -105,10 +119,11 @@ in
       inherit ifName;
     };
 
-    # mark dest China packets with gravityMark
+    # mark dest China and ETH packets with gravityMark
     chinaRoute = {
       fwmark = gravityMark;
       enableV4 = true;
+      extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") ethzV4Addrs;
     };
 
     # packets with gravityMark to minato - back to China
@@ -119,6 +134,14 @@ in
       defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       fwmark = gravityMark;
       inherit prefixLength;
+      # map ETH
+      extraConfig = concatStringsSep "\n" (map
+        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
+          # ETHZ
+          (ethzV4Addrs ++
+          # shigeru's own IVI address
+          [ { prefix = "10.172.224.0"; len = 24; } ])
+        );
     };
 
     /* TODO: galleryd
