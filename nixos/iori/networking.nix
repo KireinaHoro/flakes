@@ -97,6 +97,25 @@ in
     };
   };
 
+  # automatic login to Monzoon Networks
+  systemd.timers."monzoon-login" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "5m";
+      OnUnitActiveSec = "5m";
+      Unit = "monzoon-login.service";
+    };
+  };
+  systemd.services."monzoon-login" = {
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${pkgs.bash}/bin/bash ${./monzoon-login.sh}";
+      Environment = "CURL=${pkgs.curl}/bin/curl";
+      EnvironmentFile = config.sops.secrets.monzoon_env.path;
+    };
+  };
+
   services = {
     vnstat = { enable = true; };
     openssh.settings.PasswordAuthentication = false;
