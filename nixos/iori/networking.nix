@@ -107,11 +107,11 @@ in
     };
   };
   systemd.services."monzoon-login" = {
+    path = with pkgs; [ curl bash ];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
-      ExecStart = "${pkgs.bash}/bin/bash ${./monzoon-login.sh}";
-      Environment = "CURL=${pkgs.curl}/bin/curl";
+      ExecStart = "${./monzoon-login.sh}";
       EnvironmentFile = config.sops.secrets.monzoon_env.path;
     };
   };

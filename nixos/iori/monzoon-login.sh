@@ -8,8 +8,8 @@ MONZOON_URL='https://zrh1-as25.monzoon.net/login'
 # FIXME: do we need this cookie?
 # -H "Cookie: lang=de; airportloginmulti=vouchercode=%7Cmobileno=%7Cmobilepassword=%7Cvoucherusername=${MONZOON_USER}%7Cvoucherpassword=${MONZOON_PASS}" \
 
-if [[ "$($CURL -s "${CHECK_204_URL}" -w "%{http_code}")" != "204" ]]; then
-    $CURL "$MONZOON_URL" \
+if [[ "$(curl -s "${CHECK_204_URL}" -w "%{http_code}")" != "204" ]]; then
+    curl "$MONZOON_URL" \
         -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
         -H 'Accept-Language: de,de-DE;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6,ja;q=0.5' \
         -H 'Cache-Control: max-age=0' \
