@@ -65,6 +65,7 @@
     "/data" = {
       device = "/dev/disk/by-label/iori-data";
       fsType = "xfs";
+      options = [ "nofail" "x-systemd.device-timeout=5s" ];
     };
     "/tmp" = {
       device = "/data/tmp";
