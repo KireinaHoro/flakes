@@ -36,8 +36,6 @@
           VIDEO_ROCKCHIP_HDMIRX = no;
         };
         kernelPatches = (builtins.map (patch: { inherit patch; }) [
-          ./patches/0000-Disable-CLOCK_ALLOW_WRITE_DEBUGFS.patch
-          ./patches/0001-fix-rockchip-iomux-init-include.patch
           ./patches/0002-disable-dp0.patch
         ]) ++ old.kernelPatches;
       }; }));
