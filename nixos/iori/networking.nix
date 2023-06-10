@@ -157,10 +157,12 @@ in
       extraConfig = concatStringsSep "\n" (map
         ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
           # ETHZ
-          (ethzV4Addrs ++
-          # shigeru's own IVI address
-          [ { prefix = "10.172.224.0"; len = 24; } ])
+          ethzV4Addrs
         );
+      # FIXME: use centralised approach
+      gravityHosts = [
+        { v4 = "10.172.224.0"; v6 = "2a0c:b641:69c:ce15:0:5"; v6Len = 60; }
+      ];
     };
 
     /* TODO: galleryd

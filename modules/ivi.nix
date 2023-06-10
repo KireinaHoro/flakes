@@ -31,6 +31,10 @@ in
       type = types.int;
       description = "IPv6 subnet prefix length";
     };
+    gravityHosts = mkOption {
+      type = with types; attrsOf inferred;
+      description = "other hosts in gravity to map";
+    };
     extraConfig = mkOption {
       type = types.str;
       description = "extra config to insert";
@@ -46,6 +50,9 @@ in
           ipv6-addr ${cfg.prefix6}::2
           map 0.0.0.0/0 ${cfg.defaultMap}
           ${pkgs.genIviMap cfg.prefix4 cfg.prefix6 prefix4Length}
+          ${concatStringsSep "\n"
+            (map ({v4, v6, v6Len}: pkgs.genIviMap v4 v6 (v6Len - 36))
+              cfg.gravityHosts)}
 
           ${cfg.extraConfig}
         ''}";
