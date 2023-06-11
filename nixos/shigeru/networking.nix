@@ -187,10 +187,6 @@ in
           { prefix = "202.112.7.0"; len = 24; }
           { prefix = "202.112.8.0"; len = 24; } ]
       );
-      # FIXME: use centralised approach
-      gravityHosts = [
-        { v4 = "10.172.176.0"; v6 = "2a0c:b641:69c:cb05:0:5"; v6Len = 56; }
-      ];
     };
 
     squid = {

@@ -159,10 +159,6 @@ in
           # ETHZ
           ethzV4Addrs
         );
-      # FIXME: use centralised approach
-      gravityHosts = [
-        { v4 = "10.172.224.0"; v6 = "2a0c:b641:69c:ce15:0:5"; v6Len = 60; }
-      ];
     };
 
     /* TODO: galleryd
