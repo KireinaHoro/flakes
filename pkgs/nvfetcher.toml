@@ -6,10 +6,6 @@ fetch.git = "https://gitlab.com/NickCao/RAIT"
 src.git = "https://github.com/felixonmars/dnsmasq-china-list"
 fetch.git = "https://github.com/felixonmars/dnsmasq-china-list"
 
-[ariang]
-src.git = "https://github.com/KireinaHoro/AriaNg"
-fetch.git = "https://github.com/KireinaHoro/AriaNg"
-
 [hosts-blocklists]
 src.git = "https://github.com/notracking/hosts-blocklists"
 fetch.git = "https://github.com/notracking/hosts-blocklists"

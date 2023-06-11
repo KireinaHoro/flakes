@@ -34,7 +34,6 @@
         inputs.deploy-rs.overlay
         inputs.sops-nix.overlays.default
         inputs.blog.overlay
-        inputs.rock5b-nixos.overlays.default
         self.overlays.default
       ];
     };
@@ -52,6 +51,7 @@
       nativeBuildInputs = [
         deploy-rs.deploy-rs
         sops-import-keys-hook
+        nvfetcher
       ];
     };
   }) // {
