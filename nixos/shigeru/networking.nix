@@ -144,11 +144,14 @@ in
       logQueries = true;
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       # use ETH DNS for internal queries
+      # FIXME: hack for NetEase IPv6
       extraConfig = ''
         server=/ethz.ch/129.132.98.12
         server=/ethz.ch/129.132.250.2
         server=/gravity/sin0.nichi.link
         server=/gravity/sea0.nichi.link
+        address=/163.com/::
+        address=/netease.com/::
       '';
     };
 
