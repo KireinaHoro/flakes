@@ -12,6 +12,7 @@ let
   gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
   gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
   ifName = "enP4p65s0";
+  wifiIfName = "wlP2p33s0";
   prefixLength = 56;
   gravityTable = 3500;
   gravityMark = 333;
@@ -160,6 +161,26 @@ in
           ethzV4Addrs
         );
     };
+
+    /* WIP -- Microcode update? */
+    /*
+    hostapd = {
+      enable = false;
+      radios = {
+        ${wifiIfName} = {
+          countryCode = "CH";
+          band = "5g";
+          channel = 0;
+          wifi6.enable = true;
+          wifi4.enable = false;
+          networks.${wifiIfName} = {
+            ssid = "JSteward Tech";
+            authentication.saePasswords = [{ password = "8819fe8d-90fa-4137-8467-985238720d97"; }]; # we don't bother with sops for the wifi password
+          };
+        };
+      };
+    };
+    */
 
     /* TODO: galleryd
     nginx = {

@@ -53,7 +53,7 @@
     extraModulePackages = [];
   };
 
-  system.stateVersion = lib.traceSeq config.boot.initrd.availableKernelModules "23.05";
+  system.stateVersion = "23.05";
 
   fileSystems = {
     "/" = {
