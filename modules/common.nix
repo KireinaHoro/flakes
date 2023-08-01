@@ -1,7 +1,7 @@
 self: { config, pkgs, lib, ... }:
 
 {
-  networking.domain = "jsteward.moe";
+  networking.domain = "g.jsteward.moe";
 
   users.users.jsteward = {
     isNormalUser = true;

@@ -162,6 +162,62 @@ in
         );
     };
 
+    smokeping = {
+      enable = true;
+      owner = "Pengcheng Xu";
+      ownerEmail = "i@jsteward.moe";
+      webService = false; # we use nginx
+      cgiUrl = "https://iori.g.jsteward.moe/smokeping/smokeping.cgi";
+      targetConfig = ''
+        probe = FPing
+        menu = Top
+        title = Network Latency Grapher (iori)
+        remark = Latency graphs of hosts in and outside of Gravity, observed from iori @ \
+          Monzoon Networks, Zürich, Switzerland.  Contact the maintainer (linked at the bottom \
+          of page) for more hosts to be included.
+        + Gravity
+        menu = Gravity
+        title = Gravity Hosts
+        remark = Selected hosts in Gravity.
+        ++ Shigeru
+        menu = Shigeru (Zürich, Switzerland)
+        title = shigeru @ ETH Zürich (VSOS), Switzerland
+        remark = Selected for masquerade exit (also over divi/ivi) for IPv4 ranges of ETH.
+        host = shigeru.g.jsteward.moe
+        ++ Minato
+        menu = Minato (Beijing, China)
+        title = minato @ China Unicom, Beijing, China
+        remark = Selected for masquerade exit (also over divi/ivi) for IPv4 ranges of Chinese \
+          servers according to the APNIC list (github:KireinaHoro/flakes#chnroute).
+        host = minato.g.jsteward.moe
+        + External
+        menu = External Hosts
+        title = External Hosts from iori
+        remark = Observation of common sites from iori, using the default IPv6 route in the \
+          network.  They should give a good estimation of the regular "surfing" experience.
+        ++ YouTube
+        menu = YouTube
+        title = YouTube (youtube.com)
+        host = youtube.com
+        ++ Google
+        menu = Google
+        title = Google (google.com)
+        host = google.com
+        ++ GitHub
+        menu = GitHub
+        title = GitHub (github.com)
+        host = github.com
+        ++ ETH-SPCL
+        menu = ETH SPCL
+        title = ETH SPCL (fpga1)
+        host = fpga1.inf.ethz.ch
+        ++ NetEase-Music
+        menu = NetEase Music
+        title = NetEase Music (music.163.com)
+        host = music.163.com
+      '';
+    };
+
     /* WIP -- Microcode update? */
     /*
     hostapd = {
@@ -182,33 +238,34 @@ in
     };
     */
 
-    /* TODO: galleryd
+    /* TODO: galleryd */
     nginx = {
       enable = true;
       virtualHosts = {
-        "nagisa.jsteward.moe" = {
+        "iori.g.jsteward.moe" = {
           forceSSL = true;
           enableACME = true;
-          serverAliases = [ "nagisa.g.jsteward.moe" ];
-        };
-        "nagisa.g.jsteward.moe" = {
-          listen = [ { addr = "nagisa.g.jsteward.moe"; port = 8080; ssl = true; } ]; # only listen in gravity
-          forceSSL = true;
-          useACMEHost = "nagisa.jsteward.moe";
-          locations = {
-            "/" = {
-              proxyPass = "http://localhost:8080";
+          locations = let smokepingHome = config.users.users.${config.services.smokeping.user}.home; in {
+            "= /smokeping/smokeping.cgi" = {
+              fastcgiParams = {
+                SCRIPT_FILENAME = "${smokepingHome}/smokeping.fcgi";
+              };
               extraConfig = ''
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header REMOTE-HOST $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header Host $host;
-                proxy_redirect off;
+                fastcgi_intercept_errors on;
+                fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
               '';
+            };
+            "^~ /smokeping/" = {
+              alias = "${smokepingHome}/";
+              index = "smokeping.cgi";
+            };
+            "/" = {
+              return = "301 http://$server_name/smokeping/smokeping.cgi";
             };
           };
         };
       };
-    }; */
+    };
+    fcgiwrap.enable = true;
   };
 }

@@ -13,7 +13,7 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  environment.systemPackages = with pkgs; [ xfsprogs stow gnupg lm_sensors ];
+  environment.systemPackages = with pkgs; [ xfsprogs stow gnupg lm_sensors dig ];
 
   programs = {
     mtr.enable = true;
