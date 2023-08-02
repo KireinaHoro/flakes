@@ -117,6 +117,17 @@ in
     };
   };
 
+  # same as fping setuid as in smokeping
+  security.wrappers."fping-gravity" = {
+    setuid = true;
+    owner = "root";
+    group = "root";
+    source = pkgs.writeScript "fping-gravity" ''
+      #!${pkgs.bash}/bin/bash -p
+      ${pkgs.iproute2}/bin/ip netns exec gravity ${pkgs.fping}/bin/fping "$@"
+    '';
+  };
+
   services = {
     vnstat = { enable = true; };
     openssh.settings.PasswordAuthentication = false;
@@ -168,17 +179,51 @@ in
       ownerEmail = "i@jsteward.moe";
       webService = false; # we use nginx
       cgiUrl = "https://iori.g.jsteward.moe/smokeping/smokeping.cgi";
+      databaseConfig = ''
+        step     = 60
+        pings    = 20
+        # consfn mrhb steps total
+        AVERAGE  0.5   1  5040
+        AVERAGE  0.5  12  21600
+            MIN  0.5  12  21600
+            MAX  0.5  12  21600
+        AVERAGE  0.5 144   3600
+            MAX  0.5 144   3600
+            MIN  0.5 144   3600
+      '';
+      probeConfig = ''
+        + FPing
+        binary = ${config.security.wrapperDir}/fping
+        ++ FPing46
+        ++ FPing4
+        protocol = 4
+        ++ FPing6
+        protocol = 6
+        ++ GravityPing
+        binary = ${config.security.wrapperDir}/fping-gravity
+        protocol = 6
+      '';
       targetConfig = ''
-        probe = FPing
+        probe = FPing46
         menu = Top
         title = Network Latency Grapher (iori)
         remark = Latency graphs of hosts in and outside of Gravity, observed from iori @ \
           Monzoon Networks, Zürich, Switzerland.  Contact the maintainer (linked at the bottom \
           of page) for more hosts to be included.
+        + Gravity-WireGuard
+        menu = Gravity WireGuard
+        title = Gravity WireGuard Links
+        remark = Link-local IPv6 hosts.  These show direct connectivity over WireGuard from iori.
+        probe = GravityPing
+        ++ Shigeru
+        menu = Shigeru
+        title = Shigeru (fe80::216:3eff:fe10:7610%grv4x57777)
+        host = fe80::216:3eff:fe10:7610%grv4x57777
         + Gravity
         menu = Gravity
         title = Gravity Hosts
         remark = Selected hosts in Gravity.
+        probe = FPing6
         ++ Shigeru
         menu = Shigeru (Zürich, Switzerland)
         title = shigeru @ ETH Zürich (VSOS), Switzerland
@@ -191,10 +236,11 @@ in
           servers according to the APNIC list (github:KireinaHoro/flakes#chnroute).
         host = minato.g.jsteward.moe
         + External
-        menu = External Hosts
-        title = External Hosts from iori
-        remark = Observation of common sites from iori, using the default IPv6 route in the \
-          network.  They should give a good estimation of the regular "surfing" experience.
+        menu = External Hosts (v4)
+        title = External Hosts from iori over IPv4
+        remark = Observation of common IPv4 sites from iori, which uses the provider's default \
+          route.  They should give a good estimation of the external provider's connectivity.
+        probe = FPing4
         ++ YouTube
         menu = YouTube
         title = YouTube (youtube.com)
@@ -207,14 +253,33 @@ in
         menu = GitHub
         title = GitHub (github.com)
         host = github.com
-        ++ ETH-SPCL
-        menu = ETH SPCL
-        title = ETH SPCL (fpga1)
-        host = fpga1.inf.ethz.ch
-        ++ NetEase-Music
-        menu = NetEase Music
-        title = NetEase Music (music.163.com)
-        host = music.163.com
+        ++ ETH-SG
+        menu = ETH Systems Group
+        title = ETH Systems Group (enzian-gateway)
+        host = enzian-gateway.inf.ethz.ch
+        ++ ETH-VSOS
+        menu = ETH VSOS
+        title = ETH VSOS (shigeru v4 on public Internet)
+        host = shigeru.vsos.ethz.ch
+        + Gravity-DefaultRoute
+        menu = External Hosts (v6 Gravity)
+        title = External Hosts from iori over default route from Gravity
+        remark = Observation of common IPv6 sites from iori, which uses the default route in \
+          Gravity.  As most of major websites have IPv6 access already, they should give a good \
+          estimation of the surfing experience of a client on iori.
+        probe = FPing6
+        ++ YouTube
+        menu = YouTube
+        title = YouTube (youtube.com)
+        host = youtube.com
+        ++ Google
+        menu = Google
+        title = Google (google.com)
+        host = google.com
+        ++ GitHub
+        menu = GitHub
+        title = GitHub (github.com)
+        host = github.com
       '';
     };
 
