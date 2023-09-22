@@ -73,6 +73,10 @@ in
           publicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
           allowedIPs = [ "10.172.220.4/32" "${remoteAccessPrefix}::4/128" ];
         }
+        { # iphone
+          publicKey = "VqHfNMuAylcvkwWfY5nXqdowOBzTRyOIwGm5G3CeJlA=";
+          allowedIPs = [ "10.172.220.5/32" "${remoteAccessPrefix}::5/128" ];
+        }
       ];
     };
   };
