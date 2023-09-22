@@ -101,96 +101,17 @@ in
       '';
     };
 
-    aria2 = {
-      enable = true;
-      extraArguments = with pkgs; let
-          ariaHome = "/var/lib/aria2";
-          downloads = "${ariaHome}/Downloads";
-          log = "${ariaHome}/mvcompleted.log";
-          rc = "${rclone}/bin/rclone --verbose --config=${ariaHome}/rclone.conf";
-          mvcompleted = writeScript "mvcompleted" ''
-            #!${bash}/bin/bash
-
-            set -eu
-
-            err() {
-              echo $(${coreutils}/bin/date) ERR:  $@ >> ${log}
-              exit 1
-            }
-            info() {
-              echo $(${coreutils}/bin/date) INFO: $@ >> ${log}
-            }
-
-            if [[ "$2" == "0" ]]; then
-              info "No file to move for $1"
-              exit 0
-            fi
-
-            src="$3"
-            while true; do
-              dir=$(${coreutils}/bin/dirname "$src")
-              if [[ "$dir" == "${downloads}" ]]; then
-                tgt="gdrive:archive/Uncategorized/''${src##*/}"
-                info "Uploading $1 $src..."
-                ${rc} copyto "$src" "$tgt" &>> ${log} || err "Failed to run rclone"
-                info "$1 $3 moved as $tgt"
-                ${coreutils}/bin/rm -rf "$src" &>> ${log}
-                exit 0
-              elif [[ "$dir" == "/" || "$dir" == "." ]]; then
-                err "$1 $3 not under ${downloads}"
-              else
-                src="$dir"
-              fi
-            done
-          '';
-        in replaceStrings [ "\n" ] [ " " ] ''
-        --continue=true
-        --input-file=${ariaHome}/aria2.session
-        --max-connection-per-server=10
-        --seed-time=0
-        --max-concurrent-downloads=4
-        --max-connection-per-server=16
-        --on-download-complete=${mvcompleted}
-        --on-bt-download-complete=${mvcompleted}
-      '';
-    };
-
     nginx = {
       enable = true;
       virtualHosts = {
         "jsteward.moe" = {
           forceSSL = true;
           enableACME = true;
-          serverAliases = [ "aria2.jsteward.moe" ];
           locations."/" = { root = pkgs.jstewardMoe; };
-        };
-        "aria2.jsteward.moe" = {
-          forceSSL = true;
-          useACMEHost = "jsteward.moe";
-          locations = {
-            "/" = { root = "${pkgs.ariang}/dist/"; };
-            "/jsonrpc" = {
-              proxyPass = "http://localhost:6800";
-              proxyWebsockets = true;
-              extraConfig = ''
-                proxy_set_header   Host $host;
-                proxy_set_header   X-Real-IP $remote_addr;
-                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header   X-Forwarded-Host $server_name;
-              '';
-            };
-          };
         };
       };
     };
   };
 
-  systemd.services.aria2 = {
-    preStart = ''
-      ${pkgs.gnused}/bin/sed -i -e "s/rpc-secret.*$/rpc-secret=$RPC_SECRET/" /var/lib/aria2/aria2.conf
-    '';
-    serviceConfig.EnvironmentFile = [
-      config.sops.secrets.aria2-env.path
-    ];
   };
 }
