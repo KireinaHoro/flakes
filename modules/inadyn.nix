@@ -39,6 +39,7 @@ in
         ExecStart = ''${pkgs.inadyn}/bin/inadyn --config ${cfg.cfgFile} --cache-dir /var/cache/inadyn --pidfile /var/run/inadyn.pid'';
         Restart = "always";
         RestartSec = "10min";
+        IPAddressDeny = "0.0.0.0/0"; # deny all IPv4
       };
     };
 
