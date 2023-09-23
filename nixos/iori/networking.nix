@@ -16,19 +16,6 @@ let
   prefixLength = 56;
   gravityTable = 3500;
   gravityMark = 333;
-  ethzV4Addrs = [
-    { prefix = "82.130.64.0"; len = 18; }
-    { prefix = "192.33.96.0"; len = 21; }
-    { prefix = "192.33.92.0"; len = 22; }
-    { prefix = "192.33.91.0"; len = 24; }
-    { prefix = "192.33.90.0"; len = 24; }
-    { prefix = "192.33.87.0"; len = 24; }
-    { prefix = "192.33.110.0"; len = 24; }
-    { prefix = "192.33.108.0"; len = 23; }
-    { prefix = "192.33.104.0"; len = 22; }
-    { prefix = "148.187.192.0"; len = 19; }
-    { prefix = "129.132.0.0"; len = 16; }
-  ];
 in
 
 {
@@ -154,7 +141,7 @@ in
     chinaRoute = {
       fwmark = gravityMark;
       enableV4 = true;
-      extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") ethzV4Addrs;
+      extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
     };
 
     # packets with gravityMark to minato - back to China
@@ -169,7 +156,7 @@ in
       extraConfig = concatStringsSep "\n" (map
         ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
           # ETHZ
-          ethzV4Addrs
+          pkgs.ethzV4Addrs
         );
     };
 

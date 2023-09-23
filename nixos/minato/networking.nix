@@ -174,6 +174,12 @@ in
       prefix6 = "${iviDiviPrefix}5:0:5";
       defaultMap = "2a0c:b641:69c:f254:0:4::/96";
       inherit prefixLength;
+      # map ETH to shigeru
+      extraConfig = concatStringsSep "\n" (map
+        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
+          # ETHZ
+          pkgs.ethzV4Addrs
+        );
     };
 
     chinaRoute = {
