@@ -101,6 +101,18 @@ in
       '';
     };
 
+    roundcube = {
+      enable = true;
+      hostName = "webmail.jsteward.moe";
+      extraConfig = ''
+       # starttls needed for authentication, so the fqdn required to match
+       # the certificate
+       $config['smtp_server'] = "tls://${config.mailserver.fqdn}";
+       $config['smtp_user'] = "%u";
+       $config['smtp_pass'] = "%p";
+      '';
+    };
+
     nginx = {
       enable = true;
       virtualHosts = {
@@ -113,5 +125,16 @@ in
     };
   };
 
+  mailserver = {
+    enable = true;
+    fqdn = "mail.jsteward.moe";
+    domains = [ "jsteward.moe" ];
+    loginAccounts = {
+      "i@jsteward.moe" = {
+        hashedPasswordFile = config.sops.secrets.mailbox-passwd-hash.path;
+        aliases = [ "postmaster@jsteward.moe" ];
+      };
+    };
+    certificateScheme = "acme-nginx";
   };
 }

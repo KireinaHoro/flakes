@@ -6,6 +6,7 @@
     secrets = {
       rait = {};
       aria2-env = {};
+      mailbox-passwd-hash = {};
     };
   };
 
