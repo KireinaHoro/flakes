@@ -136,5 +136,14 @@ in
       };
     };
     certificateScheme = "acme-nginx";
+    fullTextSearch = {
+      enable = true;
+      autoIndex = true;
+      autoIndexExclude = [ "\\Junk" ];
+      indexAttachments = false;
+      enforced = "body";
+      memoryLimit = 500;
+    };
+    indexDir = "/var/lib/dovecot/indices";
   };
 }
