@@ -42,11 +42,11 @@ in
       ${ifName} = {
         DHCP = "ipv4";
         networkConfig = {
-          IPv6PrivacyExtensions = true;
           # FIXME we cannot use this until systemd v248. ref:
           # IPv6 masquerade: https://github.com/systemd/systemd/commit/b1b4e9204c8260956825e2b9733c95903e215e31
           # nft backend: https://github.com/systemd/systemd/commit/a8af734e75431d676b25afb49ac317036e6825e6
           # IPMasquerade = "ipv4";
+          IPv6PrivacyExtensions = "prefer-public";
         };
       };
     };
