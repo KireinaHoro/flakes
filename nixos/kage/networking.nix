@@ -149,21 +149,22 @@ in
     indexDir = "/var/lib/dovecot/indices";
   };
 
-  # backup vmail
-  systemd.timers."vmail-backup" = {
+  # backup vmail and dkim
+  systemd.timers."mail-backup" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnBootSec = "1d";
       OnUnitActiveSec = "1d";
-      Unit = "vmail-backup.service";
+      Unit = "mail-backup.service";
     };
   };
-  systemd.services."vmail-backup" = {
+  systemd.services."mail-backup" = {
     serviceConfig = {
       Type = "oneshot";
       User = "root";
       ExecStart = with pkgs; ''
-        ${rsync}/bin/rsync -avzhe"${ssh}/bin/ssh -o IdentityFile=${backupSecret}" /var/vmail ${backupHost}:backups/
+        ${rsync}/bin/rsync -azhe"${openssh}/bin/ssh -o IdentityFile=${backupSecret} -o StrictHostKeyChecking=no" /var/vmail /var/dkim ${backupHost}:backups/
       '';
+    };
   };
 }
