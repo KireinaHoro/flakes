@@ -116,7 +116,8 @@ in
         ipv6SendRAConfig = {
           OtherInformation = true;
           EmitDNS = true;
-          DNS = [ "2001:4860:4860::8888" "2001:4860:4860::8844" ];
+          # DNS = [ "2001:4860:4860::8888" "2001:4860:4860::8844" ];
+          DNS = [ "${localPrefix}::1" ];
           EmitDomains = false;
         };
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
