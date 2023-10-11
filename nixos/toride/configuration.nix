@@ -14,11 +14,12 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   # allow backup connection from kage
-  users.users.jsteward.openssh.authorizedKeys.keys =
-    config.users.users.jsteward.openssh.authorizedKeys.keys ++ [
+  users.users.jsteward = {
+    openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICt/1H/oZByq2sIlO8ZAo2dU/E7vC59iPU40toEarl/q backup@kage"
     ];
-  users.users.jsteward.shell = pkgs.zsh;
+    shell = pkgs.zsh;
+  };
 
   environment = {
     systemPackages = with pkgs; [ dig stow ];
