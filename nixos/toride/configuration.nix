@@ -13,9 +13,10 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  users.users.root.openssh.authorizedKeys.keys =
+  # allow backup connection from kage
+  users.users.jsteward.openssh.authorizedKeys.keys =
     config.users.users.jsteward.openssh.authorizedKeys.keys ++ [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILDMgHmBznjSAeC+4sBTyfwbR/xkD6EDjKeoBJnArGzr github-actions"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICt/1H/oZByq2sIlO8ZAo2dU/E7vC59iPU40toEarl/q backup@kage"
     ];
   users.users.jsteward.shell = pkgs.zsh;
 

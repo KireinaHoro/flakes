@@ -7,6 +7,7 @@
       rait = {};
       aria2-env = {};
       mailbox-passwd-hash = {};
+      toride-backup-key = {};
     };
   };
 
