@@ -68,13 +68,15 @@ in
           { routeConfig = { Destination = "0.0.0.0/0"; Table = 3500; }; }
         ];
         routingPolicyRules = [
+          # first check if is local peer
+          { routingPolicyRuleConfig = {
+            To = "${cfg.prefix4}/${toString prefix4Length}";
+            Priority = 50;
+          }; }
+          # then if still gravity, send to ivi for outgoing
           { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; } //
             (if cfg.fwmark == null then {} else { FirewallMark = cfg.fwmark; });
           }
-          { routingPolicyRuleConfig = {
-            To = "${cfg.prefix4}/${toString prefix4Length}";
-            Priority = 100;
-          }; }
           { routingPolicyRuleConfig = {
             Family = "ipv6";
             IncomingInterface = "ivi";
