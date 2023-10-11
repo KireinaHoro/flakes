@@ -110,13 +110,11 @@ in
         };
         dhcpServerConfig = {
           DNS = [ "10.172.222.254" ];
-          # DNS = [ "8.8.8.8" "8.8.4.4" ];
           PoolOffset = 1; # excludes IVI address
         };
         ipv6SendRAConfig = {
           OtherInformation = true;
           EmitDNS = true;
-          # DNS = [ "2001:4860:4860::8888" "2001:4860:4860::8844" ];
           DNS = [ "${localPrefix}::1" ];
           EmitDomains = false;
         };
