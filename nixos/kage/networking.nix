@@ -42,11 +42,11 @@ in
       ${ifName} = {
         DHCP = "ipv4";
         networkConfig = {
-          IPv6PrivacyExtensions = true;
           # FIXME we cannot use this until systemd v248. ref:
           # IPv6 masquerade: https://github.com/systemd/systemd/commit/b1b4e9204c8260956825e2b9733c95903e215e31
           # nft backend: https://github.com/systemd/systemd/commit/a8af734e75431d676b25afb49ac317036e6825e6
           # IPMasquerade = "ipv4";
+          IPv6PrivacyExtensions = "prefer-public";
         };
       };
     };
@@ -101,57 +101,15 @@ in
       '';
     };
 
-    aria2 = {
+    roundcube = {
       enable = true;
-      extraArguments = with pkgs; let
-          ariaHome = "/var/lib/aria2";
-          downloads = "${ariaHome}/Downloads";
-          log = "${ariaHome}/mvcompleted.log";
-          rc = "${rclone}/bin/rclone --verbose --config=${ariaHome}/rclone.conf";
-          mvcompleted = writeScript "mvcompleted" ''
-            #!${bash}/bin/bash
-
-            set -eu
-
-            err() {
-              echo $(${coreutils}/bin/date) ERR:  $@ >> ${log}
-              exit 1
-            }
-            info() {
-              echo $(${coreutils}/bin/date) INFO: $@ >> ${log}
-            }
-
-            if [[ "$2" == "0" ]]; then
-              info "No file to move for $1"
-              exit 0
-            fi
-
-            src="$3"
-            while true; do
-              dir=$(${coreutils}/bin/dirname "$src")
-              if [[ "$dir" == "${downloads}" ]]; then
-                tgt="gdrive:archive/Uncategorized/''${src##*/}"
-                info "Uploading $1 $src..."
-                ${rc} copyto "$src" "$tgt" &>> ${log} || err "Failed to run rclone"
-                info "$1 $3 moved as $tgt"
-                ${coreutils}/bin/rm -rf "$src" &>> ${log}
-                exit 0
-              elif [[ "$dir" == "/" || "$dir" == "." ]]; then
-                err "$1 $3 not under ${downloads}"
-              else
-                src="$dir"
-              fi
-            done
-          '';
-        in replaceStrings [ "\n" ] [ " " ] ''
-        --continue=true
-        --input-file=${ariaHome}/aria2.session
-        --max-connection-per-server=10
-        --seed-time=0
-        --max-concurrent-downloads=4
-        --max-connection-per-server=16
-        --on-download-complete=${mvcompleted}
-        --on-bt-download-complete=${mvcompleted}
+      hostName = "webmail.jsteward.moe";
+      extraConfig = ''
+       # starttls needed for authentication, so the fqdn required to match
+       # the certificate
+       $config['smtp_server'] = "tls://${config.mailserver.fqdn}";
+       $config['smtp_user'] = "%u";
+       $config['smtp_pass'] = "%p";
       '';
     };
 
@@ -161,36 +119,31 @@ in
         "jsteward.moe" = {
           forceSSL = true;
           enableACME = true;
-          serverAliases = [ "aria2.jsteward.moe" ];
           locations."/" = { root = pkgs.jstewardMoe; };
-        };
-        "aria2.jsteward.moe" = {
-          forceSSL = true;
-          useACMEHost = "jsteward.moe";
-          locations = {
-            "/" = { root = "${pkgs.ariang}/dist/"; };
-            "/jsonrpc" = {
-              proxyPass = "http://localhost:6800";
-              proxyWebsockets = true;
-              extraConfig = ''
-                proxy_set_header   Host $host;
-                proxy_set_header   X-Real-IP $remote_addr;
-                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header   X-Forwarded-Host $server_name;
-              '';
-            };
-          };
         };
       };
     };
   };
 
-  systemd.services.aria2 = {
-    preStart = ''
-      ${pkgs.gnused}/bin/sed -i -e "s/rpc-secret.*$/rpc-secret=$RPC_SECRET/" /var/lib/aria2/aria2.conf
-    '';
-    serviceConfig.EnvironmentFile = [
-      config.sops.secrets.aria2-env.path
-    ];
+  mailserver = {
+    enable = true;
+    fqdn = "mail.jsteward.moe";
+    domains = [ "jsteward.moe" ];
+    loginAccounts = {
+      "i@jsteward.moe" = {
+        hashedPasswordFile = config.sops.secrets.mailbox-passwd-hash.path;
+        aliases = [ "postmaster@jsteward.moe" ];
+      };
+    };
+    certificateScheme = "acme-nginx";
+    fullTextSearch = {
+      enable = true;
+      autoIndex = true;
+      autoIndexExclude = [ "\\Junk" ];
+      indexAttachments = false;
+      enforced = "body";
+      memoryLimit = 500;
+    };
+    indexDir = "/var/lib/dovecot/indices";
   };
 }

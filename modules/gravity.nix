@@ -121,7 +121,7 @@ in
         ExecStartPre = [
           # FIXME move to networkd when netns support lands there
           "networkctl reload"
-          "${ip} netns add ${cfg.netns}"
+          "-${ip} netns add ${cfg.netns}" # do not panic when a stale netns was not deleted
           "${ip} link set host netns ${cfg.netns}"
 
           "${ip} -n ${cfg.netns} link set host up"

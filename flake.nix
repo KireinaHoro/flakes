@@ -19,6 +19,13 @@
       };
     };
     rock5b-nixos = { url = "github:aciceri/rock5b-nixos"; inputs.nixpkgs.follows = "nixpkgs"; };
+    simple-nixos-mailserver = {
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:

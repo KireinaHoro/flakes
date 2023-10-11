@@ -11,5 +11,7 @@ nixpkgs.lib.nixosSystem {
     gravity divi ivi
     { nixpkgs.overlays = [ self.overlays.default inputs.blog.overlay ]; }
     inputs.sops-nix.nixosModules.sops
+
+    inputs.simple-nixos-mailserver.nixosModule
   ];
 }

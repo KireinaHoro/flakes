@@ -73,6 +73,10 @@ in
           publicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
           allowedIPs = [ "10.172.220.4/32" "${remoteAccessPrefix}::4/128" ];
         }
+        { # iphone
+          publicKey = "VqHfNMuAylcvkwWfY5nXqdowOBzTRyOIwGm5G3CeJlA=";
+          allowedIPs = [ "10.172.220.5/32" "${remoteAccessPrefix}::5/128" ];
+        }
       ];
     };
   };
@@ -85,11 +89,11 @@ in
         vlan = [ "${ifName}.200" ];
         # chinaRoute packets NAT
         networkConfig = {
-          IPv6PrivacyExtensions = true;
           # FIXME we cannot use this until systemd v248. ref:
           # IPv6 masquerade: https://github.com/systemd/systemd/commit/b1b4e9204c8260956825e2b9733c95903e215e31
           # nft backend: https://github.com/systemd/systemd/commit/a8af734e75431d676b25afb49ac317036e6825e6
           # IPMasquerade = "ipv4";
+          IPv6PrivacyExtensions = "prefer-public";
         };
         # chinaRoute packets lookup main
         routingPolicyRules = [
@@ -105,14 +109,13 @@ in
           IPv6SendRA = true;
         };
         dhcpServerConfig = {
-          # DNS = [ "10.172.222.254" ];
-          DNS = [ "8.8.8.8" "8.8.4.4" ];
+          DNS = [ "10.172.222.254" ];
           PoolOffset = 1; # excludes IVI address
         };
         ipv6SendRAConfig = {
           OtherInformation = true;
           EmitDNS = true;
-          DNS = [ "2001:4860:4860::8888" "2001:4860:4860::8844" ];
+          DNS = [ "${localPrefix}::1" ];
           EmitDomains = false;
         };
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
@@ -170,6 +173,12 @@ in
       prefix6 = "${iviDiviPrefix}5:0:5";
       defaultMap = "2a0c:b641:69c:f254:0:4::/96";
       inherit prefixLength;
+      # map ETH to shigeru
+      extraConfig = concatStringsSep "\n" (map
+        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
+          # ETHZ
+          pkgs.ethzV4Addrs
+        );
     };
 
     chinaRoute = {
@@ -305,16 +314,9 @@ in
       '';
     };
 
-    ddclient = {
+    inadyn = {
       enable = true;
-      protocol = "cloudflare";
-      username = "xubin990510@gmail.com";
-      passwordFile = config.sops.secrets.cf-global-apikey.path;
-      zone = "jsteward.moe";
-      server = "api.cloudflare.com/client/v4";
-      domains = [ "minato.jsteward.moe" ];
-      ssl = true;
-      use = "cmd, cmd=\"${pkgs.curl}/bin/curl -s --noproxy '*' -k http://checkip6.spdyn.de\"";
+      cfgFile = config.sops.secrets.inadyn-cfg.path;
     };
   };
 }
