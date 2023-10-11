@@ -8,6 +8,8 @@ let
   raitSecret = config.sops.secrets.rait.path;
   ifName = "ens3";
   prefixLength = 60;
+  backupHost = "jsteward@toride.g.jsteward.moe";
+  backupSecret = config.sops.secrets.toride-backup-key.path;
 in
 
 {
@@ -145,5 +147,23 @@ in
       memoryLimit = 500;
     };
     indexDir = "/var/lib/dovecot/indices";
+  };
+
+  # backup vmail
+  systemd.timers."vmail-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "1d";
+      OnUnitActiveSec = "1d";
+      Unit = "vmail-backup.service";
+    };
+  };
+  systemd.services."vmail-backup" = {
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = with pkgs; ''
+        ${rsync}/bin/rsync -avzhe"${ssh}/bin/ssh -o IdentityFile=${backupSecret}" /var/vmail ${backupHost}:backups/
+      '';
   };
 }
