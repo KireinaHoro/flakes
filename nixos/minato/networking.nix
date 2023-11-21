@@ -198,7 +198,11 @@ in
     localResolver = {
       logQueries = true;
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
-      extraConfig = "server=/suki.moe/${config.services.chinaDNS.chinaServer}";
+      extraConfig = ''
+        server=/suki.moe/${config.services.chinaDNS.chinaServer}
+        address=/163.com/::
+        address=/netease.com/::
+      '';
     };
 
     squid = {
