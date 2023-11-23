@@ -101,7 +101,7 @@ in
         };
         # chinaRoute packets lookup main
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = gravityMark; }; }
+          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = gravityMark; Priority = 60; }; }
         ];
       };
 
@@ -204,8 +204,6 @@ in
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       extraConfig = ''
         server=/suki.moe/${config.services.chinaDNS.chinaServer}
-        address=/163.com/::
-        address=/netease.com/::
       '';
     };
 

@@ -88,9 +88,8 @@ in
           routes = [ { routeConfig = { Destination = "::/0"; Gateway = "fe80::200:ff:fe00:2"; Table = cfg.gravityTable; }; } ];
           routingPolicyRules = [
             { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.fwmark; Priority = 50; }; }
-            # this blackhole rule is preferred (in case default route in main disappeared), but
-            # Type="blackhole" is in systemd 248 https://github.com/systemd/systemd/commit/d7d1d18fd25e3d6c7f3d1841e0502fadb8cecbf9
-            # { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.fwmark; Type = "blackhole"; Priority = 51; }; }
+            # this blackhole rule is preferred (in case default route in main disappeared)
+            { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.fwmark; Type = "blackhole"; Priority = 51; }; }
             { routingPolicyRuleConfig = { To = cfg.route; Table = cfg.gravityTable; Priority = 200; }; }
             { routingPolicyRuleConfig = { From = cfg.route; Table = cfg.gravityTable; Priority = 200; }; }
           ] ++ (if cfg.defaultRoute then [
