@@ -26,6 +26,7 @@
         utils.follows = "flake-utils";
       };
     };
+    home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:

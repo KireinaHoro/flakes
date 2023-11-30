@@ -11,5 +11,8 @@ nixpkgs.lib.nixosSystem {
     gravity
     { nixpkgs.overlays = [ self.overlays.default ]; }
     inputs.sops-nix.nixosModules.sops
+
+    inputs.home-manager.nixosModules.home-manager
+    jstewardHome
   ];
 }
