@@ -74,9 +74,5 @@
     enable = true;
     dockerCompat = true;
   };
-
-  nixpkgs.config.permittedInsecurePackages = [
-    "squid-5.9"
-  ];
 }
 

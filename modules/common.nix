@@ -47,4 +47,6 @@ self: { config, pkgs, lib, ... }:
   };
 
   programs.mosh.enable = true;
+
+  nixpkgs.config.permittedInsecurePackages = [ "squid-6.6" ];
 }
