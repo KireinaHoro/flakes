@@ -27,6 +27,7 @@
       };
     };
     home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
+    nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
@@ -34,6 +35,7 @@
   with nixpkgs.lib;
   let
     this = import ./pkgs { inherit nixpkgs; };
+    findConfs = typeDir: mapAttrs (k: _: import (typeDir + "/${k}") { inherit self nixpkgs inputs; }) (readDir typeDir);
   in flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: let
     pkgs = import nixpkgs {
       inherit system;
@@ -65,8 +67,8 @@
   }) // {
     nixosModules = import ./modules self;
     overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
-    nixosConfigurations =
-      mapAttrs (k: _: import (./nixos + "/${k}") { inherit self nixpkgs inputs; }) (readDir ./nixos);
+    nixosConfigurations = findConfs ./nixos;
+    darwinConfigurations = findConfs ./darwin;
     deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" "iori" ] (n: {
       sshUser = "root";
       hostname = "${n}.jsteward.moe";
