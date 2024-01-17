@@ -1,0 +1,59 @@
+{
+    "dnsmasq-china-list": {
+        "cargoLocks": null,
+        "date": "2024-01-17",
+        "extract": null,
+        "name": "dnsmasq-china-list",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "6e662c2b92ca071bafd15b38d615f859437b1520",
+            "sha256": "sha256-zwTW3Z9x179/kfxVLHpnQRCIsj4TU+djjE06eimDXCU=",
+            "type": "git",
+            "url": "https://github.com/felixonmars/dnsmasq-china-list"
+        },
+        "version": "6e662c2b92ca071bafd15b38d615f859437b1520"
+    },
+    "hosts-blocklists": {
+        "cargoLocks": null,
+        "date": "2023-06-26",
+        "extract": null,
+        "name": "hosts-blocklists",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "2ab426e806985d0d3d1c3eb447d7e772a836e10d",
+            "sha256": "sha256-nKNz9ux1FPxoL14VZtH/1tfnn67LeXmdVQJz7I9+Srk=",
+            "type": "git",
+            "url": "https://github.com/notracking/hosts-blocklists"
+        },
+        "version": "2ab426e806985d0d3d1c3eb447d7e772a836e10d"
+    },
+    "rait": {
+        "cargoLocks": null,
+        "date": "2022-10-07",
+        "extract": null,
+        "name": "rait",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "278188c8bae13165aa70b6a2fbbb99101fd6f4cd",
+            "sha256": "sha256-6Y0s5/HUmWrZA6QmV5wYjB1M0Ab/jHM3TSruRpMRwtA=",
+            "type": "git",
+            "url": "https://gitlab.com/NickCao/RAIT"
+        },
+        "version": "278188c8bae13165aa70b6a2fbbb99101fd6f4cd"
+    }
+}
