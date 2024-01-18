@@ -1,6 +1,8 @@
 { username, standalone ? false }: { config, pkgs, ... }:
 
-let homeConf = {
+let
+homeConfUpper = if standalone then config else config.home-manager.users."${username}";
+homeConf = {
   home = {
     inherit username;
     stateVersion = "24.05";
@@ -11,7 +13,7 @@ let homeConf = {
       enable-ssh-support
     '';
     sessionPath = [
-      "${config.home.homeDirectory}/.local/bin" # XXX: express with XDG?
+      "${homeConfUpper.home.homeDirectory}/.local/bin" # XXX: express with XDG?
     ];
   };
 
