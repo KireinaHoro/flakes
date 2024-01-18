@@ -69,6 +69,7 @@
     overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
     nixosConfigurations = findConfs ./nixos;
     darwinConfigurations = findConfs ./darwin;
+    homeConfigurations = findConfs ./standalone;
     deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" "iori" ] (n: {
       sshUser = "root";
       hostname = "${n}.jsteward.moe";
