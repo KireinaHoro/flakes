@@ -48,22 +48,14 @@ homeConf = {
 
       initExtra = ''
           # TMUX auto attach
-            if which tmux >/dev/null 2>&1; then
+          if which tmux >/dev/null 2>&1; then
             case $- in
               *i*) test -z "$TMUX" && (tmux attach || tmux new-session)
             esac
-            fi
+          fi
 
           # iTerm2 integration
-            test -e "$HOME/.iterm2_shell_integration.zsh" && source "$HOME/.iterm2_shell_integration.zsh"
-
-          # load homebrew
-          # FIXME: we should eventually completely switch to nix-darwin
-            if [ "$(arch)" = "arm64" ]; then
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-            else
-            eval "$(/usr/local/bin/brew shellenv)"
-            fi
+          test -e "$HOME/.iterm2_shell_integration.zsh" && source "$HOME/.iterm2_shell_integration.zsh"
       '';
     };
 

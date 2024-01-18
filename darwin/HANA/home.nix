@@ -16,5 +16,15 @@ in
       ];
       packages = with pkgs; [ coreutils ];
     };
+
+    programs.zsh.initExtra = ''
+      # load homebrew
+      # FIXME: we should eventually completely switch to nix-darwin
+      if [ "$(arch)" = "arm64" ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      else
+        eval "$(/usr/local/bin/brew shellenv)"
+      fi
+    '';
   };
 }
