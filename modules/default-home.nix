@@ -5,6 +5,11 @@ let homeConf = {
     inherit username;
     stateVersion = "24.05";
     packages = with pkgs; [ ripgrep ];
+    file.".gnupg/gpg-agent.conf".text = ''
+      max-cache-ttl 18000
+      default-cache-ttl 18000
+      enable-ssh-support
+    '';
   };
 
   programs = {

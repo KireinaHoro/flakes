@@ -16,11 +16,6 @@ in
         "${homeDir}/go/bin"
       ];
       packages = with pkgs; [ coreutils ];
-      file.".gnupg/gpg-agent.conf".text = ''
-        max-cache-ttl 18000
-        default-cache-ttl 18000
-        enable-ssh-support
-      '';
     };
   };
 }
