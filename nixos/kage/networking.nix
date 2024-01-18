@@ -141,7 +141,7 @@ in
     loginAccounts = {
       "i@jsteward.moe" = {
         hashedPasswordFile = config.sops.secrets.mailbox-passwd-hash.path;
-        aliases = [ "postmaster@jsteward.moe" "abuse@jsteward.moe" "promotion@jsteward.moe" ];
+        aliases = [ "postmaster@jsteward.moe" "abuse@jsteward.moe" ];
       };
     };
     certificateScheme = "acme-nginx";
