@@ -11,7 +11,6 @@ in
   home-manager.users."${username}" = {
     home = {
       sessionPath = [
-        "${homeDir}/.local/bin/" # XXX: express with XDG?
         "${homeDir}/sdk/go1.20.3/bin"
         "${homeDir}/go/bin"
       ];

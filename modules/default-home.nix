@@ -10,6 +10,9 @@ let homeConf = {
       default-cache-ttl 18000
       enable-ssh-support
     '';
+    sessionPath = [
+      "${config.home.homeDirectory}/.local/bin" # XXX: express with XDG?
+    ];
   };
 
   programs = {
