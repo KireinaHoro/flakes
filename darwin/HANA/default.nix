@@ -5,5 +5,7 @@ inputs.nix-darwin.lib.darwinSystem {
   modules = [
     ./configuration.nix
     { nixpkgs.overlays = [ self.overlays.default ]; }
+    inputs.home-manager.darwinModules.home-manager
+    ./home.nix
   ];
 }

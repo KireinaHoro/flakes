@@ -6,7 +6,7 @@ in
 
 {
   home-manager.users."${username}" = { home = {
-    stateVersion = "21.03";
+    stateVersion = "24.05";
     packages = with pkgs; [
       texlive.combined.scheme-full
       gnumake

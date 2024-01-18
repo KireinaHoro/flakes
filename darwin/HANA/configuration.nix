@@ -1,16 +1,11 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    direnv
-  ];
-
-  programs.zsh = {
-    enable = true;
-    enableSyntaxHighlighting = true;
-  };
-
   services.nix-daemon.enable = true;
+
+  # setup zsh global profile (nix path, etc.)
+  programs.zsh.enable = true;
+
   nix = {
     package = pkgs.nix;
     extraOptions = ''
