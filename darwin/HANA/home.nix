@@ -51,6 +51,10 @@ in
           theme = "candy";
         };
 
+        shellAliases = {
+          ls = "ls -G --color=auto";
+        };
+
         initExtra = ''
           # TMUX auto attach
           if which tmux >/dev/null 2>&1; then
