@@ -9,4 +9,5 @@ self:
   chinaDNS = import ./china-dns.nix;
   localResolver = import ./local-resolver.nix;
   inadyn = import ./inadyn.nix;
+  defaultHome = import ./default-home.nix;
 }

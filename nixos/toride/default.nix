@@ -13,6 +13,7 @@ nixpkgs.lib.nixosSystem {
     inputs.sops-nix.nixosModules.sops
 
     inputs.home-manager.nixosModules.home-manager
+    (defaultHome { username = "jsteward"; })
     ./home.nix
   ];
 }
