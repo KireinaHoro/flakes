@@ -40,17 +40,28 @@
     };
     date = "2022-10-07";
   };
-  vim-ripgrep = {
-    pname = "vim-ripgrep";
-    version = "2bb2425387b449a0cd65a54ceb85e123d7a320b8";
+  vim-haskell-indent = {
+    pname = "vim-haskell-indent";
+    version = "a7423fe3968f04e60d33c76b64c9d4c404c73665";
     src = fetchgit {
-      url = "https://github.com/jremmen/vim-ripgrep";
-      rev = "2bb2425387b449a0cd65a54ceb85e123d7a320b8";
+      url = "https://github.com/itchyny/vim-haskell-indent";
+      rev = "a7423fe3968f04e60d33c76b64c9d4c404c73665";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
+      sha256 = "sha256-uU4UAdHqOPrnWaKApuFATA+CklZ0DqdcKzP6mTxUN6g=";
+    };
+    date = "2023-11-07";
+  };
+  vim-ripgrep = {
+    pname = "vim-ripgrep";
+    version = "v1.0.3";
+    src = fetchFromGitHub {
+      owner = "jremmen";
+      repo = "vim-ripgrep";
+      rev = "v1.0.3";
+      fetchSubmodules = false;
       sha256 = "sha256-OvQPTEiXOHI0uz0+6AVTxyJ/TUMg6kd3BYTAbnCI7W8=";
     };
-    date = "2021-11-30";
   };
 }

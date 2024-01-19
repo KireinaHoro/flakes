@@ -56,9 +56,28 @@
         },
         "version": "278188c8bae13165aa70b6a2fbbb99101fd6f4cd"
     },
+    "vim-haskell-indent": {
+        "cargoLocks": null,
+        "date": "2023-11-07",
+        "extract": null,
+        "name": "vim-haskell-indent",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "a7423fe3968f04e60d33c76b64c9d4c404c73665",
+            "sha256": "sha256-uU4UAdHqOPrnWaKApuFATA+CklZ0DqdcKzP6mTxUN6g=",
+            "type": "git",
+            "url": "https://github.com/itchyny/vim-haskell-indent"
+        },
+        "version": "a7423fe3968f04e60d33c76b64c9d4c404c73665"
+    },
     "vim-ripgrep": {
         "cargoLocks": null,
-        "date": "2021-11-30",
+        "date": null,
         "extract": null,
         "name": "vim-ripgrep",
         "passthru": null,
@@ -68,11 +87,12 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "rev": "2bb2425387b449a0cd65a54ceb85e123d7a320b8",
+            "owner": "jremmen",
+            "repo": "vim-ripgrep",
+            "rev": "v1.0.3",
             "sha256": "sha256-OvQPTEiXOHI0uz0+6AVTxyJ/TUMg6kd3BYTAbnCI7W8=",
-            "type": "git",
-            "url": "https://github.com/jremmen/vim-ripgrep"
+            "type": "github"
         },
-        "version": "2bb2425387b449a0cd65a54ceb85e123d7a320b8"
+        "version": "v1.0.3"
     }
 }
