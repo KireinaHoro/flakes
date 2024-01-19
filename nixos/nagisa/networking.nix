@@ -83,7 +83,10 @@ in
           serverAliases = [ "nagisa.g.jsteward.moe" ];
         };
         "nagisa.g.jsteward.moe" = {
-          listen = [ { addr = "nagisa.g.jsteward.moe"; port = 8080; ssl = true; } ]; # only listen in gravity
+          listen = [
+            { addr = "[${gravityAddrSingle "1"}]"; port = 8080; ssl = true; }
+            { addr = "10.0.0.248"; port = 8080; ssl = true; } # public IPv4
+          ];
           forceSSL = true;
           useACMEHost = "nagisa.jsteward.moe";
           locations = {
