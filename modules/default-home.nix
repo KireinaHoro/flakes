@@ -38,7 +38,7 @@ homeConf = {
       syntaxHighlighting.enable = true;
       oh-my-zsh = {
         enable = true;
-        plugins = [ "git" "gpg-agent" ];
+        plugins = [ "git" ];
         theme = "candy";
       };
 
@@ -47,6 +47,11 @@ homeConf = {
       };
 
       initExtra = ''
+          # enable gpg ssh agent only if not in ssh session
+          if [[ -z $SSH_CONNECTION ]]; then
+            plugins+=(gpg-agent)
+          fi
+
           # TMUX auto attach
           if which tmux >/dev/null 2>&1; then
             case $- in
