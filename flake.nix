@@ -1,11 +1,6 @@
 {
   description = "KireinaHoro's Nix universe";
 
-  nixConfig = {
-    extra-trusted-substituters = ["https://rock5b-nixos.cachix.org"];
-    extra-trusted-public-keys = ["rock5b-nixos.cachix.org-1:bXHDewFS0d8pT90A+/YZan/3SjcyuPZ/QRgRSuhSPnA="];
-  };
-
   inputs = rec {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
