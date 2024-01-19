@@ -34,7 +34,7 @@
   with builtins;
   with nixpkgs.lib;
   let
-    this = import ./pkgs { inherit nixpkgs; };
+    this = import ./packages { inherit nixpkgs; };
     findConfs = typeDir: mapAttrs (k: _: import (typeDir + "/${k}") { inherit self nixpkgs inputs; }) (readDir typeDir);
   in flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: let
     pkgs = import nixpkgs {

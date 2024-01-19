@@ -9,3 +9,7 @@ fetch.git = "https://github.com/felixonmars/dnsmasq-china-list"
 [hosts-blocklists]
 src.git = "https://github.com/notracking/hosts-blocklists"
 fetch.git = "https://github.com/notracking/hosts-blocklists"
+
+[vim-ripgrep]
+src.git = "https://github.com/jremmen/vim-ripgrep"
+fetch.git = "https://github.com/jremmen/vim-ripgrep"
