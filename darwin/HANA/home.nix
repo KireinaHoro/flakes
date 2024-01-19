@@ -25,6 +25,9 @@ in
       else
         eval "$(/usr/local/bin/brew shellenv)"
       fi
+
+      # remove walters RPS1
+      unset RPS1
     '';
   };
 }
