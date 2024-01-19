@@ -126,6 +126,9 @@ homeConf = {
         " https://vi.stackexchange.com/questions/3288/override-cursorline-background-color-by-syntax-highlighting
         hi Todo         ctermbg=Black ctermfg=Yellow cterm=reverse
 
+        " nix-darwin vim uses VisualNOS by default (?), so link to regular visual
+        hi! def link VisualNOS Visual
+
         " Tabs
         nnoremap t. :tabedit %<CR>
         nnoremap tc :tabclose<CR>
