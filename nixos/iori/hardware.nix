@@ -34,6 +34,8 @@
           NTFS_FS = module;
           GPIO_ROCKCHIP = module;
           VIDEO_ROCKCHIP_HDMIRX = no;
+          # speed-up build
+          DEBUG_INFO_BTF = lib.mkForce no;
         };
         kernelPatches = (builtins.map (patch: { inherit patch; }) [
           ./patches/0002-disable-dp0.patch

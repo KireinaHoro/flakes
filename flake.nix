@@ -13,7 +13,7 @@
         flake-utils.follows = "flake-utils";
       };
     };
-    rock5b-nixos = { url = "github:aciceri/rock5b-nixos"; inputs.nixpkgs.follows = "nixpkgs"; };
+    rock5b-nixos = { url = "github:KireinaHoro/rock5b-nixos"; inputs.nixpkgs.follows = "nixpkgs"; };
     simple-nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
