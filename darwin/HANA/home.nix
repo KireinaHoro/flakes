@@ -26,8 +26,8 @@ in
         eval "$(/usr/local/bin/brew shellenv)"
       fi
 
-      # iTerm2 integration
-      test -e "$HOME/.iterm2_shell_integration.zsh" && source "$HOME/.iterm2_shell_integration.zsh"
+      # remove walters RPS1
+      unset RPS1
     '';
   };
 }

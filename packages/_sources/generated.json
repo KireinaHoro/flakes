@@ -1,7 +1,7 @@
 {
     "dnsmasq-china-list": {
         "cargoLocks": null,
-        "date": "2024-01-17",
+        "date": "2024-01-18",
         "extract": null,
         "name": "dnsmasq-china-list",
         "passthru": null,
@@ -11,12 +11,12 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "rev": "6e662c2b92ca071bafd15b38d615f859437b1520",
-            "sha256": "sha256-zwTW3Z9x179/kfxVLHpnQRCIsj4TU+djjE06eimDXCU=",
+            "rev": "7eb2855f5195287feac4a82d235d18f06b9bcd76",
+            "sha256": "sha256-Szljxn4gddp6Z8/F7CzWZVJKOvQSjVjBZEBS/RfhuYM=",
             "type": "git",
             "url": "https://github.com/felixonmars/dnsmasq-china-list"
         },
-        "version": "6e662c2b92ca071bafd15b38d615f859437b1520"
+        "version": "7eb2855f5195287feac4a82d235d18f06b9bcd76"
     },
     "hosts-blocklists": {
         "cargoLocks": null,
@@ -55,5 +55,44 @@
             "url": "https://gitlab.com/NickCao/RAIT"
         },
         "version": "278188c8bae13165aa70b6a2fbbb99101fd6f4cd"
+    },
+    "vim-haskell-indent": {
+        "cargoLocks": null,
+        "date": "2023-11-07",
+        "extract": null,
+        "name": "vim-haskell-indent",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "a7423fe3968f04e60d33c76b64c9d4c404c73665",
+            "sha256": "sha256-uU4UAdHqOPrnWaKApuFATA+CklZ0DqdcKzP6mTxUN6g=",
+            "type": "git",
+            "url": "https://github.com/itchyny/vim-haskell-indent"
+        },
+        "version": "a7423fe3968f04e60d33c76b64c9d4c404c73665"
+    },
+    "vim-ripgrep": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "vim-ripgrep",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jremmen",
+            "repo": "vim-ripgrep",
+            "rev": "v1.0.3",
+            "sha256": "sha256-OvQPTEiXOHI0uz0+6AVTxyJ/TUMg6kd3BYTAbnCI7W8=",
+            "type": "github"
+        },
+        "version": "v1.0.3"
     }
 }

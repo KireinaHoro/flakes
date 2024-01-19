@@ -3,16 +3,16 @@
 {
   dnsmasq-china-list = {
     pname = "dnsmasq-china-list";
-    version = "6e662c2b92ca071bafd15b38d615f859437b1520";
+    version = "7eb2855f5195287feac4a82d235d18f06b9bcd76";
     src = fetchgit {
       url = "https://github.com/felixonmars/dnsmasq-china-list";
-      rev = "6e662c2b92ca071bafd15b38d615f859437b1520";
+      rev = "7eb2855f5195287feac4a82d235d18f06b9bcd76";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-zwTW3Z9x179/kfxVLHpnQRCIsj4TU+djjE06eimDXCU=";
+      sha256 = "sha256-Szljxn4gddp6Z8/F7CzWZVJKOvQSjVjBZEBS/RfhuYM=";
     };
-    date = "2024-01-17";
+    date = "2024-01-18";
   };
   hosts-blocklists = {
     pname = "hosts-blocklists";
@@ -39,5 +39,29 @@
       sha256 = "sha256-6Y0s5/HUmWrZA6QmV5wYjB1M0Ab/jHM3TSruRpMRwtA=";
     };
     date = "2022-10-07";
+  };
+  vim-haskell-indent = {
+    pname = "vim-haskell-indent";
+    version = "a7423fe3968f04e60d33c76b64c9d4c404c73665";
+    src = fetchgit {
+      url = "https://github.com/itchyny/vim-haskell-indent";
+      rev = "a7423fe3968f04e60d33c76b64c9d4c404c73665";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "sha256-uU4UAdHqOPrnWaKApuFATA+CklZ0DqdcKzP6mTxUN6g=";
+    };
+    date = "2023-11-07";
+  };
+  vim-ripgrep = {
+    pname = "vim-ripgrep";
+    version = "v1.0.3";
+    src = fetchFromGitHub {
+      owner = "jremmen";
+      repo = "vim-ripgrep";
+      rev = "v1.0.3";
+      fetchSubmodules = false;
+      sha256 = "sha256-OvQPTEiXOHI0uz0+6AVTxyJ/TUMg6kd3BYTAbnCI7W8=";
+    };
   };
 }
