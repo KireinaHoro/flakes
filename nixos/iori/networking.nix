@@ -50,15 +50,15 @@ in
         networkConfig = {
           LinkLocalAddressing = "ipv4";
           IPv6AcceptRA = "no";
-          IPMasquerade = "ipv4";
+          IPForward = "ipv4";
         };
       };
       "${ifName}.200" = {
         address = [ "${localPrefixV4}.254/24" "${localPrefix}::1/64" ];
         networkConfig = {
           DHCPServer = true;
-          IPForward = true;
           IPv6SendRA = true;
+          IPMasquerade = "ipv4";
         };
         dhcpServerConfig = {
           # FIXME: run dnsmasq locally so we are standalone
