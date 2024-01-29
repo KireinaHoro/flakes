@@ -1,4 +1,4 @@
-{ username, standalone ? false }: { config, pkgs, ... }:
+{ username, standalone ? false }: { config, pkgs, lib, ... }:
 
 let
 homeConfUpper = if standalone then config else config.home-manager.users."${username}";
@@ -18,6 +18,52 @@ homeConf = {
   };
 
   programs = {
+    ssh = {
+      enable = true;
+      forwardAgent = true;
+      compression = true;
+      controlMaster = "auto";
+      controlPersist = "yes";
+      matchBlocks = (let
+        vncForward = { localForwards = [ {
+          bind.port = 59000;
+          host.address = "localhost";
+          host.port = 5901;
+        } ]; };
+        actualHosts = {
+          "fpga1" = { hostname = "fpga1.inf.ethz.ch"; user = "jsteward"; } // vncForward;
+          "enzian-build" = { hostname =  "enzian-build.ethz.ch"; } // vncForward;
+          "enzian-gateway" = { hostname = "enzian-gateway.ethz.ch"; };
+          "enzian-server" = { hostname = "enzian-server.ethz.ch"; };
+          "workstation" = { hostname = "sgd-dalcoi5-06.ethz.ch"; };
+
+          "minato" = { hostname = "minato.g.jsteward.moe"; };
+          "shigeru" = { hostname = "shigeru.g.jsteward.moe"; };
+        };
+      in actualHosts // {
+        "ethz-sg" = lib.hm.dag.entryAfter (builtins.attrNames actualHosts) {
+          match = "host *.ethz.ch";
+          extraOptions = {
+            GSSAPIAuthentication = "yes";
+            GSSAPIDelegateCredentials = "yes";
+            GSSAPIRenewalForcesRekey = "yes";
+            GSSAPIKeyExchange = "yes";
+            ControlMaster = "no";
+          };
+          user = "pengxu";
+        };
+        "enzians" = {
+          match = "host zuestoll*";
+          user = "enzian";
+          proxyJump = "enzian-gateway";
+        };
+        "jsteward.moe" = {
+          match = "host *.jsteward.moe";
+          user = "jsteward";
+        };
+      });
+    };
+
     vim = {
       enable = true;
       defaultEditor = true;
