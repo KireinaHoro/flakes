@@ -217,6 +217,12 @@ homeConf = {
         enable = true;
         plugins = [ "git" "gpg-agent" ];
         theme = "candy";
+        extraConfig = ''
+          # disable gpg-agent integration if we are in ssh session
+          if [[ -n "$SSH_CONNECTION" ]]; then
+            gnupg_SSH_AUTH_SOCK_by=$$
+          fi
+        '';
       };
 
       shellAliases = {
