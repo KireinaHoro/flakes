@@ -2,7 +2,7 @@
 
 let
 homeConfUpper = if standalone then config else config.home-manager.users."${username}";
-homeConf = {
+homeConf = { lib, ... }: {
   home = {
     inherit username;
     stateVersion = "24.05";
@@ -46,10 +46,11 @@ homeConf = {
           extraOptions = {
             GSSAPIAuthentication = "yes";
             GSSAPIDelegateCredentials = "yes";
+            ControlMaster = "no";
+          } // (if standalone then {
             GSSAPIRenewalForcesRekey = "yes";
             GSSAPIKeyExchange = "yes";
-            ControlMaster = "no";
-          };
+          } else {});
           user = "pengxu";
         };
         "enzians" = {
