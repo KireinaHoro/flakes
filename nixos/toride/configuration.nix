@@ -9,6 +9,9 @@
 #    };
 #  };
 
+  # emulate aarch64 for building
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   time.timeZone = "Europe/Zurich";
 
   i18n.defaultLocale = "en_US.UTF-8";
