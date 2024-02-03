@@ -1,4 +1,4 @@
-{ username, standalone ? false }: { config, pkgs, lib, ... }:
+{ username, standalone ? false }: { config, pkgs, lib, ...  }:
 
 let
 homeConfUpper = if standalone then config else config.home-manager.users."${username}";
@@ -251,7 +251,7 @@ homeConf = { lib, ... }: {
     bat.enable = true;
     home-manager.enable = true;
   };
-}; in if standalone then homeConf else {
+}; in if standalone then homeConf { inherit lib; } else {
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
   home-manager.users."${username}" = homeConf;
