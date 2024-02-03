@@ -77,9 +77,13 @@ in
           publicKey = "VqHfNMuAylcvkwWfY5nXqdowOBzTRyOIwGm5G3CeJlA=";
           allowedIPs = [ "10.172.220.5/32" "${remoteAccessPrefix}::5/128" ];
         }
-        { # ushi windows
+        { # ushi device 1
           publicKey = "AOje2nnk1FDEyB4UvX3WeT2x33x5uVnuGdAqMJOZ8Ws=";
           allowedIPs = [ "10.172.220.6/32" "${remoteAccessPrefix}::6/128" ];
+        }
+        { # ushi device 2
+          publicKey = "wKGCJX6z7NanHx4PZi0SAT9ugvdJvBVqwHXQG/ogLl8=";
+          allowedIPs = [ "10.172.220.7/32" "${remoteAccessPrefix}::7/128" ];
         }
       ];
     };
