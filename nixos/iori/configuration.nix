@@ -15,6 +15,9 @@
 
   environment.systemPackages = with pkgs; [ xfsprogs stow gnupg lm_sensors dig ];
 
+  users.users.root.openssh.authorizedKeys.keys =
+    config.users.users.jsteward.openssh.authorizedKeys.keys;
+
   programs = {
     mtr.enable = true;
     zsh.enable = true;
