@@ -55,6 +55,13 @@ in
   };
 
   services = {
+    # workaround in https://github.com/NixOS/nixpkgs/pull/275031#issuecomment-1891052685
+    dovecot2.sieve = {
+      plugins = [ "sieve_imapsieve" "sieve_extprograms" ];
+      extensions = [ "fileinto" ];
+      globalExtensions = [ "+vnd.dovecot.pipe" "+vnd.dovecot.environment" ];
+    };
+
     vnstat = { enable = true; };
 
     openssh.settings.PasswordAuthentication = false;
@@ -134,7 +141,7 @@ in
     loginAccounts = {
       "i@jsteward.moe" = {
         hashedPasswordFile = config.sops.secrets.mailbox-passwd-hash.path;
-        aliases = [ "postmaster@jsteward.moe" ];
+        aliases = [ "postmaster@jsteward.moe" "abuse@jsteward.moe" ];
       };
     };
     certificateScheme = "acme-nginx";

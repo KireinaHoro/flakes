@@ -1,0 +1,98 @@
+{
+    "dnsmasq-china-list": {
+        "cargoLocks": null,
+        "date": "2024-01-18",
+        "extract": null,
+        "name": "dnsmasq-china-list",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "7eb2855f5195287feac4a82d235d18f06b9bcd76",
+            "sha256": "sha256-Szljxn4gddp6Z8/F7CzWZVJKOvQSjVjBZEBS/RfhuYM=",
+            "type": "git",
+            "url": "https://github.com/felixonmars/dnsmasq-china-list"
+        },
+        "version": "7eb2855f5195287feac4a82d235d18f06b9bcd76"
+    },
+    "hosts-blocklists": {
+        "cargoLocks": null,
+        "date": "2023-06-26",
+        "extract": null,
+        "name": "hosts-blocklists",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "2ab426e806985d0d3d1c3eb447d7e772a836e10d",
+            "sha256": "sha256-nKNz9ux1FPxoL14VZtH/1tfnn67LeXmdVQJz7I9+Srk=",
+            "type": "git",
+            "url": "https://github.com/notracking/hosts-blocklists"
+        },
+        "version": "2ab426e806985d0d3d1c3eb447d7e772a836e10d"
+    },
+    "rait": {
+        "cargoLocks": null,
+        "date": "2022-10-07",
+        "extract": null,
+        "name": "rait",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "278188c8bae13165aa70b6a2fbbb99101fd6f4cd",
+            "sha256": "sha256-6Y0s5/HUmWrZA6QmV5wYjB1M0Ab/jHM3TSruRpMRwtA=",
+            "type": "git",
+            "url": "https://gitlab.com/NickCao/RAIT"
+        },
+        "version": "278188c8bae13165aa70b6a2fbbb99101fd6f4cd"
+    },
+    "vim-haskell-indent": {
+        "cargoLocks": null,
+        "date": "2023-11-07",
+        "extract": null,
+        "name": "vim-haskell-indent",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "a7423fe3968f04e60d33c76b64c9d4c404c73665",
+            "sha256": "sha256-uU4UAdHqOPrnWaKApuFATA+CklZ0DqdcKzP6mTxUN6g=",
+            "type": "git",
+            "url": "https://github.com/itchyny/vim-haskell-indent"
+        },
+        "version": "a7423fe3968f04e60d33c76b64c9d4c404c73665"
+    },
+    "vim-ripgrep": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "vim-ripgrep",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jremmen",
+            "repo": "vim-ripgrep",
+            "rev": "v1.0.3",
+            "sha256": "sha256-OvQPTEiXOHI0uz0+6AVTxyJ/TUMg6kd3BYTAbnCI7W8=",
+            "type": "github"
+        },
+        "version": "v1.0.3"
+    }
+}

@@ -34,6 +34,8 @@
           NTFS_FS = module;
           GPIO_ROCKCHIP = module;
           VIDEO_ROCKCHIP_HDMIRX = no;
+          # speed-up build
+          DEBUG_INFO_BTF = lib.mkForce no;
         };
         kernelPatches = (builtins.map (patch: { inherit patch; }) [
           ./patches/0002-disable-dp0.patch
@@ -47,10 +49,15 @@
       "earlyprintk"
     ];
 
-    initrd.availableKernelModules = lib.mkForce [ "ext4" "mmc_block" ];
-    initrd.kernelModules = [];
+    initrd.availableKernelModules = lib.mkForce [ "ext4" "xfs" "nvme" "mmc_block" ];
+    initrd.kernelModules = [ "gpio_rockchip" "rk806-spi" "rk806-core" "rk806-regulator" "pinctrl-rk806" ];
 
+    supportedFilesystems = [ "ext4" "xfs" ];
     extraModulePackages = [];
+    initrd.systemd = {
+      enable = true;
+      emergencyAccess = true;
+    };
   };
 
   system.stateVersion = "23.05";
@@ -64,10 +71,17 @@
       device = "/dev/disk/by-label/iori-data";
       fsType = "xfs";
       options = [ "nofail" "x-systemd.device-timeout=5s" ];
+      neededForBoot = true;
     };
     "/tmp" = {
       device = "/data/tmp";
       options = [ "bind" ];
+      depends = [ "/data" ];
+    };
+    "/nix/store" = {
+      device = "/data/nix-store";
+      options = [ "bind" "ro" "noatime" "discard" ];
+      depends = [ "/data" ];
     };
   };
 
