@@ -93,6 +93,12 @@ homeConf = { lib, ... }: {
         set nu rnu
         set bg=dark
 
+        " Control characters expansion
+        set list listchars=tab:»-,trail:.,eol:↲,extends:»,precedes:«,nbsp:%
+
+        " for copying out of the terminal, toggle line number display and control chars expansion
+        nnoremap <Leader>N :set invnu invrnu invlist<CR>
+
         set tabstop=4
         set shiftwidth=4
         set softtabstop=4
@@ -142,8 +148,6 @@ homeConf = { lib, ... }: {
             '''
         endfunction
 
-        " Control characters expansion
-        set list listchars=tab:»-,trail:.,eol:↲,extends:»,precedes:«,nbsp:%
         au FileType diff let b:noStripWhitespace=1
         au FileWritePre * call TrimWhiteSpace()
         au FileAppendPre * call TrimWhiteSpace()
