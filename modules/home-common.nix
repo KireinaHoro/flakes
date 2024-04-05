@@ -197,6 +197,10 @@ homeConf = { lib, ... }: {
         " fold with syntax by default
         set foldmethod=syntax
         set nofoldenable
+
+        " highlight column 80
+        set colorcolumn=80
+        hi ColorColumn cterm=NONE ctermbg=233 ctermfg=NONE guibg=NONE guifg=NONE
       '';
     };
 
