@@ -29,5 +29,10 @@ in
     activation.symlinkFlakes = lib.hm.dag.entryAfter ["writeBoundary"] ''
       $DRY_RUN_CMD ln -snf $VERBOSE_ARG ${workDir}/flakes ${xdgConfigHome}/home-manager
     '';
+
+    packages = with pkgs; [
+      texlive.combined.scheme-full
+      ffmpeg-headless
+    ];
   };
 }
