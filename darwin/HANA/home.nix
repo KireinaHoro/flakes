@@ -13,8 +13,9 @@ in
       sessionPath = [
         "${homeDir}/sdk/go1.20.3/bin"
         "${homeDir}/go/bin"
+        "${homeDir}/.ghcup/bin"
       ];
-      packages = with pkgs; [ coreutils ];
+      packages = with pkgs; [ coreutils graalvm-ce verilator ];
     };
 
     programs.zsh.initExtra = ''
