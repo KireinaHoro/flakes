@@ -32,9 +32,6 @@ homeConf = { lib, ... }: {
         } ]; };
         actualHosts = {
           "fpga1" = { hostname = "fpga1.inf.ethz.ch"; user = "jsteward"; } // vncForward;
-          "enzian-build" = { hostname =  "enzian-build.ethz.ch"; } // vncForward;
-          "enzian-gateway" = { hostname = "enzian-gateway.ethz.ch"; };
-          "enzian-server" = { hostname = "enzian-server.ethz.ch"; };
           "workstation" = { hostname = "sgd-dalcoi5-06.ethz.ch"; };
 
           "minato" = { hostname = "minato.g.jsteward.moe"; };
@@ -52,6 +49,14 @@ homeConf = { lib, ... }: {
             GSSAPIKeyExchange = "yes";
           } else {});
           user = "pengxu";
+        };
+        "enzian-infras" = {
+          match = "host enzian-*";
+          user = "pengxu";
+          extraOptions = {
+            CanonicalDomains = "ethz.ch";
+            CanonicalizeHostname = "yes";
+          };
         };
         "enzians" = {
           match = "host zuestoll*";
