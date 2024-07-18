@@ -304,7 +304,7 @@ in
               };
               extraConfig = ''
                 fastcgi_intercept_errors on;
-                fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
+                fastcgi_pass unix:${config.services.fcgiwrap.nginx.socket.address};
               '';
             };
             "^~ /smokeping/" = {
@@ -318,6 +318,10 @@ in
         };
       };
     };
-    fcgiwrap.enable = true;
+    fcgiwrap.nginx = {
+      process.user = config.services.smokeping.user;
+      process.group = config.services.smokeping.user;
+      socket = { inherit (config.services.nginx) user group; };
+    };
   };
 }
