@@ -9,7 +9,10 @@
         owner = name;
         inherit group;
       };
-      inadyn-cfg = {};
+      inadyn-cfg = with config.users.users.inadyn; {
+        owner = name;
+        inherit group;
+      };
     };
   };
 
