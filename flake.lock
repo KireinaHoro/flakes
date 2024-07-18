@@ -64,11 +64,11 @@
     "fan-control": {
       "flake": false,
       "locked": {
-        "lastModified": 1669548492,
-        "narHash": "sha256-qqPmOEF+r10VGz3izAnHZW6aJk1mOXy9BrpR9FvWSt0=",
+        "lastModified": 1698501344,
+        "narHash": "sha256-TuilsK62MovO9WpwUlQTf9K1ClDFk2P3exWYiITONs0=",
         "owner": "pymumu",
         "repo": "fan-control-rock5b",
-        "rev": "8419990c6c0f47a3ed0b55255d7e3591cc5fdab9",
+        "rev": "3a119fa4783223dfed4a73474761b883ee425cf0",
         "type": "github"
       },
       "original": {
@@ -114,11 +114,11 @@
         "nixpkgs-lib": "nixpkgs-lib"
       },
       "locked": {
-        "lastModified": 1678379998,
-        "narHash": "sha256-TZdfNqftHhDuIFwBcN9MUThx5sQXCTeZk9je5byPKRw=",
+        "lastModified": 1719994518,
+        "narHash": "sha256-pQMhCCHyQGRzdfAkdJ4cIWiw+JNuWsTX7f0ZYSyz0VY=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "c13d60b89adea3dc20704c045ec4d50dd964d447",
+        "rev": "9227223f6d922fee3c7b190b2cc238a99527bbb7",
         "type": "github"
       },
       "original": {
@@ -204,11 +204,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1721296618,
-        "narHash": "sha256-bEoD5uJKSyi9wXx8V9muzLnnFZ9SPWQyvH2fjvVGFPo=",
+        "lastModified": 1721311195,
+        "narHash": "sha256-PHa8zt+2Ga0rS4EL31T/Tzc/4Ev1n6y7DJHTLpKrnCw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "bfb339b377e531fb54401676870872bb9e2ea84f",
+        "rev": "f8b69469ae63cd405b22bff2a949ba5721a21017",
         "type": "github"
       },
       "original": {
@@ -234,20 +234,14 @@
     },
     "nixpkgs-lib": {
       "locked": {
-        "dir": "lib",
-        "lastModified": 1678375444,
-        "narHash": "sha256-XIgHfGvjFvZQ8hrkfocanCDxMefc/77rXeHvYdzBMc8=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "130fa0baaa2b93ec45523fdcde942f6844ee9f6e",
-        "type": "github"
+        "lastModified": 1719876945,
+        "narHash": "sha256-Fm2rDDs86sHy0/1jxTOKB1118Q0O3Uc7EC0iXvXKpbI=",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/5daf0514482af3f97abaefc78a6606365c9108e2.tar.gz"
       },
       "original": {
-        "dir": "lib",
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/5daf0514482af3f97abaefc78a6606365c9108e2.tar.gz"
       }
     },
     "nixpkgs-stable": {
@@ -266,22 +260,6 @@
         "type": "github"
       }
     },
-    "panfork": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1670633863,
-        "narHash": "sha256-4eZHMiYS+sRDHNBtLZTA8ELZnLns7yT3USU5YQswxQ0=",
-        "owner": "panfork",
-        "repo": "mesa",
-        "rev": "120202c675749c5ef81ae4c8cdc30019b4de08f4",
-        "type": "gitlab"
-      },
-      "original": {
-        "owner": "panfork",
-        "repo": "mesa",
-        "type": "gitlab"
-      }
-    },
     "rock5b-nixos": {
       "inputs": {
         "fan-control": "fan-control",
@@ -290,16 +268,15 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "panfork": "panfork",
         "tow-boot": "tow-boot",
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1705691632,
-        "narHash": "sha256-WYi1+kbc7nr3anM+6kvHqeowTYA1QoJEBf4e9nxhZ5s=",
+        "lastModified": 1721311238,
+        "narHash": "sha256-WlnGOExMMemcNQKBrWyzGl3lEXTpdXj62gUr0DTK7ek=",
         "owner": "KireinaHoro",
         "repo": "rock5b-nixos",
-        "rev": "138c281dbed601bafa9f5ca6b35a453b73a5b6ae",
+        "rev": "aaa8c07c60e9fa94c674f3f59728b60976f87b41",
         "type": "github"
       },
       "original": {
@@ -398,11 +375,11 @@
     "tow-boot": {
       "flake": false,
       "locked": {
-        "lastModified": 1677346757,
-        "narHash": "sha256-3SKlcZhfUaNz1bd/l/1B3D66NUk3sALVIyP8DHv41SU=",
+        "lastModified": 1696375616,
+        "narHash": "sha256-iCo5KF9+WMYww02cdlwEm+Y7Y8oo2b9eU4R3gyTUHmY=",
         "owner": "aciceri",
         "repo": "Tow-Boot",
-        "rev": "85d099f3473effdeca409bd165175d64dfb37ecc",
+        "rev": "f2aa25ce26be9756e91eafc9a98eae871720f14e",
         "type": "github"
       },
       "original": {
@@ -420,11 +397,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1678277086,
-        "narHash": "sha256-fQ1G72KhLWWf2z+ug9+4ErTEayvlcVQMul0qusKKBgk=",
+        "lastModified": 1721059077,
+        "narHash": "sha256-gCICMMX7VMSKKt99giDDtRLkHJ0cwSgBtDijJAqTlto=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "ec39cfa24342fdf0b04ae44592a191c4765f9c74",
+        "rev": "0fb28f237f83295b4dd05e342f333b447c097398",
         "type": "github"
       },
       "original": {
