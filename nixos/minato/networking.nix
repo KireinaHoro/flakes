@@ -56,39 +56,6 @@ in
     '';
   };
 
-  networking.wireguard.interfaces = {
-    remote-access = {
-      listenPort = 31675;
-      privateKeyFile = config.sops.secrets.remote-access-priv.path;
-      peers = [
-        { # pixel 4
-          publicKey = "zXU3IYwRdNnjEitP/WjS+v8q7KnPbYumwx3qEw0uGzM=";
-          allowedIPs = [ "10.172.220.2/32" "${remoteAccessPrefix}::2/128" ];
-        }
-        { # thinkpad
-          publicKey = "q4zeQsdAgfMu+z8F0QlmtlcUz75VqSONIq+Mz6Ja40U=";
-          allowedIPs = [ "10.172.220.3/32" "${remoteAccessPrefix}::3/128" ];
-        }
-        { # m1 macbook
-          publicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
-          allowedIPs = [ "10.172.220.4/32" "${remoteAccessPrefix}::4/128" ];
-        }
-        { # iphone
-          publicKey = "VqHfNMuAylcvkwWfY5nXqdowOBzTRyOIwGm5G3CeJlA=";
-          allowedIPs = [ "10.172.220.5/32" "${remoteAccessPrefix}::5/128" ];
-        }
-        { # ushi device 1
-          publicKey = "AOje2nnk1FDEyB4UvX3WeT2x33x5uVnuGdAqMJOZ8Ws=";
-          allowedIPs = [ "10.172.220.6/32" "${remoteAccessPrefix}::6/128" ];
-        }
-        { # ushi device 2
-          publicKey = "wKGCJX6z7NanHx4PZi0SAT9ugvdJvBVqwHXQG/ogLl8=";
-          allowedIPs = [ "10.172.220.7/32" "${remoteAccessPrefix}::7/128" ];
-        }
-      ];
-    };
-  };
-
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
   systemd.network = {
     networks = pkgs.injectNetworkNames {
@@ -139,6 +106,36 @@ in
       };
       remote-access = {
         address = [ "10.172.220.1/24" "${remoteAccessPrefix}::1/64" ];
+        wireguardConfig = {
+          ListenPort = 31675;
+          PrivateKeyFile = config.sops.secrets.remote-access-priv.path;
+        };
+        wireguardPeers = [
+          { # pixel 4
+            PublicKey = "zXU3IYwRdNnjEitP/WjS+v8q7KnPbYumwx3qEw0uGzM=";
+            AllowedIPs = [ "10.172.220.2/32" "${remoteAccessPrefix}::2/128" ];
+          }
+          { # thinkpad
+            PublicKey = "q4zeQsdAgfMu+z8F0QlmtlcUz75VqSONIq+Mz6Ja40U=";
+            AllowedIPs = [ "10.172.220.3/32" "${remoteAccessPrefix}::3/128" ];
+          }
+          { # m1 macbook
+            PublicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
+            AllowedIPs = [ "10.172.220.4/32" "${remoteAccessPrefix}::4/128" ];
+          }
+          { # iphone
+            PublicKey = "VqHfNMuAylcvkwWfY5nXqdowOBzTRyOIwGm5G3CeJlA=";
+            AllowedIPs = [ "10.172.220.5/32" "${remoteAccessPrefix}::5/128" ];
+          }
+          { # ushi device 1
+            PublicKey = "AOje2nnk1FDEyB4UvX3WeT2x33x5uVnuGdAqMJOZ8Ws=";
+            AllowedIPs = [ "10.172.220.6/32" "${remoteAccessPrefix}::6/128" ];
+          }
+          { # ushi device 2
+            PublicKey = "wKGCJX6z7NanHx4PZi0SAT9ugvdJvBVqwHXQG/ogLl8=";
+            AllowedIPs = [ "10.172.220.7/32" "${remoteAccessPrefix}::7/128" ];
+          }
+        ];
         routingPolicyRules = [
           {
             From = "${remoteAccessPrefix}::/64";

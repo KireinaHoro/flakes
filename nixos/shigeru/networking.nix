@@ -54,43 +54,6 @@ in
     '';
   };
 
-  networking.wireguard.interfaces = {
-    remote-access = {
-      listenPort = 31675;
-      privateKeyFile = config.sops.secrets.remote-access-priv.path;
-      peers = [
-        { # pixel 4
-          publicKey = "xMQLxCBknaGfE5qomFCB3s9uzcvvbbvlU+D1uQtvryY=";
-          allowedIPs = [ "10.172.224.2/32" "${remoteAccessPrefix}::2/128" ];
-        }
-        { # thinkpad
-          publicKey = "6zsHjlqznwa2BvieBnSEcJv65ouPY7GVaQiX82Ko22M=";
-          allowedIPs = [ "10.172.224.3/32" "${remoteAccessPrefix}::3/128" ];
-        }
-        { # m1 macbook
-          publicKey = "sTmAuGsMebXGsOLGCrowonWEIDDSBnQxTZkAuVzIfU4=";
-          allowedIPs = [ "10.172.224.4/32" "${remoteAccessPrefix}::4/128" ];
-        }
-        { # Jindi iPhone
-          publicKey = "i3IJjP1h+z4YtIwY4df2uqUViWBtgL0lK3rGeGRIk3U=";
-          allowedIPs = [ "10.172.224.5/32" "${remoteAccessPrefix}::5/128" ];
-        }
-        { # Jindi Mac
-          publicKey = "8NvajLFSN+xSP86v67caUusYgAUqB1dbwTlutCpUjBI=";
-          allowedIPs = [ "10.172.224.6/32" "${remoteAccessPrefix}::6/128" ];
-        }
-        { # iphone 13 mini
-          publicKey = "qATZSr/NXq/yPyFX1I7k7F6wJeTMJv5yhSY4aa05n2w=";
-          allowedIPs = [ "10.172.224.7/32" "${remoteAccessPrefix}::7/128" ];
-        }
-        { # desktop
-          publicKey = "YdM51psPpxUH7oV5mHmH6POa0h59xwW2cMuAE09deDw=";
-          allowedIPs = [ "10.172.224.8/32" "${remoteAccessPrefix}::8/128" ];
-        }
-      ];
-    };
-  };
-
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
@@ -101,6 +64,32 @@ in
       };
       remote-access = {
         address = [ "10.172.224.1/24" "${remoteAccessPrefix}::1/64" ];
+        wireguardConfig = {
+          ListenPort = 31675;
+          PrivateKeyFile = config.sops.secrets.remote-access-priv.path;
+        };
+        wireguardPeers = [
+          { # pixel 4
+            PublicKey = "xMQLxCBknaGfE5qomFCB3s9uzcvvbbvlU+D1uQtvryY=";
+            AllowedIPs = [ "10.172.224.2/32" "${remoteAccessPrefix}::2/128" ];
+          }
+          { # thinkpad t470p
+            PublicKey = "6zsHjlqznwa2BvieBnSEcJv65ouPY7GVaQiX82Ko22M=";
+            AllowedIPs = [ "10.172.224.3/32" "${remoteAccessPrefix}::3/128" ];
+          }
+          { # m1 macbook air
+            PublicKey = "sTmAuGsMebXGsOLGCrowonWEIDDSBnQxTZkAuVzIfU4=";
+            AllowedIPs = [ "10.172.224.4/32" "${remoteAccessPrefix}::4/128" ];
+          }
+          { # iphone 13 mini
+            PublicKey = "qATZSr/NXq/yPyFX1I7k7F6wJeTMJv5yhSY4aa05n2w=";
+            AllowedIPs = [ "10.172.224.7/32" "${remoteAccessPrefix}::7/128" ];
+          }
+          { # desktop in Zurich home
+            PublicKey = "YdM51psPpxUH7oV5mHmH6POa0h59xwW2cMuAE09deDw=";
+            AllowedIPs = [ "10.172.224.8/32" "${remoteAccessPrefix}::8/128" ];
+          }
+        ];
         routingPolicyRules = [
           # local resolver for China DNS
           {
