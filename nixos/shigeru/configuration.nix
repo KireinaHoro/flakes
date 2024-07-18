@@ -5,7 +5,10 @@
     defaultSopsFile = ./secrets.yaml;
     secrets = {
       rait = {};
-      remote-access-priv = {};
+      remote-access-priv = with config.users.users.systemd-network; {
+        owner = name;
+        inherit group;
+      };
     };
   };
 

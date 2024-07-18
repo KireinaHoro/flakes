@@ -31,7 +31,7 @@ in
       resolveLocalQueries = false;
       extraConfig = ''
         interface=${cfg.ifName}
-        bind-interfaces
+        bind-dynamic
         no-resolv
         no-hosts
         ${if cfg.logQueries then ''
@@ -45,8 +45,6 @@ in
       '';
     };
     systemd.services.dnsmasq = {
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
       serviceConfig = {
         TimeoutStartSec = "infinity";
       };

@@ -1,14 +1,6 @@
 { config, pkgs, ... }:
 
 {
-#  sops = {
-#    defaultSopsFile = ./secrets.yaml;
-#    secrets = {
-#      rait = {};
-#      remote-access-priv = {};
-#    };
-#  };
-
   # emulate aarch64 for building
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
