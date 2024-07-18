@@ -103,22 +103,22 @@ in
         address = [ "10.172.224.1/24" "${remoteAccessPrefix}::1/64" ];
         routingPolicyRules = [
           # local resolver for China DNS
-          { routingPolicyRuleConfig = {
+          {
             To = chinaServer;
             Table = gravityTable;
             Priority = 50;
-          }; }
-          { routingPolicyRuleConfig = {
+          }
+          {
             From = "${remoteAccessPrefix}::/64";
             IncomingInterface = "remote-access";
             FirewallMark = gravityMark;  # PKU IPv6
             Table = gravityTable;
             Priority = 100;
-          }; }
-          { routingPolicyRuleConfig = {
+          }
+          {
             To = "${remoteAccessPrefix}::/64";
             Priority = 100;
-          }; }
+          }
         ];
       };
     };

@@ -76,7 +76,7 @@ in
         };
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { To = "${localPrefix}::/64"; Priority = 100; }; }
+          { To = "${localPrefix}::/64"; Priority = 100; }
         ];
       };
     };

@@ -61,29 +61,28 @@ in
       ivi = {
         name = "ivi";
         addresses = [
-          { addressConfig = { Address = "${removeSuffix "0" cfg.prefix4}1/12"; PreferredLifetime = 0; }; }
-          { addressConfig = { Address = "${cfg.prefix6}::/96"; PreferredLifetime = 0; }; }
+          { Address = "${removeSuffix "0" cfg.prefix4}1/12"; PreferredLifetime = 0; }
+          { Address = "${cfg.prefix6}::/96"; PreferredLifetime = 0; }
         ];
         routes = [
-          { routeConfig = { Destination = "0.0.0.0/0"; Table = 3500; }; }
+          { Destination = "0.0.0.0/0"; Table = 3500; }
         ];
         routingPolicyRules = [
           # first check if is local peer
-          { routingPolicyRuleConfig = {
+          {
             To = "${cfg.prefix4}/${toString prefix4Length}";
             Priority = 50;
-          }; }
-          # then if still gravity, send to ivi for outgoing
-          { routingPolicyRuleConfig = { From = "10.160.0.0/12"; Table = 3500; Priority = 100; } //
-            (if cfg.fwmark == null then {} else { FirewallMark = cfg.fwmark; });
           }
-          { routingPolicyRuleConfig = {
+          # then if still gravity, send to ivi for outgoing
+          ({ From = "10.160.0.0/12"; Table = 3500; Priority = 100; } //
+            (if cfg.fwmark == null then {} else { FirewallMark = cfg.fwmark; }))
+          {
             Family = "ipv6";
             IncomingInterface = "ivi";
             Table = 3500;
             Priority = 100;
-          }; }
-          { routingPolicyRuleConfig = { To = "${cfg.prefix6}::/96"; Priority = 150; }; }
+          }
+          { To = "${cfg.prefix6}::/96"; Priority = 150; }
         ];
       };
     };

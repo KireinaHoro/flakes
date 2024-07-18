@@ -85,15 +85,15 @@ in
         ${cfg.link} = {
           linkConfig = { RequiredForOnline = false; };
           address = [ cfg.address ];
-          routes = [ { routeConfig = { Destination = "::/0"; Gateway = "fe80::200:ff:fe00:2"; Table = cfg.gravityTable; }; } ];
+          routes = [ { Destination = "::/0"; Gateway = "fe80::200:ff:fe00:2"; Table = cfg.gravityTable; } ];
           routingPolicyRules = [
-            { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.fwmark; Priority = 50; }; }
+            { Family = "ipv6"; FirewallMark = cfg.fwmark; Priority = 50; }
             # this blackhole rule is preferred (in case default route in main disappeared)
-            { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.fwmark; Type = "blackhole"; Priority = 51; }; }
-            { routingPolicyRuleConfig = { To = cfg.route; Table = cfg.gravityTable; Priority = 200; }; }
-            { routingPolicyRuleConfig = { From = cfg.route; Table = cfg.gravityTable; Priority = 200; }; }
+            { Family = "ipv6"; FirewallMark = cfg.fwmark; Type = "blackhole"; Priority = 51; }
+            { To = cfg.route; Table = cfg.gravityTable; Priority = 200; }
+            { From = cfg.route; Table = cfg.gravityTable; Priority = 200; }
           ] ++ (if cfg.defaultRoute then [
-            { routingPolicyRuleConfig = { To = "::/0"; Table = cfg.gravityTable; Priority = 300; }; }
+            { To = "::/0"; Table = cfg.gravityTable; Priority = 300; }
           ] else []);
         };
       };

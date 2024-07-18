@@ -105,7 +105,7 @@ in
         };
         # chinaRoute packets lookup main
         routingPolicyRules = [
-          { routingPolicyRuleConfig = { Family = "both"; FirewallMark = gravityMark; Priority = 60; }; }
+          { Family = "both"; FirewallMark = gravityMark; Priority = 60; }
         ];
       };
 
@@ -128,25 +128,25 @@ in
         };
         ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = {
+          {
             From = "${localPrefix}::/64";
             IncomingInterface = "${ifName}.200";
             Table = gravityTable;
             Priority = 100;
-          }; }
-          { routingPolicyRuleConfig = { To = "${localPrefix}::/64"; Priority = 100; }; }
-        ] ++ map (s: { routingPolicyRuleConfig = { To = s; Table = gravityTable; }; }) publicDNS;
+          }
+          { To = "${localPrefix}::/64"; Priority = 100; }
+        ] ++ map (s: { To = s; Table = gravityTable; }) publicDNS;
       };
       remote-access = {
         address = [ "10.172.220.1/24" "${remoteAccessPrefix}::1/64" ];
         routingPolicyRules = [
-          { routingPolicyRuleConfig = {
+          {
             From = "${remoteAccessPrefix}::/64";
             IncomingInterface = "remote-access";
             Table = gravityTable;
             Priority = 100;
-          }; }
-          { routingPolicyRuleConfig = { To = "${remoteAccessPrefix}::/64"; Priority = 100; }; }
+          }
+          { To = "${remoteAccessPrefix}::/64"; Priority = 100; }
         ];
       };
     };
