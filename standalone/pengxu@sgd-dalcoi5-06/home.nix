@@ -33,6 +33,9 @@ in
     packages = with pkgs; [
       texlive.combined.scheme-full
       ffmpeg-headless
+      # spinalhdl formal
+      symbiyosys
+      yices
     ];
   };
 }
