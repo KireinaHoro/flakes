@@ -22,7 +22,7 @@
 
   users.users.jsteward.shell = pkgs.zsh;
 
-  nix.binaryCaches = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
+  nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
   environment.systemPackages = with pkgs; [ gnupg dig ];
 
   programs = {
