@@ -93,7 +93,7 @@ in
           DNS = [ "${localPrefix}::1" ];
           EmitDomains = false;
         };
-        ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
+        ipv6Prefixes = [ { Prefix = "${localPrefix}::/64"; } ];
         routingPolicyRules = [
           {
             From = "${localPrefix}::/64";

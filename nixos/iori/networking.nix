@@ -74,7 +74,7 @@ in
           # DNS = [ "2a0c:b641:69c:ce10::1" ];
           EmitDomains = false;
         };
-        ipv6Prefixes = [ { ipv6PrefixConfig = { Prefix = "${localPrefix}::/64"; }; } ];
+        ipv6Prefixes = [ { Prefix = "${localPrefix}::/64"; } ];
         routingPolicyRules = [
           { To = "${localPrefix}::/64"; Priority = 100; }
         ];
