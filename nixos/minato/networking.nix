@@ -323,7 +323,7 @@ in
 
     inadyn = {
       enable = true;
-      cfgFile = config.sops.secrets.inadyn-cfg.path;
+      configFile = config.sops.secrets.inadyn-cfg.path;
     };
   };
 }
