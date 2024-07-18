@@ -106,6 +106,20 @@ in
       };
       remote-access = {
         address = [ "10.172.220.1/24" "${remoteAccessPrefix}::1/64" ];
+        routingPolicyRules = [
+          {
+            From = "${remoteAccessPrefix}::/64";
+            IncomingInterface = "remote-access";
+            Table = gravityTable;
+            Priority = 100;
+          }
+          { To = "${remoteAccessPrefix}::/64"; Priority = 100; }
+        ];
+      };
+    };
+    netdevs = pkgs.injectNetdevNames {
+      remote-access = {
+        netdevConfig = { Kind = "wireguard"; };
         wireguardConfig = {
           ListenPort = 31675;
           PrivateKeyFile = config.sops.secrets.remote-access-priv.path;
@@ -136,18 +150,7 @@ in
             AllowedIPs = [ "10.172.220.7/32" "${remoteAccessPrefix}::7/128" ];
           }
         ];
-        routingPolicyRules = [
-          {
-            From = "${remoteAccessPrefix}::/64";
-            IncomingInterface = "remote-access";
-            Table = gravityTable;
-            Priority = 100;
-          }
-          { To = "${remoteAccessPrefix}::/64"; Priority = 100; }
-        ];
       };
-    };
-    netdevs = pkgs.injectNetdevNames {
       "${ifName}.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
     };
   };

@@ -64,6 +64,30 @@ in
       };
       remote-access = {
         address = [ "10.172.224.1/24" "${remoteAccessPrefix}::1/64" ];
+        routingPolicyRules = [
+          # local resolver for China DNS
+          {
+            To = chinaServer;
+            Table = gravityTable;
+            Priority = 50;
+          }
+          {
+            From = "${remoteAccessPrefix}::/64";
+            IncomingInterface = "remote-access";
+            FirewallMark = gravityMark;  # PKU IPv6
+            Table = gravityTable;
+            Priority = 100;
+          }
+          {
+            To = "${remoteAccessPrefix}::/64";
+            Priority = 100;
+          }
+        ];
+      };
+    };
+    netdevs = pkgs.injectNetdevNames {
+      remote-access = {
+        netdevConfig = { Kind = "wireguard"; };
         wireguardConfig = {
           ListenPort = 31675;
           PrivateKeyFile = config.sops.secrets.remote-access-priv.path;
@@ -88,25 +112,6 @@ in
           { # desktop in Zurich home
             PublicKey = "YdM51psPpxUH7oV5mHmH6POa0h59xwW2cMuAE09deDw=";
             AllowedIPs = [ "10.172.224.8/32" "${remoteAccessPrefix}::8/128" ];
-          }
-        ];
-        routingPolicyRules = [
-          # local resolver for China DNS
-          {
-            To = chinaServer;
-            Table = gravityTable;
-            Priority = 50;
-          }
-          {
-            From = "${remoteAccessPrefix}::/64";
-            IncomingInterface = "remote-access";
-            FirewallMark = gravityMark;  # PKU IPv6
-            Table = gravityTable;
-            Priority = 100;
-          }
-          {
-            To = "${remoteAccessPrefix}::/64";
-            Priority = 100;
           }
         ];
       };
