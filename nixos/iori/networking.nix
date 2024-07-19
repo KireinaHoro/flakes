@@ -286,9 +286,8 @@ in
         ${wifiIfName} = {
           countryCode = "CH";
           band = "2g";
-          channel = 10;
+          channel = 1;
           wifi6.enable = true;
-          wifi4.enable = false;
           networks.${wifiIfName} = {
             ssid = "JSteward Tech";
             authentication.saePasswords = [{ password = "Project$Dark$Velvet"; }]; # we don't bother with sops for the wifi password
