@@ -86,4 +86,5 @@
   };
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
+  hardware.enableRedistributableFirmware = true;
 }

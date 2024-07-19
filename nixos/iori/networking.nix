@@ -54,6 +54,14 @@ in
         };
       };
       "${ifName}.200" = {
+        linkConfig = { RequiredForOnline = false; };
+        networkConfig = { Bridge = "local-devs"; };
+      };
+      ${wifiIfName} = {
+        linkConfig = { RequiredForOnline = false; };
+        networkConfig = { Bridge = "local-devs"; };
+      };
+      local-devs = {
         address = [ "${localPrefixV4}.254/24" "${localPrefix}::1/64" ];
         linkConfig = { RequiredForOnline = false; };
         networkConfig = {
@@ -83,6 +91,7 @@ in
     };
     netdevs = pkgs.injectNetdevNames {
       "${ifName}.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
+      "local-devs" = { netdevConfig = { Kind = "bridge"; }; };
     };
   };
 
@@ -271,25 +280,22 @@ in
       '';
     };
 
-    /* WIP -- Microcode update? */
-    /*
     hostapd = {
-      enable = false;
+      enable = true;
       radios = {
         ${wifiIfName} = {
           countryCode = "CH";
-          band = "5g";
-          channel = 0;
+          band = "2g";
+          channel = 10;
           wifi6.enable = true;
           wifi4.enable = false;
           networks.${wifiIfName} = {
             ssid = "JSteward Tech";
-            authentication.saePasswords = [{ password = "8819fe8d-90fa-4137-8467-985238720d97"; }]; # we don't bother with sops for the wifi password
+            authentication.saePasswords = [{ password = "Project$Dark$Velvet"; }]; # we don't bother with sops for the wifi password
           };
         };
       };
     };
-    */
 
     /* TODO: galleryd */
     nginx = {
