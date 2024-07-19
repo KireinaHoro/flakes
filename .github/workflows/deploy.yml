@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: checkout local action
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: deploy flake on kage
         uses: ./actions/deploy
         with:

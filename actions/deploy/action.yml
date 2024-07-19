@@ -11,7 +11,8 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'docker://kireinahoro/flakes-ci:v1'
+  image: 'docker://kireinahoro/flakes-base:v1'
+  entrypoint: /deploy.sh
   args:
     - ${{ inputs.flake }}
     - ${{ inputs.privkey }}

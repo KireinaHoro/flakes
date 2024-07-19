@@ -3,7 +3,7 @@ on:
     types: [bump_dep]
 
 jobs:
-  bump_job:
+  bump:
     runs-on: ubuntu-latest
     name: Bump dependency
     steps:
