@@ -60,6 +60,7 @@ in
     systemd.network.networks = {
       ivi = {
         name = "ivi";
+        linkConfig = { RequiredForOnline = false; };
         addresses = [
           { Address = "${removeSuffix "0" cfg.prefix4}1/12"; PreferredLifetime = 0; }
           { Address = "${cfg.prefix6}::/96"; PreferredLifetime = 0; }

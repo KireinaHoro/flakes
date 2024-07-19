@@ -65,6 +65,7 @@ in
       };
       remote-access = {
         address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
+        linkConfig = { RequiredForOnline = false; };
         routingPolicyRules = [
           # local resolver for China DNS
           {

@@ -55,6 +55,7 @@ in
       };
       "${ifName}.200" = {
         address = [ "${localPrefixV4}.254/24" "${localPrefix}::1/64" ];
+        linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
           IPv6SendRA = true;

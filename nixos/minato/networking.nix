@@ -79,6 +79,7 @@ in
 
       "${ifName}.200" = {
         address = [ "${ivi4Prefix}.254/24" "${localPrefix}::1/64" ];
+        linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
           IPForward = true;
@@ -107,6 +108,7 @@ in
       };
       remote-access = {
         address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
+        linkConfig = { RequiredForOnline = false; };
         routingPolicyRules = [
           {
             From = "${remoteAccessPrefix}::/64";
