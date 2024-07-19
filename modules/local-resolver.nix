@@ -9,9 +9,9 @@ in
     servers = mkOption {
       type = types.listOf types.str;
     };
-    ifName = mkOption {
+    listenAddr = mkOption {
       type = types.str;
-      description = "which interface to listen on for DNS queries";
+      description = "address to listen on for DNS requests";
     };
     configDirs = mkOption {
       type = types.listOf types.str;
@@ -30,7 +30,7 @@ in
       inherit (cfg) servers;
       resolveLocalQueries = false;
       extraConfig = ''
-        interface=${cfg.ifName}
+        listen-address=${cfg.listenAddr}
         bind-dynamic
         no-resolv
         no-hosts

@@ -4,6 +4,7 @@ with pkgs.lib;
 
 let
   iviDiviPrefix = "2a0c:b641:69c:ce1";
+  ivi4Prefix = "10.172.224";
   remoteAccessPrefix = "2a0c:b641:69c:ce1f";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
@@ -63,7 +64,7 @@ in
         dns = [ "129.132.98.12" "129.132.250.2" ];
       };
       remote-access = {
-        address = [ "10.172.224.1/24" "${remoteAccessPrefix}::1/64" ];
+        address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
         routingPolicyRules = [
           # local resolver for China DNS
           {
@@ -95,23 +96,23 @@ in
         wireguardPeers = [
           { # pixel 4
             PublicKey = "xMQLxCBknaGfE5qomFCB3s9uzcvvbbvlU+D1uQtvryY=";
-            AllowedIPs = [ "10.172.224.2/32" "${remoteAccessPrefix}::2/128" ];
+            AllowedIPs = [ "${ivi4Prefix}.2/32" "${remoteAccessPrefix}::2/128" ];
           }
           { # thinkpad t470p
             PublicKey = "6zsHjlqznwa2BvieBnSEcJv65ouPY7GVaQiX82Ko22M=";
-            AllowedIPs = [ "10.172.224.3/32" "${remoteAccessPrefix}::3/128" ];
+            AllowedIPs = [ "${ivi4Prefix}.3/32" "${remoteAccessPrefix}::3/128" ];
           }
           { # m1 macbook air
             PublicKey = "sTmAuGsMebXGsOLGCrowonWEIDDSBnQxTZkAuVzIfU4=";
-            AllowedIPs = [ "10.172.224.4/32" "${remoteAccessPrefix}::4/128" ];
+            AllowedIPs = [ "${ivi4Prefix}.4/32" "${remoteAccessPrefix}::4/128" ];
           }
           { # iphone 13 mini
             PublicKey = "qATZSr/NXq/yPyFX1I7k7F6wJeTMJv5yhSY4aa05n2w=";
-            AllowedIPs = [ "10.172.224.7/32" "${remoteAccessPrefix}::7/128" ];
+            AllowedIPs = [ "${ivi4Prefix}.7/32" "${remoteAccessPrefix}::7/128" ];
           }
           { # desktop in Zurich home
             PublicKey = "YdM51psPpxUH7oV5mHmH6POa0h59xwW2cMuAE09deDw=";
-            AllowedIPs = [ "10.172.224.8/32" "${remoteAccessPrefix}::8/128" ];
+            AllowedIPs = [ "${ivi4Prefix}.8/32" "${remoteAccessPrefix}::8/128" ];
           }
         ];
       };
@@ -129,13 +130,13 @@ in
     };
     chinaDNS = {
       enable = true;
-      ifName = "remote-access";
       servers = publicDNS;
       inherit chinaServer;
       accelAppleGoogle = false;
     };
     localResolver = {
       logQueries = true;
+      listenAddr = "${ivi4Prefix}.1";
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       # use ETH DNS for internal queries
       # FIXME: hack for NetEase IPv6
@@ -169,7 +170,7 @@ in
     # default to minato - back to China
     ivi = {
       enable = true;
-      prefix4 = "10.172.224.0";
+      prefix4 = "${ivi4Prefix}.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
       defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       fwmark = gravityMark;

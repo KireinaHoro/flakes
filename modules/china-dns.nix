@@ -14,10 +14,6 @@ in
       type = types.listOf types.str;
       default = [ "8.8.8.8" "8.8.4.4" ];
     };
-    ifName = mkOption {
-      type = types.str;
-      description = "which interface to listen on for DNS queries";
-    };
     chinaServer = mkOption {
       type = types.str;
       default = "114.114.114.114";
@@ -29,7 +25,7 @@ in
   };
   config = mkIf cfg.enable {
     services.localResolver = {
-      inherit (cfg) servers ifName enable;
+      inherit (cfg) servers enable;
       configDirs = [ "${chinaList}/dnsmasq" ];
     };
   };
