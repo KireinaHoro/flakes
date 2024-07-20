@@ -286,11 +286,24 @@ in
         ${wifiIfName} = {
           countryCode = "CH";
           band = "2g";
-          channel = 1;
+          channel = 11;
           wifi6.enable = true;
-          networks.${wifiIfName} = {
-            ssid = "JSteward Tech";
-            authentication.saePasswords = [{ password = "Project$Dark$Velvet"; }]; # we don't bother with sops for the wifi password
+          networks = let
+            # we don't bother with sops for the wifi password
+            password = "Project$Dark$Velvet";
+          in {
+            ${wifiIfName} = {
+              ssid = "JSteward Tech";
+              authentication = {
+                mode = "wpa3-sae-transition";
+                saePasswords = [ { inherit password; } ];
+                wpaPassword = password;
+              };
+              settings = {
+                # Garmin Index S2 only supports wpa2-sha256, but we still want wpa3-sae
+                wpa_key_mgmt = pkgs.lib.mkForce "WPA-PSK SAE";
+              };
+            };
           };
         };
       };
