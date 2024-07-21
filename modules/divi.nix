@@ -48,6 +48,7 @@ in
     systemd.network.networks = {
       divi = {
         name = "divi";
+        linkConfig = { RequiredForOnline = false; };
         addresses = [
           { Address = "10.208.0.1/12"; PreferredLifetime = 0; }
           { Address = cfg.address; PreferredLifetime = 0; }

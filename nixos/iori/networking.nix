@@ -54,7 +54,16 @@ in
         };
       };
       "${ifName}.200" = {
+        linkConfig = { RequiredForOnline = false; };
+        networkConfig = { Bridge = "local-devs"; };
+      };
+      ${wifiIfName} = {
+        linkConfig = { RequiredForOnline = false; };
+        networkConfig = { Bridge = "local-devs"; };
+      };
+      local-devs = {
         address = [ "${localPrefixV4}.254/24" "${localPrefix}::1/64" ];
+        linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
           IPv6SendRA = true;
@@ -82,6 +91,7 @@ in
     };
     netdevs = pkgs.injectNetdevNames {
       "${ifName}.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
+      "local-devs" = { netdevConfig = { Kind = "bridge"; }; };
     };
   };
 
@@ -270,25 +280,34 @@ in
       '';
     };
 
-    /* WIP -- Microcode update? */
-    /*
     hostapd = {
-      enable = false;
+      enable = true;
       radios = {
         ${wifiIfName} = {
           countryCode = "CH";
-          band = "5g";
-          channel = 0;
+          band = "2g";
+          channel = 11;
           wifi6.enable = true;
-          wifi4.enable = false;
-          networks.${wifiIfName} = {
-            ssid = "JSteward Tech";
-            authentication.saePasswords = [{ password = "8819fe8d-90fa-4137-8467-985238720d97"; }]; # we don't bother with sops for the wifi password
+          networks = let
+            # we don't bother with sops for the wifi password
+            password = "Project$Dark$Velvet";
+          in {
+            ${wifiIfName} = {
+              ssid = "JSteward Tech";
+              authentication = {
+                mode = "wpa3-sae-transition";
+                saePasswords = [ { inherit password; } ];
+                wpaPassword = password;
+              };
+              settings = {
+                # Garmin Index S2 only supports wpa2-sha256, but we still want wpa3-sae
+                wpa_key_mgmt = pkgs.lib.mkForce "WPA-PSK SAE";
+              };
+            };
           };
         };
       };
     };
-    */
 
     /* TODO: galleryd */
     nginx = {

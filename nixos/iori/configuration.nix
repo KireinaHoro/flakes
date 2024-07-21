@@ -13,7 +13,7 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  environment.systemPackages = with pkgs; [ xfsprogs stow gnupg lm_sensors dig ];
+  environment.systemPackages = with pkgs; [ xfsprogs stow gnupg lm_sensors dig iw ];
 
   users.users.root.openssh.authorizedKeys.keys =
     config.users.users.jsteward.openssh.authorizedKeys.keys;
