@@ -4,9 +4,10 @@ with pkgs.lib;
 
 let
   iviDiviPrefix = "2a0c:b641:69c:cd0";
-  ivi4Prefix = "10.172.222";
   localPrefix = "2a0c:b641:69c:cde0";
+  local4Prefix = "10.172.222";
   remoteAccessPrefix = "2a0c:b641:69c:cdc0";
+  remoteAccess4Prefix = "10.172.220";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp0s25";
@@ -78,7 +79,7 @@ in
       };
 
       "${ifName}.200" = {
-        address = [ "${ivi4Prefix}.254/24" "${localPrefix}::1/64" ];
+        address = [ "${local4Prefix}.254/24" "${localPrefix}::1/64" ];
         linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
@@ -86,7 +87,7 @@ in
           IPv6SendRA = true;
         };
         dhcpServerConfig = {
-          DNS = [ "${ivi4Prefix}.254" ];
+          DNS = [ "${local4Prefix}.254" ];
           PoolOffset = 1; # excludes IVI address
         };
         ipv6SendRAConfig = {
@@ -107,7 +108,7 @@ in
         ] ++ map (s: { To = s; Table = gravityTable; }) publicDNS;
       };
       remote-access = {
-        address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
+        address = [ "${remoteAccess4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
         linkConfig = { RequiredForOnline = false; };
         routingPolicyRules = [
           {
@@ -130,27 +131,27 @@ in
         wireguardPeers = [
           { # pixel 4
             PublicKey = "zXU3IYwRdNnjEitP/WjS+v8q7KnPbYumwx3qEw0uGzM=";
-            AllowedIPs = [ "${ivi4Prefix}.2/32" "${remoteAccessPrefix}::2/128" ];
+            AllowedIPs = [ "${remoteAccess4Prefix}.2/32" "${remoteAccessPrefix}::2/128" ];
           }
           { # thinkpad
             PublicKey = "q4zeQsdAgfMu+z8F0QlmtlcUz75VqSONIq+Mz6Ja40U=";
-            AllowedIPs = [ "${ivi4Prefix}.3/32" "${remoteAccessPrefix}::3/128" ];
+            AllowedIPs = [ "${remoteAccess4Prefix}.3/32" "${remoteAccessPrefix}::3/128" ];
           }
           { # m1 macbook
             PublicKey = "a713fmoT2Fbjyn097mgr2o33PhIMyrYfxU4eRjfLZH4=";
-            AllowedIPs = [ "${ivi4Prefix}.4/32" "${remoteAccessPrefix}::4/128" ];
+            AllowedIPs = [ "${remoteAccess4Prefix}.4/32" "${remoteAccessPrefix}::4/128" ];
           }
           { # iphone
             PublicKey = "VqHfNMuAylcvkwWfY5nXqdowOBzTRyOIwGm5G3CeJlA=";
-            AllowedIPs = [ "${ivi4Prefix}.5/32" "${remoteAccessPrefix}::5/128" ];
+            AllowedIPs = [ "${remoteAccess4Prefix}.5/32" "${remoteAccessPrefix}::5/128" ];
           }
           { # ushi device 1
             PublicKey = "AOje2nnk1FDEyB4UvX3WeT2x33x5uVnuGdAqMJOZ8Ws=";
-            AllowedIPs = [ "${ivi4Prefix}.6/32" "${remoteAccessPrefix}::6/128" ];
+            AllowedIPs = [ "${remoteAccess4Prefix}.6/32" "${remoteAccessPrefix}::6/128" ];
           }
           { # ushi device 2
             PublicKey = "wKGCJX6z7NanHx4PZi0SAT9ugvdJvBVqwHXQG/ogLl8=";
-            AllowedIPs = [ "${ivi4Prefix}.7/32" "${remoteAccessPrefix}::7/128" ];
+            AllowedIPs = [ "${remoteAccess4Prefix}.7/32" "${remoteAccessPrefix}::7/128" ];
           }
         ];
       };
@@ -180,7 +181,7 @@ in
 
     ivi = {
       enable = true;
-      prefix4 = "${ivi4Prefix}.0";
+      prefix4 = "10.172.208.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
       defaultMap = "2a0c:b641:69c:f254:0:4::/96";
       inherit prefixLength;
@@ -206,7 +207,7 @@ in
       chinaServer = "192.168.0.1";
     };
     localResolver = {
-      listenAddr = "${ivi4Prefix}.1";
+      listenAddrs = [ "${remoteAccess4Prefix}.1" "${local4Prefix}.254" ];
       logQueries = true;
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       extraConfig = ''

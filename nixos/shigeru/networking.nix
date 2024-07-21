@@ -137,7 +137,7 @@ in
     };
     localResolver = {
       logQueries = true;
-      listenAddr = "${ivi4Prefix}.1";
+      listenAddrs = [ "${ivi4Prefix}.1" ];
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       # use ETH DNS for internal queries
       # FIXME: hack for NetEase IPv6
