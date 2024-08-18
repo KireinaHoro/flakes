@@ -76,6 +76,7 @@ in
 
     nginx = {
       enable = true;
+      clientMaxBodySize = "100m";
       virtualHosts = {
         "nagisa.jsteward.moe" = {
           forceSSL = true;
