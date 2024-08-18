@@ -15,7 +15,7 @@ in
         "${homeDir}/go/bin"
         "${homeDir}/.ghcup/bin"
       ];
-      packages = with pkgs; [ coreutils graalvm-ce verilator ];
+      packages = with pkgs; [ coreutils jdk verilator ];
     };
 
     programs.zsh.initExtra = ''
