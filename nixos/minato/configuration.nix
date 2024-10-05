@@ -5,6 +5,10 @@
     defaultSopsFile = ./secrets.yaml;
     secrets = {
       rait = {};
+      forward_wg_ipv4 = with config.users.users.forward_ipv4; {
+        owner = name;
+        inherit group;
+      };
       remote-access-priv = with config.users.users.systemd-network; {
         owner = name;
         inherit group;
@@ -27,6 +31,13 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   users.users.jsteward.shell = pkgs.zsh;
+
+  # port forwarding user
+  users.users.forward_ipv4 = {
+    group = "forward_ipv4";
+    isSystemUser = true;
+  };
+  users.groups.forward_ipv4 = {};
 
   nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
   environment.systemPackages = with pkgs; [ gnupg dig ];
