@@ -146,8 +146,11 @@ in
         server=/ethz.ch/129.132.250.2
         server=/gravity/sin0.nichi.link
         server=/gravity/sea0.nichi.link
+        # block netease ipv6 for cloud music
         address=/163.com/::
         address=/netease.com/::
+        # block youtube for mental health
+        address=/youtube.com/#
       '';
     };
 
