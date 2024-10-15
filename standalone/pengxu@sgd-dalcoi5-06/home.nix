@@ -36,6 +36,8 @@ in
       # spinalhdl formal
       symbiyosys
       yices
+      rustup
+      typst pdf2svg
     ];
   };
 }
