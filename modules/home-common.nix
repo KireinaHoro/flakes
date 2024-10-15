@@ -248,6 +248,9 @@ homeConf = { lib, ... }: {
           if [[ -n "$SSH_CONNECTION" ]]; then
             gnupg_SSH_AUTH_SOCK_by=$$
           fi
+
+          # enable backward-kill-line
+          bindkey \^U backward-kill-line
         '';
       };
 
