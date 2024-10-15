@@ -188,6 +188,16 @@ homeConf = { lib, ... }: {
         nnoremap tn :tabnext<CR>
         nnoremap tp :tabprevious<CR>
 
+        " line and buffer text objects
+        " https://vi.stackexchange.com/a/6102
+        xnoremap il g_o^
+        onoremap il :normal vil<CR>
+        xnoremap al $o0
+        onoremap al :normal val<CR>
+
+        xnoremap i% GoggV
+        onoremap i% :normal vi%<CR>
+
         " Markdown
         let g:markdown_fenced_languages = ['vim', 'bash']
 
