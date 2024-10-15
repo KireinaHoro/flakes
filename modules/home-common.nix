@@ -85,6 +85,7 @@ homeConf = { lib, ... }: {
         vim-surround
         vim-tbone
         typst-vim
+        vimtex
       ];
       extraConfig = ''
         inoremap jk <ESC>
