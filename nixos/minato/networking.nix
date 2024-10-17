@@ -84,7 +84,8 @@ in
         linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
-          IPForward = true;
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
           IPv6SendRA = true;
         };
         dhcpServerConfig = {

@@ -53,7 +53,7 @@ in
           { Address = "10.208.0.1/12"; PreferredLifetime = 0; }
           { Address = cfg.address; PreferredLifetime = 0; }
         ];
-        networkConfig = { IPForward = true; };
+        networkConfig = { IPv4Forwarding = true; IPv6Forwarding = true; };
         routes = [
           { Destination = cfg.prefix; }
         ];

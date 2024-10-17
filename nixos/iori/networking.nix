@@ -50,7 +50,7 @@ in
         networkConfig = {
           LinkLocalAddressing = "ipv4";
           IPv6AcceptRA = "no";
-          IPForward = "ipv4";
+          IPv4Forwarding = true;
         };
       };
       "${ifName}.200" = {
