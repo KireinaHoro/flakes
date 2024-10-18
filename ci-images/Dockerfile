@@ -1,7 +1,8 @@
 FROM alpine:latest
 
 # install dependencies
-RUN apk add --no-cache openssh git nix sudo
+# use bash for scripts since the alpine sh is weird af
+RUN apk add --no-cache openssh git nix sudo bash
 
 # add a user with id 1001 to match permissions with the github env
 RUN adduser -u 1001 -D github && \
@@ -20,12 +21,10 @@ RUN echo "%wheel  ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 # run commands as the github user by default
 USER 1001
 
-# build flake so that we can save some time deploying minor changes
+# build flake and deploy tool so that we can save some time deploying minor changes
 RUN cd && nohup sh -c 'sudo nix daemon &' && sleep 1 && \
-    nix build github:KireinaHoro/flakes\#nixosConfigurations.kage.config.system.build.toplevel
+    nix build github:KireinaHoro/flakes\#nixosConfigurations.kage.config.system.build.toplevel && \
+    nix run github:KireinaHoro/flakes\#deploy-rs.deploy.rs -- --version
 
-# use bash for scripts since the alpine sh is weird af
-# run it here to avoid invalidating the nix layers
-RUN sudo apk add --no-cache bash
 COPY deploy.sh /
 COPY flake-lock.sh /
