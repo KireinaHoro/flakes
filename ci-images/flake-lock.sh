@@ -1,5 +1,12 @@
 #!/bin/sh
 
+set -eux
+
+# sanity checks
+id
+pwd
+ls -la
+
 # start nix daemon
 sudo nix daemon &
 
