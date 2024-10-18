@@ -3,13 +3,13 @@
 set -eux
 
 # start nix daemon
-sudo nix daemon &
+nohup sh -c 'sudo nix daemon &' && sleep 1
 
 # sanity checks
 id
 pwd
 ls -la
-nix doctor
+nix config check
 
 # run whatever is passed to us
 "$@"

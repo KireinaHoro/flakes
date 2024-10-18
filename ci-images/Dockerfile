@@ -27,4 +27,4 @@ RUN cd && nohup sh -c 'sudo nix daemon &' && sleep 1 && \
     nix run github:KireinaHoro/flakes\#deploy-rs.deploy-rs -- --version
 
 COPY prepare-nix.sh /
-ENTRYPOINT ["prepare-nix.sh"]
+ENTRYPOINT ["/prepare-nix.sh"]
