@@ -15,7 +15,7 @@ jobs:
         with:
           image-name: kireinahoro/flakes-base:v1
       - name: deploy flake on kage
-        uses: ./actions/deploy
+        uses: ./.github/actions/deploy
         with:
           flake: 'github:KireinaHoro/flakes'
           privkey: ${{ secrets.ACTIONS_PRIVKEY }}

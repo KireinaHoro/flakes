@@ -22,12 +22,17 @@ runs:
         path: ${{inputs.cache-dir}}
         key: ${{runner.os}}-image-cache
     - if: steps.image-cache.outputs.cache-hit != 'true'
-      name: cache miss; store image
+      name: cache miss; pull image
+      shell: bash
+      run: docker pull ${{inputs.image-name}}
+    - if: steps.image-cache.outputs.cache-hit != 'true'
+      name: cache miss; store image in cache in post
+      uses: webiny/action-post-run@3.1.0
+      with:
+        run: docker save -o ${{inputs.cache-dir}}/${{inputs.tar-name}} ${{inputs.image-name}}
+    - if: steps.image-cache.outputs.cache-hit == 'true'
+      name: cache hit; restore image and delete tar archive
       shell: bash
       run: |
-        docker pull ${{inputs.image-name}}
-        docker save -o ${{inputs.cache-dir}}/${{inputs.tar-name}} ${{inputs.image-name}}
-    - if: steps.image-cache.outputs.cache-hit == 'true'
-      name: cache hit; restore image
-      shell: bash
-      run: docker load -i ${{inputs.cache-dir}}/${{inputs.tar-name}}
+        docker load -i ${{inputs.cache-dir}}/${{inputs.tar-name}}
+        rm ${{inputs.cache-dir}}/${{inputs.tar-name}}
