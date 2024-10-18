@@ -1,5 +1,7 @@
 FROM alpine:latest
 
+ARG FLAKE=github:KireinaHoro/flakes
+
 # install dependencies
 # use bash for scripts since the alpine sh is weird af
 RUN apk add --no-cache openssh git nix sudo bash
@@ -23,8 +25,9 @@ USER 1001
 
 # build flake and deploy tool so that we can save some time deploying minor changes
 RUN cd && nohup sh -c 'sudo nix daemon &' && sleep 1 && \
-    nix flake check github:KireinaHoro/flakes && \
-    nix run github:KireinaHoro/flakes\#deploy-rs.deploy-rs -- --version
+    nix flake check $FLAKE && \
+    nix build $FLAKE\#nixosConfigurations.kage.config.system.build.toplevel && \
+    nix run $FLAKE\#deploy-rs.deploy-rs -- --version
 
 COPY prepare-nix.sh /
 ENTRYPOINT ["/prepare-nix.sh"]

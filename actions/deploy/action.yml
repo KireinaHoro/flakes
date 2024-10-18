@@ -18,4 +18,5 @@ runs:
       chmod 400 privkey &&
       nix run ${{inputs.flake}}#deploy-rs.deploy-rs --
       --ssh-opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i privkey"
+      --auto-rollback=false
       ${{inputs.flake}}#${{inputs.host}}
