@@ -4,7 +4,7 @@ inputs:
   image-name:
     required: true
   cache-dir:
-    default: $HOME/image-cache
+    default: ${{env.GITHUB_WORKSPACE}}/../image-cache
   tar-name:
     default: image.tar
 runs:
