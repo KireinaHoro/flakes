@@ -8,6 +8,12 @@ in
     enable = mkEnableOption "local resolver with DNS split";
     servers = mkOption {
       type = types.listOf types.str;
+      description = "server selection strings";
+    };
+    addresses = mkOption {
+      type = types.listOf types.str;
+      description = "address directives, can be used to block stuff";
+      default = [];
     };
     listenAddrs = mkOption {
       type = types.listOf types.str;
@@ -18,31 +24,23 @@ in
       description = "list of configuration file directories for resolver config";
     };
     logQueries = mkEnableOption "log all queries";
-    extraConfig = mkOption {
-      type = types.str;
-      description = "additional config for dnsmasq";
-      default = "";
-    };
   };
   config = mkIf cfg.enable {
     services.dnsmasq = {
       enable = true;
-      inherit (cfg) servers;
       resolveLocalQueries = false;
-      extraConfig = ''
-        ${concatStrings (map (addr: "listen-address=${addr}\n") cfg.listenAddrs)}
-        bind-dynamic
-        no-resolv
-        no-hosts
-        ${if cfg.logQueries then ''
-          log-queries
-          log-facility=local0
-        '' else ""}
-        ${concatStrings (map (c: "conf-dir=${c}\n") cfg.configDirs)}
-        ${cfg.extraConfig}
-
-        server=/gravity/2a0c:b641:69c:7864:0:5:0:3
-      '';
+      settings = {
+        server = cfg.servers ++ [ "/gravity/2a0c:b641:69c:7864:0:5:0:3" ];
+        address = cfg.addresses;
+        listen-address = cfg.listenAddrs;
+        bind-dynamic = true;
+        no-resolv = true;
+        no-hosts = true;
+        conf-dir = cfg.configDirs;
+      } // optionalAttrs cfg.logQueries {
+        log-queries = true;
+        log-facility = "local0";
+      };
     };
     systemd.services.dnsmasq = {
       serviceConfig = {

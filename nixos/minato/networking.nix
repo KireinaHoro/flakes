@@ -212,9 +212,7 @@ in
       listenAddrs = [ "${remoteAccess4Prefix}.1" "${local4Prefix}.254" ];
       logQueries = true;
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
-      extraConfig = ''
-        server=/suki.moe/${config.services.chinaDNS.chinaServer}
-      '';
+      servers = [ "/suki.moe/${config.services.chinaDNS.chinaServer}" ];
     };
 
     squid = {
