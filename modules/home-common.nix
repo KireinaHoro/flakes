@@ -41,10 +41,11 @@ homeConf = { lib, ... }: {
         "ethz-sg" = lib.hm.dag.entryAfter (builtins.attrNames actualHosts) {
           match = "host *.ethz.ch";
           extraOptions = {
-            GSSAPIAuthentication = "yes";
-            GSSAPIDelegateCredentials = "yes";
             ControlMaster = "no";
           } // lib.optionalAttrs standalone {
+            # these only supported in the ubuntu ssh
+            GSSAPIAuthentication = "yes";
+            GSSAPIDelegateCredentials = "yes";
             GSSAPIRenewalForcesRekey = "yes";
             GSSAPIKeyExchange = "yes";
           };
