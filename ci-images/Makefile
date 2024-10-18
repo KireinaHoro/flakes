@@ -12,4 +12,4 @@ build:
 	$(DOCKER) build . -t $(DEST_TAG)
 
 debug: build
-	$(DOCKER) run -it $(DEST_TAG) /bin/sh
+	$(DOCKER) run -it $(DEST_TAG) /bin/bash

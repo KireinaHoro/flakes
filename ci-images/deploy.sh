@@ -2,13 +2,14 @@
 
 set -eux
 
+# start nix daemon
+sudo nix daemon &
+
 # sanity checks
 id
 pwd
 ls -la
-
-# start nix daemon
-sudo nix daemon &
+nix doctor
 
 keyfile=privkey
 
