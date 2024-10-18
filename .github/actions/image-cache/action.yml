@@ -5,24 +5,27 @@ inputs:
     required: true
   cache-dir:
     default: $HOME/image-cache
+  tar-name:
+    default: image.tar
 runs:
   using: composite
-  env:
-    TARFILE: ${{inputs.cache-dir}}/image.tar
   steps:
     - name: create image cache dir
+      shell: bash
       run: mkdir -p ${{inputs.cache-dir}}
     - id: image-cache
       name: try load image from cache
       uses: actions/cache@v4
       with:
-        path: $TARDIR
+        path: ${{inputs.cache-dir}}
         key: ${{runner.os}}-image-cache
     - if: steps.image-cache.outputs.cache-hit != 'true'
       name: cache miss; store image
+      shell: bash
       run: |
         docker pull ${{inputs.image-name}}
-        docker save -o $TARFILE ${{inputs.image-name}}
+        docker save -o ${{inputs.cache-dir}}/${{inputs.tar-name}} ${{inputs.image-name}}
     - if: steps.image-cache.outputs.cache-hit == 'true'
       name: cache hit; restore image
-      run: docker load -i $TARFILE
+      shell: bash
+      run: docker load -i ${{inputs.cache-dir}}/${{inputs.tar-name}}
