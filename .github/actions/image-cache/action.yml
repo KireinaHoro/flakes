@@ -10,9 +10,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: create image cache dir
+    - name: create image cache dir and mount tmpfs
       shell: bash
-      run: mkdir -p ${{inputs.cache-dir}}
+      run: |
+        mkdir -p ${{inputs.cache-dir}}
+        sudo mount -t tmpfs tmpfs ${{inputs.cache-dir}}
     - id: image-cache
       name: try load image from cache
       uses: actions/cache@v4
