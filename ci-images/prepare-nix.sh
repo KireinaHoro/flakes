@@ -11,4 +11,5 @@ pwd
 ls -la
 nix doctor
 
-nix flake lock --update-input $1
+# run whatever is passed to us
+"$@"

@@ -6,6 +6,5 @@ inputs:
 runs:
   using: 'docker'
   image: 'docker://kireinahoro/flakes-base:v1'
-  entrypoint: /flake-lock.sh
   args:
-    - ${{ inputs.input }}
+    - nix flake lock --update-input ${{inputs.input}}
