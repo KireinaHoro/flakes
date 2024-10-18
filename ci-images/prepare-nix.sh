@@ -12,4 +12,5 @@ ls -la
 nix config check
 
 # run whatever is passed to us
-"$@"
+# we pass the entire script in one argument, use eval
+eval "$@"
