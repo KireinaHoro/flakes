@@ -25,6 +25,7 @@ RUN cd && nohup sh -c 'sudo nix daemon &' && sleep 1 && \
     nix build github:KireinaHoro/flakes\#nixosConfigurations.kage.config.system.build.toplevel
 
 # use bash for scripts since the alpine sh is weird af
-RUN apk add --no-cache bash
+# run it here to avoid invalidating the nix layers
+RUN sudo apk add --no-cache bash
 COPY deploy.sh /
 COPY flake-lock.sh /
