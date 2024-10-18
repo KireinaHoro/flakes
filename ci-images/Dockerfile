@@ -1,13 +1,28 @@
-FROM nixos/nix
+FROM alpine:latest
 
-RUN nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
-RUN nix-channel --update
-RUN nix-env -iA nixpkgs.openssh
-RUN nix-env -iA nixpkgs.git
+# install dependencies
+RUN apk add --no-cache openssh git nix sudo
+
+# add a user with id 1001 to match permissions with the github env
+RUN adduser -u 1001 -D github && \
+    adduser github wheel && \
+    adduser github nix && \
+    mkdir -p /github/home && \
+    chown -R github:github /github && \
+    ln -s /github/home /home/github
+
+# set up Nix command and flakes
 RUN echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
 
+# allow user to run sudo without password
+RUN echo "%wheel  ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# run commands as the github user by default
+USER 1001
+
 # build flake so that we can save some time deploying minor changes
-RUN nix build github:KireinaHoro/flakes\#nixosConfigurations.kage.config.system.build.toplevel
+RUN cd && nohup sh -c 'sudo nix daemon &' && sleep 1 && \
+    nix build github:KireinaHoro/flakes\#nixosConfigurations.kage.config.system.build.toplevel
 
 COPY deploy.sh /
 COPY flake-lock.sh /

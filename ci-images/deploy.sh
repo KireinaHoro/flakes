@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# start nix daemon
+sudo nix daemon &
+
 keyfile=privkey
 
 echo "$2" > $keyfile
