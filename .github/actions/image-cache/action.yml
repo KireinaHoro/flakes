@@ -1,0 +1,28 @@
+name: image-cache
+description: fetch/update cached one docker image
+inputs:
+  image-name:
+    required: true
+  cache-dir:
+    default: $HOME/image-cache
+runs:
+  using: composite
+  env:
+    TARFILE: ${{inputs.cache-dir}}/image.tar
+  steps:
+    - name: create image cache dir
+      run: mkdir -p ${{inputs.cache-dir}}
+    - id: image-cache
+      name: try load image from cache
+      uses: actions/cache@v4
+      with:
+        path: $TARDIR
+        key: ${{runner.os}}-image-cache
+    - if: steps.image-cache.outputs.cache-hit != 'true'
+      name: cache miss; store image
+      run: |
+        docker pull ${{inputs.image-name}}
+        docker save -o $TARFILE ${{inputs.image-name}}
+    - if: steps.image-cache.outputs.cache-hit == 'true'
+      name: cache hit; restore image
+      run: docker load -i $TARFILE
