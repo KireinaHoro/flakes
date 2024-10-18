@@ -6,11 +6,28 @@ jobs:
   bump:
     runs-on: ubuntu-latest
     name: Bump dependency
+    env:
+      IMAGE_NAME: kireinahoro/flakes-base:v1
+      TARFILE: ~/image-cache/flakes-base.tar
     steps:
       - name: checkout local repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+      - name: create image cache dir
+        run: mkdir -p ~/image-cache
+      - id: image-cache
+        name: try load image from cache
+        uses: actions/cache@v4
         with:
-          fetch-depth: 0
+          path: ~/image-cache
+          key: ${{runner.os}}-flake-image
+      - if: steps.image-cache.outputs.cache-hit != 'true'
+        name: cache miss; store image
+        run: |
+          docker pull $IMAGE_NAME
+          docker save -o $TARFILE $IMAGE_NAME
+      - if: steps.image-cache.outputs.cache-hit == 'true'
+        name: cache hit; restore image
+        run: docker load -i $TARFILE
       - name: bump flake input lock
         uses: ./actions/bump
         with:
