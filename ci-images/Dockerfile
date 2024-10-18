@@ -24,7 +24,7 @@ USER 1001
 # build flake and deploy tool so that we can save some time deploying minor changes
 RUN cd && nohup sh -c 'sudo nix daemon &' && sleep 1 && \
     nix build github:KireinaHoro/flakes\#nixosConfigurations.kage.config.system.build.toplevel && \
-    nix run github:KireinaHoro/flakes\#deploy-rs.deploy.rs -- --version
+    nix run github:KireinaHoro/flakes\#deploy-rs.deploy-rs -- --version
 
 COPY prepare-nix.sh /
 ENTRYPOINT ["prepare-nix.sh"]
