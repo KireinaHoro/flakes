@@ -14,7 +14,7 @@ runs:
   image: 'docker://kireinahoro/flakes-base:v1'
   args:
     - >-
-      echo ${{inputs.privkey}} > privkey &&
+      echo "${{inputs.privkey}}" > privkey &&
       chmod 400 privkey &&
       nix run ${{inputs.flake}}#deploy-rs.deploy-rs --
         --ssh-opts ="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i privkey"
