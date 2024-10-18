@@ -76,7 +76,7 @@ in
           }
           # then if still gravity, send to ivi for outgoing
           ({ From = "10.160.0.0/12"; Table = 3500; Priority = 100; } //
-            (if cfg.fwmark == null then {} else { FirewallMark = cfg.fwmark; }))
+            optionalAttrs (cfg.fwmark != null) { FirewallMark = cfg.fwmark; })
           {
             Family = "ipv6";
             IncomingInterface = "ivi";

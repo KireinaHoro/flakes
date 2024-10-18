@@ -44,10 +44,10 @@ homeConf = { lib, ... }: {
             GSSAPIAuthentication = "yes";
             GSSAPIDelegateCredentials = "yes";
             ControlMaster = "no";
-          } // (if standalone then {
+          } // lib.optionalAttrs standalone {
             GSSAPIRenewalForcesRekey = "yes";
             GSSAPIKeyExchange = "yes";
-          } else {});
+          };
           user = "pengxu";
         };
         "enzian-infras" = {
