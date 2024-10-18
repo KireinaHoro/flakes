@@ -17,5 +17,5 @@ runs:
       echo "${{inputs.privkey}}" > privkey &&
       chmod 400 privkey &&
       nix run ${{inputs.flake}}#deploy-rs.deploy-rs --
-      --ssh-opts ="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i privkey"
+      --ssh-opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i privkey"
       ${{inputs.flake}}#${{inputs.host}}
