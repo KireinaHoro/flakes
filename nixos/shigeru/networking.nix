@@ -26,7 +26,6 @@ in
     firewall.enable = false;
   };
 
-  # FIXME merge masquerade into networkd configuration
   networking.nftables = {
     ruleset = ''
       table inet local-wan {
@@ -34,10 +33,6 @@ in
           type filter hook forward priority 100;
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
           oifname "${ifName}" ip6 saddr != ${iviDiviPrefix}0::/${toString prefixLength} log prefix "Unknown source to WAN: " drop
-        }
-        chain nat {
-          type nat hook postrouting priority 100;
-          oifname "${ifName}" masquerade;
         }
       }
       table inet pku-v6 {
@@ -56,12 +51,14 @@ in
   };
 
   systemd.network = {
+    config = { networkConfig = { IPv6Forwarding = true; }; };
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         address = [ "192.33.91.158/24" "2001:67c:10ec:49c3::19e/118" ];
         gateway = [ "192.33.91.1" ];
         domains = [ "ethz.ch" ];
         dns = [ "129.132.98.12" "129.132.250.2" ];
+        networkConfig = { IPMasquerade = "ipv4"; };
       };
       remote-access = {
         address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
