@@ -16,6 +16,8 @@ let
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
   prefixLength = 56;
+  publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
+  chinaServer = "114.114.114.114";
   gravityTable = 3500;
   gravityMark = 333;
 in
@@ -72,9 +74,7 @@ in
           IPMasquerade = "ipv4";
         };
         dhcpServerConfig = {
-          # FIXME: run dnsmasq locally so we are standalone
-          # XXX: using shigeru for ETHZ domains
-          DNS = [ "10.172.224.1" ]; # shigeru
+          DNS = [ "${localGatewayV4}" ];
           # excludes IVI address (.1), ER-X (.253), Gateway (.254), Broadcast (.255)
           PoolOffset = 1;
           PoolSize = 252;
@@ -167,6 +167,30 @@ in
       enableV4 = true;
       extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
     };
+    chinaDNS = {
+      enable = true;
+      servers = publicDNS;
+      inherit chinaServer;
+      accelAppleGoogle = false;
+    };
+    localResolver = {
+      logQueries = true;
+      listenAddrs = [ "${localGatewayV4}" ];
+      configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
+      servers = [
+        "/ethz.ch/129.132.98.12"
+        "/ethz.ch/129.132.250.2"
+        "/gravity/sin0.nichi.link"
+        "/gravity/sea0.nichi.link"
+      ];
+      addresses = [
+        # block netease ipv6 for cloud music
+        "/163.com/::"
+        "/netease.com/::"
+        # block youtube for mental health
+        "/youtube.com/#"
+      ];
+    };
 
     ivi = {
       enable = true;
@@ -177,12 +201,14 @@ in
       # default map to minato - back to China
       defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       inherit prefixLength;
-      # map ETH
+      /*
+      # map ETH to Shigeru
+      # FIXME: disabled for now since shigeru is down
       extraConfig = concatStringsSep "\n" (map
-        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
-          # ETHZ
+        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len)
           pkgs.ethzV4Addrs
         );
+        */
     };
 
     smokeping = {
