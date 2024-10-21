@@ -69,6 +69,10 @@ in
       description = "routing table number for gravity routes in main netns";
       default = 3500;
     };
+    extraRoutePolicies = mkOption {
+      description = "extra systemd-network routing options to put on link";
+      default = [];
+    };
   };
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ wireguard-tools ];
@@ -92,9 +96,8 @@ in
             { Family = "ipv6"; FirewallMark = cfg.fwmark; Type = "blackhole"; Priority = 51; }
             { To = cfg.route; Table = cfg.gravityTable; Priority = 200; }
             { From = cfg.route; Table = cfg.gravityTable; Priority = 200; }
-          ] ++ (if cfg.defaultRoute then [
-            { To = "::/0"; Table = cfg.gravityTable; Priority = 300; }
-          ] else []);
+          ] ++ cfg.extraRoutePolicies
+            ++ lib.optional cfg.defaultRoute { To = "::/0"; Table = cfg.gravityTable; Priority = 300; };
         };
       };
     };

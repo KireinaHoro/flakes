@@ -7,7 +7,9 @@ let
   iviPrefixV4 = "10.172.176"; # 0xcb0
   # using 0xe for ER-X LAN
   localPrefixV4 = "10.172.190"; # 0xcbe
-  localPrefix = "2a0c:b641:69c:cbe0";
+  localPrefixV6 = "2a0c:b641:69c:cbe0";
+  localGatewayV4 = "${localPrefixV4}.254";
+  localGatewayV6 = "${localPrefixV6}::1";
   # could then use e.g. 0xc for remote access
   gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
   gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
@@ -34,7 +36,7 @@ in
         chain filter {
           type filter hook forward priority 100;
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
-          oifname "${ifName}" ip6 saddr != ${localPrefix}::/64 log prefix "Unknown source to WAN: " drop
+          oifname "${ifName}" ip6 saddr != ${localPrefixV6}::/64 log prefix "Unknown source to WAN: " drop
         }
       }
     '';
@@ -62,7 +64,7 @@ in
         networkConfig = { Bridge = "local-devs"; };
       };
       local-devs = {
-        address = [ "${localPrefixV4}.254/24" "${localPrefix}::1/64" ];
+        address = [ "${localGatewayV4}/24" "${localGatewayV6}/64" ];
         linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
@@ -80,12 +82,16 @@ in
         ipv6SendRAConfig = {
           OtherInformation = true;
           EmitDNS = false;
-          # DNS = [ "2a0c:b641:69c:ce10::1" ];
           EmitDomains = false;
         };
-        ipv6Prefixes = [ { Prefix = "${localPrefix}::/64"; } ];
+        ipv6Prefixes = [ { Prefix = "${localPrefixV6}::/64"; } ];
         routingPolicyRules = [
-          { To = "${localPrefix}::/64"; Priority = 100; }
+          {
+            # route return traffic back to local devices
+            # out traffic routed by default route
+            To = "${localPrefixV6}::/64";
+            Priority = 100;
+          }
         ];
       };
     };
@@ -138,6 +144,14 @@ in
       defaultRoute = true; # we do not have IPv6
       inherit prefixLength;
       inherit gravityTable;
+      extraRoutePolicies = [
+        # chinese recursive for China DNS
+        {
+          To = chinaServer;
+          Table = gravityTable;
+          Priority = 50;
+        }
+      ];
     };
 
     divi = {
@@ -154,13 +168,14 @@ in
       extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
     };
 
-    # packets with gravityMark to minato - back to China
     ivi = {
       enable = true;
       prefix4 = "${iviPrefixV4}.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
-      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
+      # accept packets with gravityMark
       fwmark = gravityMark;
+      # default map to minato - back to China
+      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       inherit prefixLength;
       # map ETH
       extraConfig = concatStringsSep "\n" (map

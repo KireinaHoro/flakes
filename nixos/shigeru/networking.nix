@@ -64,16 +64,12 @@ in
         address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
         linkConfig = { RequiredForOnline = false; };
         routingPolicyRules = [
-          # local resolver for China DNS
           {
-            To = chinaServer;
-            Table = gravityTable;
-            Priority = 50;
-          }
-          {
+            # we only feed v6 that go to China into Gravity
+            # other stuff will get masqueraded locally
             From = "${remoteAccessPrefix}::/64";
             IncomingInterface = "remote-access";
-            FirewallMark = gravityMark;  # PKU IPv6
+            FirewallMark = gravityMark;
             Table = gravityTable;
             Priority = 100;
           }
@@ -160,6 +156,14 @@ in
       subnet = gravityAddr "";
       inherit prefixLength;
       inherit gravityTable;
+      extraRoutePolicies = [
+        # chinese recursive for China DNS
+        {
+          To = chinaServer;
+          Table = gravityTable;
+          Priority = 50;
+        }
+      ];
     };
 
     divi = {
