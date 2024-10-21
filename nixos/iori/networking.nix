@@ -322,7 +322,8 @@ in
     };
 
     hostapd = {
-      enable = true;
+      # disabled in favour of NetGear device
+      enable = false;
       radios = {
         ${wifiIfName} = {
           countryCode = "CH";
