@@ -56,7 +56,7 @@ in
       enable = true;
       environmentFile = config.sops.secrets.webdav-env.path;
       settings = {
-        address = "localhost";
+        address = "127.0.0.1";
         port = 8080;
         scope = "/srv/shared";
         modify = false;
@@ -92,7 +92,7 @@ in
           useACMEHost = "nagisa.jsteward.moe";
           locations = {
             "/" = {
-              proxyPass = "http://localhost:8080";
+              proxyPass = "http://127.0.0.1:8080";
               extraConfig = ''
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header REMOTE-HOST $remote_addr;
