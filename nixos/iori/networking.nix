@@ -7,13 +7,17 @@ let
   iviPrefixV4 = "10.172.176"; # 0xcb0
   # using 0xe for ER-X LAN
   localPrefixV4 = "10.172.190"; # 0xcbe
-  localPrefix = "2a0c:b641:69c:cbe0";
+  localPrefixV6 = "2a0c:b641:69c:cbe0";
+  localGatewayV4 = "${localPrefixV4}.254";
+  localGatewayV6 = "${localPrefixV6}::1";
   # could then use e.g. 0xc for remote access
   gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
   gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
   prefixLength = 56;
+  publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
+  chinaServer = "114.114.114.114";
   gravityTable = 3500;
   gravityMark = 333;
 in
@@ -34,7 +38,7 @@ in
         chain filter {
           type filter hook forward priority 100;
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
-          oifname "${ifName}" ip6 saddr != ${localPrefix}::/64 log prefix "Unknown source to WAN: " drop
+          oifname "${ifName}" ip6 saddr != ${localPrefixV6}::/64 log prefix "Unknown source to WAN: " drop
         }
       }
     '';
@@ -43,6 +47,7 @@ in
   # TODO: extract local gravity gateway to module
   # input hybrid port from ER-X: untagged for WAN, 200 for gravity local
   systemd.network = {
+    config = { networkConfig = { IPv6Forwarding = true; }; };
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         DHCP = "yes";
@@ -50,7 +55,6 @@ in
         networkConfig = {
           LinkLocalAddressing = "ipv4";
           IPv6AcceptRA = "no";
-          IPv4Forwarding = true;
         };
       };
       "${ifName}.200" = {
@@ -62,7 +66,7 @@ in
         networkConfig = { Bridge = "local-devs"; };
       };
       local-devs = {
-        address = [ "${localPrefixV4}.254/24" "${localPrefix}::1/64" ];
+        address = [ "${localGatewayV4}/24" "${localGatewayV6}/64" ];
         linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
@@ -70,9 +74,7 @@ in
           IPMasquerade = "ipv4";
         };
         dhcpServerConfig = {
-          # FIXME: run dnsmasq locally so we are standalone
-          # XXX: using shigeru for ETHZ domains
-          DNS = [ "10.172.224.1" ]; # shigeru
+          DNS = [ "${localGatewayV4}" ];
           # excludes IVI address (.1), ER-X (.253), Gateway (.254), Broadcast (.255)
           PoolOffset = 1;
           PoolSize = 252;
@@ -80,12 +82,16 @@ in
         ipv6SendRAConfig = {
           OtherInformation = true;
           EmitDNS = false;
-          # DNS = [ "2a0c:b641:69c:ce10::1" ];
           EmitDomains = false;
         };
-        ipv6Prefixes = [ { Prefix = "${localPrefix}::/64"; } ];
+        ipv6Prefixes = [ { Prefix = "${localPrefixV6}::/64"; } ];
         routingPolicyRules = [
-          { To = "${localPrefix}::/64"; Priority = 100; }
+          {
+            # route return traffic back to local devices
+            # out traffic routed by default route
+            To = "${localPrefixV6}::/64";
+            Priority = 100;
+          }
         ];
       };
     };
@@ -138,6 +144,14 @@ in
       defaultRoute = true; # we do not have IPv6
       inherit prefixLength;
       inherit gravityTable;
+      extraRoutePolicies = [
+        # chinese recursive for China DNS
+        {
+          To = chinaServer;
+          Table = gravityTable;
+          Priority = 50;
+        }
+      ];
     };
 
     divi = {
@@ -151,23 +165,50 @@ in
     chinaRoute = {
       fwmark = gravityMark;
       enableV4 = true;
-      extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
+      # extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
+    };
+    chinaDNS = {
+      enable = true;
+      servers = publicDNS;
+      inherit chinaServer;
+      accelAppleGoogle = false;
+    };
+    localResolver = {
+      logQueries = true;
+      listenAddrs = [ "${localGatewayV4}" ];
+      configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
+      servers = [
+        # "/ethz.ch/129.132.98.12"
+        # "/ethz.ch/129.132.250.2"
+        "/gravity/sin0.nichi.link"
+        "/gravity/sea0.nichi.link"
+      ];
+      addresses = [
+        # block netease ipv6 for cloud music
+        "/163.com/::"
+        "/netease.com/::"
+        # block youtube for mental health
+        "/youtube.com/#"
+      ];
     };
 
-    # packets with gravityMark to minato - back to China
     ivi = {
       enable = true;
       prefix4 = "${iviPrefixV4}.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
-      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
+      # accept packets with gravityMark
       fwmark = gravityMark;
+      # default map to minato - back to China
+      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       inherit prefixLength;
-      # map ETH
+      /*
+      # map ETH to Shigeru
+      # FIXME: disabled for now since shigeru is down
       extraConfig = concatStringsSep "\n" (map
-        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
-          # ETHZ
+        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len)
           pkgs.ethzV4Addrs
         );
+        */
     };
 
     smokeping = {
@@ -281,7 +322,8 @@ in
     };
 
     hostapd = {
-      enable = true;
+      # disabled in favour of NetGear device
+      enable = false;
       radios = {
         ${wifiIfName} = {
           countryCode = "CH";

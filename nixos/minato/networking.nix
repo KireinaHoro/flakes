@@ -34,7 +34,6 @@ in
     };
   };
 
-  # FIXME merge masquerade into networkd configuration
   networking.nftables = {
     ruleset = ''
       table inet gravity-access {
@@ -51,26 +50,20 @@ in
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
           oifname "${ifName}" ip6 saddr != ${localPrefix}::/64 log prefix "Unknown source to WAN: " drop
         }
-        chain nat {
-          type nat hook postrouting priority 100;
-          oifname "${ifName}" masquerade;
-        }
       }
     '';
   };
 
   # input hybrid port from MikroTik: untagged for WAN, 200 for gravity local
   systemd.network = {
+    config = { networkConfig = { IPv6Forwarding = true; }; };
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         DHCP = "ipv4";
         vlan = [ "${ifName}.200" ];
         # chinaRoute packets NAT
         networkConfig = {
-          # FIXME we cannot use this until systemd v248. ref:
-          # IPv6 masquerade: https://github.com/systemd/systemd/commit/b1b4e9204c8260956825e2b9733c95903e215e31
-          # nft backend: https://github.com/systemd/systemd/commit/a8af734e75431d676b25afb49ac317036e6825e6
-          # IPMasquerade = "ipv4";
+          IPMasquerade = "ipv4";
           IPv6PrivacyExtensions = "prefer-public";
         };
         # chinaRoute packets lookup main
@@ -84,8 +77,6 @@ in
         linkConfig = { RequiredForOnline = false; };
         networkConfig = {
           DHCPServer = true;
-          IPv4Forwarding = true;
-          IPv6Forwarding = true;
           IPv6SendRA = true;
         };
         dhcpServerConfig = {

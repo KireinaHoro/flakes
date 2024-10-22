@@ -22,7 +22,6 @@ in
     firewall.enable = false;
   };
 
-  # FIXME merge masquerade into networkd configuration
   networking.nftables = {
     ruleset = ''
       table inet local-wan {
@@ -30,10 +29,6 @@ in
           type filter hook forward priority 100;
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
           oifname "${ifName}" ip6 saddr != ${iviDiviPrefix}0::/${toString prefixLength} log prefix "Unknown source to WAN: " drop
-        }
-        chain nat {
-          type nat hook postrouting priority 100;
-          oifname "${ifName}" masquerade;
         }
       }
     '';
@@ -44,10 +39,7 @@ in
       ${ifName} = {
         DHCP = "ipv4";
         networkConfig = {
-          # FIXME we cannot use this until systemd v248. ref:
-          # IPv6 masquerade: https://github.com/systemd/systemd/commit/b1b4e9204c8260956825e2b9733c95903e215e31
-          # nft backend: https://github.com/systemd/systemd/commit/a8af734e75431d676b25afb49ac317036e6825e6
-          # IPMasquerade = "ipv4";
+          IPMasquerade = "ipv4";
           IPv6PrivacyExtensions = "prefer-public";
         };
       };
