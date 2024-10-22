@@ -46,6 +46,8 @@ in
       serviceConfig = {
         TimeoutStartSec = "infinity";
       };
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
     };
   };
 }

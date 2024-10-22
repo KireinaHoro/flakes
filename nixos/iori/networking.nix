@@ -178,8 +178,8 @@ in
       listenAddrs = [ "${localGatewayV4}" ];
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       servers = [
-        "/ethz.ch/129.132.98.12"
-        "/ethz.ch/129.132.250.2"
+        # "/ethz.ch/129.132.98.12"
+        # "/ethz.ch/129.132.250.2"
         "/gravity/sin0.nichi.link"
         "/gravity/sea0.nichi.link"
       ];
