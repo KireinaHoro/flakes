@@ -5,6 +5,7 @@ keys:
   - &shigeru 7f7b670838a10ddf6645f61ecb870ff13b0b3844
   - &nagisa 72879b604d86f86d89833ab15a668f432cde37e6
   - &iori 1c66b66a62109f653fcb8f63fcd3d7fab9a53fb6
+  - &hama d35d58bed6e43d3c981b70ceaaf923671e232ade
 creation_rules:
   - path_regex: nixos/minato/secrets\.yaml$
     key_groups:
@@ -31,3 +32,8 @@ creation_rules:
       - pgp:
         - *jsteward
         - *iori
+- path_regex: nixos/hama/secrets.yaml$
+    key_groups:
+      - pgp:
+        - *jsteward
+        - *hama
