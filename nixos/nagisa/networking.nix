@@ -58,16 +58,15 @@ in
       settings = {
         address = "127.0.0.1";
         port = 8080;
-        scope = "/srv/shared";
-        modify = false;
-        auth = true;
+        behindProxy = true;
+        directory = "/srv/shared";
+        permissions = "";
         users = [
           {
             username = "{env}ZOT_USERNAME";
             password = "{env}ZOT_PASSWORD";
             rules = [
-              { allow = false; path = "/"; }
-              { allow = true; modify = true; path = "/zotero"; }
+              { path = "/zotero"; permissions = "CRUD"; }
             ];
           }
         ];
