@@ -9,7 +9,7 @@ Standalone ones not using `nvfetcher` should allow arbitrary arguments (for the
 
 ## Updating
 
-```shell
+```console
 $ nix flake update
 $ cd pkgs && nvfetcher build
 ```
@@ -21,9 +21,38 @@ the CI.  Make sure that you are logged into the registry with `docker login`,
 and that the current user has access to the docker daemon (part of `docker`
 group).
 
-```shell
+```console
 $ cd ci-images
 $ make
+```
+
+## Adding a new host
+
+Install a new, regular NixOS host/VM with either the NixOS ISO or
+`nixos-infect`.  Afterwards, clone the flakes repo, add the host key to
+`keys/hosts/` and enable sops for the new host:
+
+```console
+$ git clone git+ssh://github.com/KireinaHoro/flakes && cd flakes
+$ hostname=$(hostname -s)
+$ fingerprint=$( { sudo cat /etc/ssh/ssh_host_rsa_key | ssh-to-pgp -i - -o keys/hosts/$hostname.asc; } 2>&1)
+$ sed -i .sops.yaml \
+> -e "/creation_rules/i\  - &$hostname $fingerprint" \
+> -e "\$a\
+>   - path_regex: nixos/$hostname/secrets\\.yaml\$\n\
+>     key_groups:\n\
+>       - pgp:\n\
+>         - *jsteward\n\
+>         - *$hostname\n"
+```
+
+Then, create the NixOS configuration for the host and rebuild with flake:
+
+```console
+$ # create nixos configuration for new host, and then:
+$ sudo mv /etc/nixos{,.bak}
+$ sudo ln -s $PWD /etc/nixos
+$ sudo nixos-rebuild switch -L
 ```
 
 ## Caveats

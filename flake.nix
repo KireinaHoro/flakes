@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs";
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
+    ssh-to-pgp = { url = "github:Mic92/ssh-to-pgp"; inputs.nixpkgs.follows = "nixpkgs"; };
     flake-utils.url = "github:numtide/flake-utils";
     blog = {
       url = "github:KireinaHoro/jsteward.moe";
@@ -33,8 +34,6 @@
       inherit system;
       config.allowUnfree = true;
       overlays = [
-        inputs.deploy-rs.overlay
-        inputs.sops-nix.overlays.default
         inputs.blog.overlay
         self.overlays.default
       ];
@@ -51,8 +50,9 @@
       sopsPGPKeyDirs = [ "./keys/hosts" "./keys/users" ];
 
       nativeBuildInputs = [
-        deploy-rs.deploy-rs
-        sops-import-keys-hook
+        inputs.deploy-rs.packages.${system}.deploy-rs
+        inputs.sops-nix.packages.${system}.sops-import-keys-hook
+        inputs.ssh-to-pgp.packages.${system}.ssh-to-pgp
         nvfetcher
       ];
     };

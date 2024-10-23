@@ -27,7 +27,7 @@ USER 1001
 RUN cd && nohup sh -c 'sudo nix daemon &' && sleep 1 && \
     nix flake check $FLAKE && \
     nix build $FLAKE\#nixosConfigurations.kage.config.system.build.toplevel && \
-    nix run $FLAKE\#deploy-rs.deploy-rs -- --version
+    nix develop $FLAKE -c deploy --version
 
 COPY prepare-nix.sh /
 ENTRYPOINT ["/prepare-nix.sh"]
