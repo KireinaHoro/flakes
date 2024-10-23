@@ -13,8 +13,9 @@ in
       example = "10.172.208.0";
     };
     fwmark = mkOption {
-      type = types.int;
+      type = types.nullOr types.int;
       description = "firewall mark for packets to ivi";
+      default = null;
     };
     prefix6 = mkOption {
       type = types.str;
@@ -22,9 +23,10 @@ in
       example = "2a0c:b641:69c:cd05:0:5";
     };
     defaultMap = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
       description = "nat46 default destination";
       example = "2a0c:b641:69c:f254:0:4::/96";
+      default = null;
     };
     prefixLength = mkOption {
       type = types.int;
@@ -43,7 +45,7 @@ in
           tun-device ivi
           ipv4-addr 10.160.0.2
           ipv6-addr ${cfg.prefix6}::2
-          ${optionalString (cfg?defaultMap) "map 0.0.0.0/0 ${cfg.defaultMap}"}
+          ${optionalString (cfg.defaultMap != null) "map 0.0.0.0/0 ${cfg.defaultMap}"}
           ${pkgs.genIviMap cfg.prefix4 cfg.prefix6 prefix4Length}
 
           ${concatStringsSep "\n"
@@ -75,7 +77,7 @@ in
           }
           # then if still gravity, send to ivi for outgoing
           ({ From = "10.160.0.0/12"; Table = 3500; Priority = 100; } //
-            optionalAttrs (cfg?fwmark) { FirewallMark = cfg.fwmark; })
+            optionalAttrs (cfg.fwmark != null) { FirewallMark = cfg.fwmark; })
           {
             Family = "ipv6";
             IncomingInterface = "ivi";

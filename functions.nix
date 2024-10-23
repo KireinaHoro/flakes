@@ -6,9 +6,13 @@ rec {
 
   genIviMap = v4: v6: v4len: "map ${v4}/${toString v4len} ${v6}:${v4}/${toString (v4len + 96)}";
 
-  gravityHosts = mapAttrsToList (k: v: { v4 = "10.172.${k}.0"; v6 = "2a0c:b641:69c:${v.v6}4:0:4"; v6Len = v.len; })
-    { "224" = { v6 = "ce1"; len = 60; };
-      "176" = { v6 = "cb0"; len = 56; }; };
+  gravityHosts = map ({id, len}: let
+    seg2 = toString (fromHexString (substring 0 1 id) + 160);
+    seg3 = toString (fromHexString (substring 1 2 id));
+  in { v4 = "10.${seg2}.${seg3}.0"; v6 = "2a0c:b641:69c:${id}4:0:4"; v6Len = len; })
+    [ { id = "ce1"; len = 60; }
+      { id = "ce2"; len = 60; }
+      { id = "cb0"; len = 56; } ];
   gravityHostsExcept = v4: filter (h: h.v4 != v4) gravityHosts;
 
   ethzV4Addrs = [
