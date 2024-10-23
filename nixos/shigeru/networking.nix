@@ -4,7 +4,7 @@ with pkgs.lib;
 
 let
   iviDiviPrefix = "2a0c:b641:69c:ce1";
-  ivi4Prefix = "10.172.224";
+  ivi4Prefix = "10.172.225";
   remoteAccessPrefix = "2a0c:b641:69c:ce1f";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
