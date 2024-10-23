@@ -35,18 +35,6 @@ in
           oifname "${ifName}" ip6 saddr != ${iviDiviPrefix}0::/${toString prefixLength} log prefix "Unknown source to WAN: " drop
         }
       }
-      table inet pku-v6 {
-        set pkuv6 {
-          type ipv6_addr
-          flags constant,interval
-          elements = { 2001:da8:201::/48,
-                       240c:c001::/32 }
-        }
-        chain prerouting {
-          type filter hook prerouting priority 0;
-          ip6 saddr ${remoteAccessPrefix}::/64 ip6 daddr @pkuv6 mark set ${toString gravityMark}
-        }
-      }
     '';
   };
 
@@ -181,16 +169,6 @@ in
       defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       fwmark = gravityMark;
       inherit prefixLength;
-      # map PKU v4 to seki
-      extraConfig = concatStringsSep "\n" (map
-        ({prefix, len}: pkgs.genIviMap prefix "2a0c:b641:69c:cc04:0:4" len)
-        [ { prefix = "162.105.0.0"; len = 16; }
-          { prefix = "222.29.0.0"; len = 17; }
-          { prefix = "222.29.128.0"; len = 19; }
-          { prefix = "115.27.0.0"; len = 16; }
-          { prefix = "202.112.7.0"; len = 24; }
-          { prefix = "202.112.8.0"; len = 24; } ]
-      );
     };
 
     squid = {

@@ -190,7 +190,6 @@ in
       enableV4 = true;
       enableV6 = true;
       prefix6 = "${localPrefix}::/64";
-      whitelistV6 = [ "2001:da8:201::/48" ]; # PKU shall still go to seki via gravity
       fwmark = gravityMark;
     };
 
