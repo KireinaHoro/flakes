@@ -165,7 +165,7 @@ in
     chinaRoute = {
       fwmark = gravityMark;
       enableV4 = true;
-      # extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
+      extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
     };
     chinaDNS = {
       enable = true;
@@ -178,8 +178,8 @@ in
       listenAddrs = [ "${localGatewayV4}" ];
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
       servers = [
-        # "/ethz.ch/129.132.98.12"
-        # "/ethz.ch/129.132.250.2"
+        "/ethz.ch/129.132.98.12"
+        "/ethz.ch/129.132.250.2"
         "/gravity/sin0.nichi.link"
         "/gravity/sea0.nichi.link"
       ];
@@ -201,14 +201,11 @@ in
       # default map to minato - back to China
       defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
       inherit prefixLength;
-      /*
-      # map ETH to Shigeru
-      # FIXME: disabled for now since shigeru is down
+      # map ETH to hama (shigeru is down)
       extraConfig = concatStringsSep "\n" (map
-        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len)
+        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce24:0:4" len)
           pkgs.ethzV4Addrs
         );
-        */
     };
 
     smokeping = {
@@ -265,8 +262,13 @@ in
         ++ Shigeru
         menu = Shigeru (Zürich, Switzerland)
         title = shigeru @ ETH Zürich (VSOS), Switzerland
-        remark = Selected for masquerade exit (also over divi/ivi) for IPv4 ranges of ETH.
+        remark = Temporarily down.
         host = shigeru.g.jsteward.moe
+        ++ Hama
+        menu = Hama (Zürich, Switzerland)
+        title = hama @ ETH Zürich (SG, STF G 222), Switzerland
+        remark = Selected for masquerade exit (also over divi/ivi) for IPv4 ranges of ETH.
+        host = hama.g.jsteward.moe
         ++ Minato
         menu = Minato (Beijing, China)
         title = minato @ China Unicom, Beijing, China
