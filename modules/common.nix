@@ -18,12 +18,11 @@ self: { config, pkgs, lib, ... }:
   system.configurationRevision = if self ? rev then self.rev else "dirty";
 
   nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      keep-outputs = true
-      keep-derivations = true
-    '';
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      keep-outputs = true;
+      keep-derivations = true;
+    };
     gc = { automatic = true; dates = "03:15"; };
   };
 
@@ -49,4 +48,6 @@ self: { config, pkgs, lib, ... }:
   programs.mosh.enable = true;
 
   nixpkgs.config.permittedInsecurePackages = [ "squid-6.10" ];
+
+  boot.enableContainers = false;
 }

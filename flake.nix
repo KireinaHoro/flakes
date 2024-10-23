@@ -44,7 +44,7 @@
       nodes = pkgs.lib.filterAttrs (name: cfg: cfg.profiles.system.path.system == system) self.deploy.nodes;
     });
     legacyPackages = pkgs;
-    devShell = with pkgs; mkShell {
+    devShells.default = with pkgs; mkShell {
       sources = attrValues self.inputs;
       # import sops keys
       sopsPGPKeyDirs = [ "./keys/hosts" "./keys/users" ];
