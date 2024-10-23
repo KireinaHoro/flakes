@@ -29,30 +29,40 @@ $ make
 ## Adding a new host
 
 Install a new, regular NixOS host/VM with either the NixOS ISO or
-`nixos-infect`.  Afterwards, clone the flakes repo, add the host key to
-`keys/hosts/` and enable sops for the new host:
+`nixos-infect`.  Afterwards, clone the flakes repo, create the NixOS
+configuration (based on an existing host), and switch to it:
 
 ```console
 $ git clone git+ssh://github.com/KireinaHoro/flakes && cd flakes
+$ # create nixos configuration for new host, and then:
+$ sudo mv /etc/nixos{,.bak}
+$ sudo ln -s $PWD /etc/nixos
+$ sudo nixos-rebuild switch -L
+```
+
+The switching would partially fail due to missing keys for decrypting the sops
+secret, but SSH should be up and thus have created the host key.  Add the host
+key to `keys/hosts/` and enable sops for the new host:
+
+```console
 $ hostname=$(hostname -s)
 $ fingerprint=$( { sudo cat /etc/ssh/ssh_host_rsa_key | ssh-to-pgp -i - -o keys/hosts/$hostname.asc; } 2>&1)
 $ sed -i .sops.yaml \
 > -e "/creation_rules/i\  - &$hostname $fingerprint" \
 > -e "\$a\
->   - path_regex: nixos/$hostname/secrets\\.yaml\$\n\
+> \   - path_regex: nixos/$hostname/secrets\\.yaml\$\n\
 >     key_groups:\n\
 >       - pgp:\n\
 >         - *jsteward\n\
 >         - *$hostname\n"
+$
 ```
 
-Then, create the NixOS configuration for the host and rebuild with flake:
+Finally, on a machine that we can plug the YubiKey into, create `secrets.yaml`
+for the new machine by:
 
 ```console
-$ # create nixos configuration for new host, and then:
-$ sudo mv /etc/nixos{,.bak}
-$ sudo ln -s $PWD /etc/nixos
-$ sudo nixos-rebuild switch -L
+$ sops nixos/<hostname>/secrets.yaml
 ```
 
 ## Caveats

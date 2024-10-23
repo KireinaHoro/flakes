@@ -4,8 +4,8 @@ with pkgs.lib;
 
 let
   # TODO: enable gravity -- allocate prefix, upload keys, etc.
-  iviDiviPrefix = "2a0c:b641:69c:ce1";
-  ivi4Prefix = "10.172.224";
+  iviDiviPrefix = "2a0c:b641:69c:ce2";
+  ivi4Prefix = "10.172.226";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   raitSecret = config.sops.secrets.rait.path;
   ifName = "enp1s0";
@@ -42,7 +42,7 @@ in
     openssh.settings.PasswordAuthentication = false;
 
     gravity = rec {
-      enable = false;
+      enable = true;
       config = raitSecret;
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
@@ -52,14 +52,14 @@ in
     };
 
     divi = {
-      enable = false;
+      enable = true;
       prefix = "${iviDiviPrefix}4:0:4::/96";
       address = "${iviDiviPrefix}4:0:5:0:3/128";
       inherit ifName;
     };
 
     ivi = {
-      enable = false;
+      enable = true;
       prefix4 = "${ivi4Prefix}.0";
       prefix6 = "${iviDiviPrefix}5:0:5";
       inherit prefixLength;

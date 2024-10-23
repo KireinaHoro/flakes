@@ -32,7 +32,7 @@ creation_rules:
       - pgp:
         - *jsteward
         - *iori
-- path_regex: nixos/hama/secrets.yaml$
+  - path_regex: nixos/hama/secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward

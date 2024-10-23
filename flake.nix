@@ -54,6 +54,7 @@
         inputs.sops-nix.packages.${system}.sops-import-keys-hook
         inputs.ssh-to-pgp.packages.${system}.ssh-to-pgp
         nvfetcher
+        rait
       ];
     };
   }) // {
