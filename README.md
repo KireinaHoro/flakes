@@ -26,6 +26,18 @@ $ cd ci-images
 $ make
 ```
 
+## Checking if a (NixOS) host is up to date
+
+The Git commit hash of the system configuration is recorded.  To check:
+
+```console
+$ cd /etc/nixos
+$ git show $(nixos-version --configuration-revision)
+```
+
+If `git show` fails, it means that the system was built without a commit.  This
+should be avoided (ideally the build should fail).
+
 ## Adding a new host
 
 Install a new, regular NixOS host/VM with either the NixOS ISO or
@@ -64,6 +76,8 @@ for the new machine by:
 ```console
 $ sops nixos/<hostname>/secrets.yaml
 ```
+
+We can then rebuild again with everything working.
 
 ## Caveats
 
