@@ -43,13 +43,21 @@ in
 
     gravity = {
       enable = true;
-      config = config.sops.secrets.rait.path;
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";
       # defaultRoute = true;
       inherit prefixLength;
       inherit gravityTable;
+
+      rait = {
+        enable = true;
+        transports = [
+          { family = "ip4"; sendPort = 59999; mtu = 1420;
+            address = "nagisa.jsteward.moe"; }
+        ];
+      };
+      babeld.enable = true;
     };
 
     webdav = {

@@ -5,7 +5,6 @@ with pkgs.lib;
 let
   iviDiviPrefix = "2a0c:b641:69c:ce0";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
-  raitSecret = config.sops.secrets.rait.path;
   ifName = "ens3";
   prefixLength = 60;
   backupHost = "jsteward@toride.g.jsteward.moe";
@@ -60,7 +59,6 @@ in
 
     gravity = rec {
       enable = true;
-      config = raitSecret;
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";

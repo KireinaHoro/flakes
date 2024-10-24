@@ -137,7 +137,6 @@ in
 
     gravity = {
       enable = true;
-      config = config.sops.secrets.rait.path;
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";
