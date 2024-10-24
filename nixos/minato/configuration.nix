@@ -1,22 +1,18 @@
-{ config, pkgs, ... }:
-
-{
+{ config, pkgs, ... }: let
+  userToSops = user: with user; {
+    owner = name;
+    inherit group;
+  };
+in {
   sops = {
     defaultSopsFile = ./secrets.yaml;
     secrets = {
-      rait = {};
-      forward_wg_ipv4 = with config.users.users.forward_ipv4; {
-        owner = name;
-        inherit group;
-      };
-      remote-access-priv = with config.users.users.systemd-network; {
-        owner = name;
-        inherit group;
-      };
-      inadyn-cfg = with config.users.users.inadyn; {
-        owner = name;
-        inherit group;
-      };
+      rait-operator-key = {};
+      rait-node-key = {};
+      rait-registry = {};
+      forward_wg_ipv4 = userToSops config.users.users.forward_ipv4;
+      remote-access-priv = userToSops config.users.users.systemd-network;
+      inadyn-cfg = userToSops config.users.users.inadyn;
     };
   };
 

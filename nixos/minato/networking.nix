@@ -163,6 +163,16 @@ in
       subnet = gravityAddr "";
       inherit prefixLength;
       inherit gravityTable;
+
+      rait = {
+        enable = true;
+        transports = [
+          { family = "ip4"; sendPort = 53333; mtu = 1420; }
+          { family = "ip6"; sendPort = 54444; mtu = 1400;
+            address = "minato.jsteward.moe"; }
+        ];
+      };
+      babeld.enable = true;
     };
 
     divi = {
