@@ -39,11 +39,6 @@ in
       description = "enable default IPv6 route to gravity";
       default = false;
     };
-    prefixLength = mkOption {
-      type = types.int;
-      description = "prefix length of local subnet";
-      default = 60;
-    };
     route = mkOption {
       type = types.str;
       description = "route to gravity";
@@ -235,7 +230,7 @@ in
           interface placeholder
 
           redistribute local deny
-          redistribute ip ${cfg.route} eq ${toString cfg.prefixLength} allow
+          redistribute ip ${cfg.route} ge 56 le 64 allow
         ''}";
         Restart = "always";
         RestartSec = 5;

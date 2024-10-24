@@ -45,7 +45,6 @@ in
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";
-      inherit prefixLength;
       inherit gravityTable;
 
       rait = {

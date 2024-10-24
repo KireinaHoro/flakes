@@ -141,7 +141,6 @@ in
       address = gravityAddr "1";
       subnet = gravityAddr "";
       defaultRoute = true; # we do not have IPv6
-      inherit prefixLength;
       inherit gravityTable;
       extraRoutePolicies = [
         # chinese recursive for China DNS
