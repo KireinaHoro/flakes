@@ -26,6 +26,14 @@ in {
           sha256 = "17lq6ddildf0lw2zwsp89d6vgqds4m53jq8syh4hbcwmps3dhgc5";
         });
       });
+      bird = prev.bird.overrideAttrs (oldAttrs: rec {
+        version = "2.15.1-nickcao3";
+        # apply NickCao's ETX Babel patch
+        patches = oldAttrs.patches ++ [ (fetchurl {
+          url = https://github.com/NickCao/bird/commit/dac2ce348f5ee321c80d219719118292f027c2d2.patch;
+          sha256 = "1nr8chy3w8kfmy6rbm8kkqxk0kp6ipngf47jb01xy145p4gjjhm1";
+        }) ];
+      });
     } // (let
       newPlugins = mapVimPlugins (name: final.vimUtils.buildVimPlugin { # vim plugins
           inherit name;

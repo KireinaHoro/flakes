@@ -50,8 +50,9 @@ in
       rait = {
         enable = true;
         transports = [ { family = "ip4"; sendPort = 57779; mtu = 1420; } ];
+        routeDaemon = "bird";
       };
-      babeld.enable = true;
+      bird.enable = true;
     };
 
     divi = {

@@ -80,6 +80,11 @@ in
     bird = mkOption {
       type = types.submodule { options = {
         enable = mkEnableOption "bird for routing";
+        socket = mkOption {
+          type = types.str;
+          description = "path of bird control socket";
+          default = "/run/bird.ctl";
+        };
       }; };
       default = {};
     };
@@ -88,6 +93,10 @@ in
     rait = mkOption {
       type = types.submodule { options = {
         enable = mkEnableOption "rait for WireGuard backbone";
+        routeDaemon = mkOption {
+          type = types.enum [ "bird" "babeld" ];
+          default = "babeld";
+        };
         secretNames = mkOption {
           type = types.submodule { options = {
             operatorKey = mkOption { type = types.str; default = "rait-operator-key"; };
@@ -117,7 +126,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
+    assertions = let
+      checkRaitRouteDaemon = impl: {
+        assertion = cfg.rait.routeDaemon == impl -> cfg.${impl}.enable;
+        message = "selected ${impl} for rait but ${impl} not enabled";
+      };
+    in [
       { assertion = cfg.bird.enable || cfg.babeld.enable;
         message = "at least one of bird and babeld should be enabled"; }
       { assertion = cfg.rait.enable || cfg.ranet.enable;
@@ -125,11 +139,17 @@ in
       { assertion = cfg.rait.enable -> length cfg.rait.transports >= 1;
         message = "must define at least one transport"; }
 
+      # check compatible routing daemons
+      { assertion = cfg.rait.routeDaemon == "babeld" -> cfg.babeld.enable;
+        message = "ranet does not support babeld, must enable bird"; }
+      (checkRaitRouteDaemon "babeld")
+      (checkRaitRouteDaemon "bird")
+      { assertion = cfg.bird.enable -> (cfg.rait.routeDaemon == "bird" || cfg.ranet.enable);
+        message = "bird enabled but no backbone selects it"; }
+
       # TODO: implement these
       { assertion = !cfg.ranet.enable;
         message = "ranet (IPsec) not implemented yet"; }
-      { assertion = !cfg.bird.enable;
-        message = "bird not implemented yet"; }
     ];
 
     sops.templates."rait.conf".content = mkIf cfg.rait.enable ''
@@ -155,7 +175,7 @@ in
         }
         '') cfg.rait.transports)}
 
-        ${optionalString cfg.babeld.enable ''
+        ${optionalString (cfg.rait.routeDaemon == "babeld") ''
           babeld {
             enabled = true
             socket_type = "unix"
@@ -222,7 +242,8 @@ in
 
     systemd.services.gravity-babeld = mkIf cfg.babeld.enable ({
       serviceConfig = with pkgs; {
-        ExecStart = "${ip} netns exec ${cfg.netns} ${babeld}/bin/babeld -c ${writeText "babeld.conf" ''
+        NetworkNamespacePath = "/run/netns/${cfg.netns}";
+        ExecStart = "${babeld}/bin/babeld -c ${writeText "babeld.conf" ''
           random-id true
           local-path-readwrite ${cfg.babeld.socket}
           state-file ""
@@ -232,6 +253,57 @@ in
           redistribute local deny
           redistribute ip ${cfg.route} ge 56 le 64 allow
         ''}";
+        Restart = "always";
+        RestartSec = 5;
+      };
+    } // gravityPart);
+
+    systemd.services.gravity-bird = mkIf cfg.bird.enable ({
+      serviceConfig = with pkgs; {
+        NetworkNamespacePath = "/run/netns/${cfg.netns}";
+        ExecStart = "${bird}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
+          interfacePatterns = concatStringsSep ", "
+            (map (pattern: "\"${pattern}\"") (
+              optional cfg.ranet.enable "swan*" ++
+              optionals (cfg.rait.enable && cfg.rait.routeDaemon == "bird") [ "grv4x*" "grv6x*" ]));
+        in ''
+          ipv6 sadr table sadr6;
+          router id 10.10.10.10;
+          protocol device {
+            scan time 5;
+          }
+          protocol kernel {
+            metric 2048;
+            ipv6 sadr {
+              export filter {
+                if net ~ [${cfg.route}] then accept;
+                reject;
+              };
+              import none;
+            };
+          }
+          protocol direct {
+            interface "lo";
+            ipv6 sadr;
+          }
+          protocol babel {
+            ipv6 sadr {
+              export all;
+              import all;
+            };
+            randomize router id;
+            interface ${interfacePatterns} {
+              type tunnel;
+              link quality etx;
+              rxcost 32;
+              hello interval 20 s;
+              rtt cost 1024;
+              rtt max 1024 ms;
+              rx buffer 1500;
+            };
+          }
+        '')}";
+        ExecStop = "${bird}/bin/birdc -s ${cfg.bird.socket} down";
         Restart = "always";
         RestartSec = 5;
       };
