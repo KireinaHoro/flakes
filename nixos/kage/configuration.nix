@@ -4,7 +4,9 @@
   sops = {
     defaultSopsFile = ./secrets.yaml;
     secrets = {
-      rait = {};
+      rait-operator-key = {};
+      rait-node-key = {};
+      rait-registry = {};
       aria2-env = {};
       mailbox-passwd-hash = {};
       toride-backup-key = {};

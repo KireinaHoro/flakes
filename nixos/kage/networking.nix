@@ -65,6 +65,17 @@ in
       address = gravityAddr "1";
       subnet = gravityAddr "";
       inherit prefixLength;
+
+      rait = {
+        enable = true;
+        transports = [
+          { family = "ip4"; sendPort = 55555; mtu = 1420;
+            address = "kage.jsteward.moe"; }
+          { family = "ip6"; sendPort = 56666; mtu = 1400;
+            address = "kage.jsteward.moe"; }
+        ];
+        babeld.enable = true;
+      };
     };
 
     divi = {
