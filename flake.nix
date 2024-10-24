@@ -63,7 +63,7 @@
     nixosConfigurations = findConfs ./nixos;
     darwinConfigurations = findConfs ./darwin;
     homeConfigurations = findConfs ./standalone;
-    deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" "iori" ] (n: {
+    deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" "iori" "hama" ] (n: {
       sshUser = "root";
       hostname = "${n}.jsteward.moe";
       profiles.system.path =

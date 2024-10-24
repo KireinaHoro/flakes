@@ -7,7 +7,6 @@ let
   iviDiviPrefix = "2a0c:b641:69c:ce2";
   ivi4Prefix = "10.172.226";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
-  raitSecret = config.sops.secrets.rait.path;
   ifName = "enp1s0";
   prefixLength = 60;
   gravityTable = 3500;
@@ -43,12 +42,17 @@ in
 
     gravity = rec {
       enable = true;
-      config = raitSecret;
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";
       inherit prefixLength;
       inherit gravityTable;
+
+      rait = {
+        enable = true;
+        transports = [ { family = "ip4"; sendPort = 57779; mtu = 1420; } ];
+      };
+      babeld.enable = true;
     };
 
     divi = {
