@@ -7,7 +7,6 @@ let
   ivi4Prefix = "10.172.225";
   remoteAccessPrefix = "2a0c:b641:69c:ce1f";
   gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
-  raitSecret = config.sops.secrets.rait.path;
   ifName = "enp6s18";
   prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
@@ -138,7 +137,6 @@ in
 
     gravity = rec {
       enable = true;
-      config = raitSecret;
       netnsAddress = gravityAddr "2";
       address = gravityAddr "1";
       subnet = gravityAddr "";
@@ -152,6 +150,17 @@ in
           Priority = 50;
         }
       ];
+
+      rait = {
+        enable = true;
+        transports = [
+          { family = "ip4"; sendPort = 57777; mtu = 1420;
+            address = "shigeru.jsteward.moe"; }
+          { family = "ip6"; sendPort = 58888; mtu = 1400;
+            address = "shigeru.jsteward.moe"; }
+        ];
+      };
+      babeld.enable = true;
     };
 
     divi = {

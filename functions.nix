@@ -28,4 +28,9 @@ rec {
     { prefix = "148.187.192.0"; len = 19; }
     { prefix = "129.132.0.0"; len = 16; }
   ];
+
+  userToSops = user: with user; {
+    owner = name;
+    inherit group;
+  };
 }

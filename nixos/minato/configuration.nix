@@ -1,9 +1,6 @@
-{ config, pkgs, ... }: let
-  userToSops = user: with user; {
-    owner = name;
-    inherit group;
-  };
-in {
+{ config, pkgs, ... }:
+
+{
   sops = {
     defaultSopsFile = ./secrets.yaml;
     secrets = {
