@@ -156,6 +156,9 @@ in
             address = "shigeru.jsteward.moe"; }
         ];
       };
+
+      babeld.enable = false;
+      bird.enable = true;
     };
 
     divi = {
