@@ -6,7 +6,6 @@ let
   # TODO: enable gravity -- allocate prefix, upload keys, etc.
   iviDiviPrefix = "2a0c:b641:69c:ce2";
   ivi4Prefix = "10.172.226";
-  gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   ifName = "enp1s0";
   prefixLength = 60;
   gravityTable = 3500;
@@ -42,9 +41,7 @@ in
 
     gravity = rec {
       enable = true;
-      netnsAddress = gravityAddr "2";
-      address = gravityAddr "1";
-      subnet = gravityAddr "";
+      localPrefix = "${iviDiviPrefix}0::/${toString prefixLength}";
       inherit gravityTable;
 
       rait = {

@@ -3,7 +3,7 @@
 {
   sops = {
     defaultSopsFile = ./secrets.yaml;
-    secrets = {
+    secrets = with pkgs; {
       rait-operator-key = {};
       rait-node-key = {};
       rait-registry = {};

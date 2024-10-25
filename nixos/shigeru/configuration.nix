@@ -7,7 +7,7 @@
       rait-operator-key = {};
       rait-node-key = {};
       rait-registry = {};
-      remote-access-priv = userToSops config.users.users.systemd-network;
+      remote-access-priv = pkgs.userToSops config.users.users.systemd-network;
     };
   };
 

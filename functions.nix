@@ -33,4 +33,10 @@ rec {
     owner = name;
     inherit group;
   };
+
+  hostInV6Prefix = prefix: host: let
+    parts = splitString "/" prefix;
+    network = elemAt parts 0;
+    len = elemAt parts 1;
+  in "${network}${host}/${len}";
 }

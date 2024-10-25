@@ -21,14 +21,6 @@ in
 {
   options.services.gravity = {
     enable = mkEnableOption "gravity overlay network";
-    address = mkOption {
-      type = types.str;
-      description = "address to add into main netns";
-    };
-    netnsAddress = mkOption {
-      type = types.str;
-      description = "address to add into netns (as icmp source address)";
-    };
     netns = mkOption {
       type = types.str;
       description = "name of netns for wireguard interfaces";
@@ -44,9 +36,9 @@ in
       description = "enable default IPv6 route to gravity";
       default = false;
     };
-    route = mkOption {
+    homePrefix = mkOption {
       type = types.str;
-      description = "route to gravity";
+      description = "gravity home prefix (always routed into gravity)";
       default = "2a0c:b641:69c::/48";
     };
     fwmark = mkOption {
@@ -54,7 +46,7 @@ in
       description = "fwmark for IPv6 gravity wireguard packets";
       default = 56;
     };
-    subnet = mkOption {
+    localPrefix = mkOption {
       type = types.str;
       description = "route to local subnet";
       example = "2a0c:b641:69c:cd00::/56";
@@ -92,7 +84,7 @@ in
           type = types.str;
           description = "filter expression to export to kernel routing table";
           default = "all";
-          example = "filter { if net ~ [${cfg.route}+] then accept; reject; }";
+          example = "filter { if net ~ [${cfg.homePrefix}+] then accept; reject; }";
         };
       }; };
       default = {};
@@ -180,7 +172,7 @@ in
 
         remarks = {
           name = "${config.networking.hostName}"
-          prefix = "${cfg.subnet}"
+          prefix = "${cfg.localPrefix}"
         }
     '';
 
@@ -197,14 +189,14 @@ in
       networks = pkgs.injectNetworkNames {
         ${cfg.link} = {
           linkConfig = { RequiredForOnline = false; };
-          address = [ cfg.address ];
+          address = [ (pkgs.hostInV6Prefix cfg.localPrefix "1") ];
           routes = [ { Destination = "::/0"; Gateway = "fe80::200:ff:fe00:2"; Table = cfg.gravityTable; } ];
           routingPolicyRules = [
             { Family = "ipv6"; FirewallMark = cfg.fwmark; Priority = 50; }
             # this blackhole rule is preferred (in case default route in main disappeared)
             { Family = "ipv6"; FirewallMark = cfg.fwmark; Type = "blackhole"; Priority = 51; }
-            { To = cfg.route; Table = cfg.gravityTable; Priority = 200; }
-            { From = cfg.route; Table = cfg.gravityTable; Priority = 200; }
+            { To = cfg.homePrefix; Table = cfg.gravityTable; Priority = 200; }
+            { From = cfg.homePrefix; Table = cfg.gravityTable; Priority = 200; }
           ] ++ cfg.extraRoutePolicies
             ++ optional cfg.defaultRoute { To = "::/0"; Table = cfg.gravityTable; Priority = 300; };
         };
@@ -238,7 +230,7 @@ in
           interface placeholder
 
           redistribute local deny
-          redistribute ip ${cfg.route} ge 56 le 64 allow
+          redistribute ip ${cfg.homePrefix} ge 56 le 64 allow
         ''}";
         Restart = "always";
         RestartSec = 5;
@@ -314,9 +306,9 @@ in
 
           "${ip} -n ${cfg.netns} link set host up"
           "${ip} -n ${cfg.netns} link set lo up"
-          "${ip} -n ${cfg.netns} addr add ${cfg.netnsAddress} dev host"
-          "${ip} -n ${cfg.netns} route add ${cfg.subnet} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
-          "${ip} -n ${cfg.netns} addr add ${cfg.subnet} dev lo"
+          "${ip} -n ${cfg.netns} addr add ${pkgs.hostInV6Prefix cfg.localPrefix "2"} dev host"
+          "${ip} -n ${cfg.netns} route add ${cfg.localPrefix} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
+          "${ip} -n ${cfg.netns} addr add ${cfg.localPrefix} dev lo"
         ];
         ExecStop = [
           # restore host back to default namespace, or it will be deleted along with the netns

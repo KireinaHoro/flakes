@@ -10,9 +10,6 @@ let
   localPrefixV6 = "2a0c:b641:69c:cbe0";
   localGatewayV4 = "${localPrefixV4}.254";
   localGatewayV6 = "${localPrefixV6}::1";
-  # could then use e.g. 0xc for remote access
-  gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
-  gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
   prefixLength = 56;
@@ -137,9 +134,7 @@ in
 
     gravity = {
       enable = true;
-      netnsAddress = gravityAddr "2";
-      address = gravityAddr "1";
-      subnet = gravityAddr "";
+      localPrefix = "${iviDiviPrefix}0::/${toString prefixLength}";
       defaultRoute = true; # we do not have IPv6
       inherit gravityTable;
       extraRoutePolicies = [

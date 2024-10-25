@@ -9,7 +9,6 @@ let
   remoteAccessPrefix = "2a0c:b641:69c:cdc0";
   remoteAccess4Prefix = "10.172.220";
   remoteAccessPort = 31675;
-  gravityAddr = last: "${iviDiviPrefix}0::${last}/${toString prefixLength}";
   ifName = "enp0s25";
   prefixLength = 56;
 
@@ -156,9 +155,7 @@ in
 
     gravity = rec {
       enable = true;
-      netnsAddress = gravityAddr "2";
-      address = gravityAddr "1";
-      subnet = gravityAddr "";
+      localPrefix = "${iviDiviPrefix}0::/${toString prefixLength}";
       inherit gravityTable;
 
       rait = {

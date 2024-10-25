@@ -5,7 +5,6 @@ with pkgs.lib;
 let
   iviDiviPrefix = "2a0c:b641:69c:cf1";
   gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
-  gravityAddr = last: "${gravityAddrSingle last}/${toString prefixLength}";
   ifName = "enp0s3";
   prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
@@ -43,9 +42,7 @@ in
 
     gravity = {
       enable = true;
-      netnsAddress = gravityAddr "2";
-      address = gravityAddr "1";
-      subnet = gravityAddr "";
+      localPrefix = "${gravityAddrSingle ""}/${toString prefixLength}";
       # defaultRoute = true;
       inherit gravityTable;
 
