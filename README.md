@@ -79,21 +79,8 @@ $ sops nixos/<hostname>/secrets.yaml
 
 We can then rebuild again with everything working.
 
-## Caveats
+## Blog
 
-### Squid
-
-Squid requires the cache dirs to be populated with `squid -z` before first
-launch.  As on NixOS the configuration files are generated, use `systemctl
-status squid` to find the location of the configuration file.  Use `nix shell
-.#squid` to bring the `squid` binary into `PATH`.
-
-### Blog
-
-Remember to [update the lock file](https://t.me/c/1415471266/1015) for blog
-input after updating the blog flake:
-
-```bash
-nix flake lock --update-input blog
-deploy .#kage
-```
+Blog deployment is triggered automatically with repository dispatch.  A new
+commit in the [blog repo](https://github.com/KireinaHoro/jsteward.moe) will
+trigger a flake lock update then the deploy action in this repo.
