@@ -354,6 +354,26 @@ in
       };
     };
 
+    squid = {
+      enable = true;
+      extraConfig = ''
+        acl localnet src 2a0c:b641:69c::/48 10.160.0.0/12 127.0.0.1 ::1
+
+        http_access allow CONNECT
+        icp_access allow localnet
+        htcp_access allow localnet
+
+        cache_dir aufs /var/cache/squid 500 16 256
+        maximum_object_size 65536 KB
+
+        logformat combined  %>a %ui %un [%tl] "%rm %ru HTTP/%rv" %>Hs %<st "%{Referer}>h" "%{User-Agent}>h" %Ss:%Sh
+        logfile_rotate 0
+
+        negative_ttl 0
+        icp_port 3130
+      '';
+    };
+
     /* TODO: galleryd */
     nginx = {
       enable = true;
