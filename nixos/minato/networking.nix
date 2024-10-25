@@ -3,14 +3,14 @@
 with pkgs.lib;
 
 let
-  iviDiviPrefix = "2a0c:b641:69c:cd0";
+  my = pkgs.gravityHostByName config.networking.hostName;
+
   localPrefix = "2a0c:b641:69c:cde0";
   local4Prefix = "10.172.222";
   remoteAccessPrefix = "2a0c:b641:69c:cdc0";
   remoteAccess4Prefix = "10.172.220";
   remoteAccessPort = 31675;
   ifName = "enp0s25";
-  prefixLength = 56;
 
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
 
@@ -154,7 +154,6 @@ in
 
     gravity = rec {
       enable = true;
-      localPrefix = "${iviDiviPrefix}0::/${toString prefixLength}";
       inherit gravityTable;
 
       rait = {
@@ -169,23 +168,17 @@ in
 
     divi = {
       enable = true;
-      prefix = "${iviDiviPrefix}4:0:4::/96";
-      address = "${iviDiviPrefix}4:0:5:0:3/128";
       inherit ifName;
     };
 
     ivi = {
       enable = true;
-      prefix4 = "10.172.208.0";
-      prefix6 = "${iviDiviPrefix}5:0:5";
-      defaultMap = "2a0c:b641:69c:f254:0:4::/96";
-      inherit prefixLength;
+      default = "nick_sin";
       # map ETH to shigeru
       extraConfig = concatStringsSep "\n" (map
-        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce14:0:4" len) # shigeru
-          # ETHZ
-          pkgs.ethzV4Addrs
-        );
+        (pkgs.gravityHostByName "shigeru" pkgs.gravityHostToIviDestMap)
+        pkgs.ethzV4Addrs
+      );
     };
 
     chinaRoute = {

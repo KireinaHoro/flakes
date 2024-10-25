@@ -4,7 +4,6 @@ with pkgs.lib;
 
 let
   ifName = "enp1s0";
-  prefixLength = 60;
   gravityTable = 3500;
 in
 
@@ -54,7 +53,6 @@ in
 
     ivi = {
       enable = true;
-      inherit prefixLength;
     };
 
     squid = {

@@ -3,10 +3,10 @@
 with pkgs.lib;
 
 let
-  iviDiviPrefix = "2a0c:b641:69c:cf1";
-  gravityAddrSingle = last: "${iviDiviPrefix}0::${last}";
+  my = pkgs.gravityHostByName config.networking.hostName;
+  gravityMe = my ({id, ...}: "${pkgs.gravityHomePrefix}:${id}0::1");
+
   ifName = "enp0s3";
-  prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   chinaServer = "114.114.114.114";
   gravityTable = 3500;
@@ -42,7 +42,6 @@ in
 
     gravity = {
       enable = true;
-      localPrefix = "${gravityAddrSingle ""}/${toString prefixLength}";
       # defaultRoute = true;
       inherit gravityTable;
 
@@ -89,7 +88,7 @@ in
         };
         "nagisa.g.jsteward.moe" = {
           listen = [
-            { addr = "[${gravityAddrSingle "1"}]"; port = 8080; ssl = true; }
+            { addr = "[${gravityMe}]"; port = 8080; ssl = true; }
             { addr = "10.0.0.248"; port = 8080; ssl = true; } # public IPv4
           ];
           forceSSL = true;
