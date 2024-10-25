@@ -240,13 +240,6 @@ in
         ExecStart = "${rait}/bin/rait sync -c ${raitConfigFile}";
       };
     } // raitPart);
-    systemd.services.gravity-rait-up = mkIf cfg.rait.enable ({
-      serviceConfig = with pkgs; {
-        Type = "oneshot";
-        User = "root";
-        ExecStart = [ "${rait}/bin/rait up -c ${raitConfigFile}" ];
-      };
-    } // raitPart);
 
     systemd.services.gravity-babeld = mkIf cfg.babeld.enable ({
       serviceConfig = with pkgs; {
