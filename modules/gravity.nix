@@ -270,6 +270,10 @@ in
       serviceConfig = with pkgs; {
         NetworkNamespacePath = "/run/netns/${cfg.netns}";
         Type = "forking";
+        ExecStartPre = [
+          # babeld enables forwarding automatically inside the namespace; bird does not
+          "${ip} netns exec ${cfg.netns} ${procps}/bin/sysctl -w net.ipv6.conf.all.forwarding=1"
+        ];
         ExecStart = "${bird}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
           interfacePatterns = concatStringsSep ", "
             (map (pattern: "\"${pattern}\"") (
@@ -334,9 +338,7 @@ in
           "${ip} -n ${cfg.netns} addr add ${cfg.netnsAddress} dev host"
           "${ip} -n ${cfg.netns} route add ${cfg.subnet} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
           "${ip} -n ${cfg.netns} addr add ${cfg.subnet} dev lo"
-        ] ++ optional (!cfg.babeld.enable)
-          # babeld enables forwarding automatically inside the namespace; bird does not
-          "${ip} netns exec ${cfg.netns} ${procps}/bin/sysctl -w net.ipv6.conf.all.forwarding=1";
+        ];
         ExecStop = [
           # restore host back to default namespace, or it will be deleted along with the netns
           "${ip} -n ${cfg.netns} link set host netns 1"
