@@ -25,6 +25,7 @@ rec {
 
   gravityHomePrefix = "2a0c:b641:69c";
 
+  gravityHostToPrefix = {id, len, ...}: "${gravityHomePrefix}:${id}0::/${toString len}";
   gravityHostToIviPrefix4 = {id, len, ...}: let
     seg2 = toString (fromHexString (substring 0 1 id) + 160);
     seg3 = toString (fromHexString (substring 1 2 id));

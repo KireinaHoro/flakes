@@ -3,8 +3,9 @@ with lib;
 let
   cfg = config.services.ivi;
   hostname = config.networking.hostName;
-  prefix4 = pkgs.gravityHostByName hostname pkgs.gravityHostToIviPrefix4;
-  prefix6 = pkgs.gravityHostByName hostname ({id, ...}:
+  my = pkgs.gravityHostByName hostname;
+  prefix4 = my pkgs.gravityHostToIviPrefix4;
+  prefix6 = my ({id, ...}:
     "${pkgs.gravityHomePrefix}:${id}5:0:5");
   defaultMap = optionalString (cfg.default != null) (let
     p = pkgs.gravityHostByName cfg.default pkgs.gravityHostToDiviPrefix;

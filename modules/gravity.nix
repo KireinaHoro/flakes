@@ -4,6 +4,10 @@ let
   cfg = config.services.gravity;
   raitConfigFile = config.sops.templates."rait.conf".path;
   ip = "${pkgs.iproute2}/bin/ip";
+
+  my = pkgs.gravityHostByName config.networking.hostName;
+  localPrefix = my pkgs.gravityHostToPrefix;
+
   gravityPartDepend = after: {
     partOf = [ "gravity.service" ];
     after = [ "gravity.service" ] ++ after;
@@ -43,11 +47,6 @@ in
       type = types.int;
       description = "fwmark for IPv6 gravity wireguard packets";
       default = 56;
-    };
-    localPrefix = mkOption {
-      type = types.str;
-      description = "route to local subnet";
-      example = "2a0c:b641:69c:cd00::/56";
     };
     gravityTable = mkOption {
       type = types.int;
@@ -177,7 +176,7 @@ in
 
         remarks = {
           name = "${config.networking.hostName}"
-          prefix = "${cfg.localPrefix}"
+          prefix = "${localPrefix}"
         }
     '';
 
@@ -194,7 +193,7 @@ in
       networks = pkgs.injectNetworkNames {
         ${cfg.link} = {
           linkConfig = { RequiredForOnline = false; };
-          address = [ (pkgs.hostInV6Prefix cfg.localPrefix "1") ];
+          address = [ (pkgs.hostInV6Prefix localPrefix "1") ];
           routes = [ { Destination = "::/0"; Gateway = "fe80::200:ff:fe00:2"; Table = cfg.gravityTable; } ];
           routingPolicyRules = [
             { Family = "ipv6"; FirewallMark = cfg.fwmark; Priority = 50; }
@@ -311,9 +310,9 @@ in
 
           "${ip} -n ${cfg.netns} link set host up"
           "${ip} -n ${cfg.netns} link set lo up"
-          "${ip} -n ${cfg.netns} addr add ${pkgs.hostInV6Prefix cfg.localPrefix "2"} dev host"
-          "${ip} -n ${cfg.netns} route add ${cfg.localPrefix} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
-          "${ip} -n ${cfg.netns} addr add ${cfg.localPrefix} dev lo"
+          "${ip} -n ${cfg.netns} addr add ${pkgs.hostInV6Prefix localPrefix "2"} dev host"
+          "${ip} -n ${cfg.netns} route add ${localPrefix} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
+          "${ip} -n ${cfg.netns} addr add ${localPrefix} dev lo"
         ];
         ExecStop = [
           # restore host back to default namespace, or it will be deleted along with the netns

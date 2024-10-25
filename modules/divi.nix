@@ -2,18 +2,14 @@
 with lib;
 let
   cfg = config.services.divi;
+  my = pkgs.gravityHostByName config.networking.hostName;
+  pre = with my pkgs.gravityHostToDiviPrefix; "${prefix}/${toString len}";
+  address = my ({id, ...}:
+    "${pkgs.gravityHomePrefix}:${id}4:0:5:0:3/128");
 in
 {
   options.services.divi = {
     enable = mkEnableOption "divi nat64";
-    prefix = mkOption {
-      type = types.str;
-      description = "nat64 prefix";
-    };
-    address = mkOption {
-      type = types.str;
-      description = "nat64 address";
-    };
     ifName = mkOption {
       type = types.str;
       description = "nat64 output interface name";
@@ -37,7 +33,7 @@ in
         ExecStart = "${pkgs.tayga}/bin/tayga -d --config ${pkgs.writeText "divi.conf" ''
           tun-device divi
           ipv4-addr 10.208.0.2
-          prefix ${cfg.prefix}
+          prefix ${pre}
           dynamic-pool 10.208.0.0/12
           data-dir /var/spool/tayga
         ''}";
@@ -51,14 +47,14 @@ in
         linkConfig = { RequiredForOnline = false; };
         addresses = [
           { Address = "10.208.0.1/12"; PreferredLifetime = 0; }
-          { Address = cfg.address; PreferredLifetime = 0; }
+          { Address = address; PreferredLifetime = 0; }
         ];
         networkConfig = { IPv4Forwarding = true; IPv6Forwarding = true; };
         routes = [
-          { Destination = cfg.prefix; }
+          { Destination = pre; }
         ];
         routingPolicyRules = [
-          { To = cfg.prefix; Priority = 150; }
+          { To = pre; Priority = 150; }
         ];
       };
     };

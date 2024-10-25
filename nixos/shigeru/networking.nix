@@ -3,13 +3,17 @@
 with pkgs.lib;
 
 let
-  iviDiviPrefix = "2a0c:b641:69c:ce1";
-  ivi4Prefix = "10.172.225";
-  remoteAccessPrefix = "2a0c:b641:69c:ce1f";
+  my = pkgs.gravityHostByName config.networking.hostName;
+
+  ivi4Prefix = removeSuffix ".0" (my pkgs.gravityHostToIviPrefix4).prefix;
+  remoteAccessPrefix = my ({id, ...}: "${pkgs.gravityHomePrefix}:${id}f");
   ifName = "enp6s18";
   prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   chinaServer = "114.114.114.114";
+
+  hostname = config.networking.hostName;
+  gravityPrefix = pkgs.gravityHostByName hostname pkgs.gravityHostToPrefix;
   gravityTable = 3500;
   gravityMark = 333;
 in
@@ -30,7 +34,7 @@ in
         chain filter {
           type filter hook forward priority 100;
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
-          oifname "${ifName}" ip6 saddr != ${iviDiviPrefix}0::/${toString prefixLength} log prefix "Unknown source to WAN: " drop
+          oifname "${ifName}" ip6 saddr != ${gravityPrefix} log prefix "Unknown source to WAN: " drop
         }
       }
     '';
@@ -136,7 +140,6 @@ in
 
     gravity = rec {
       enable = true;
-      localPrefix = "${iviDiviPrefix}0::/${toString prefixLength}";
       inherit gravityTable;
       extraRoutePolicies = [
         # chinese recursive for China DNS
@@ -163,8 +166,6 @@ in
 
     divi = {
       enable = true;
-      prefix = "${iviDiviPrefix}4:0:4::/96";
-      address = "${iviDiviPrefix}4:0:5:0:3/128";
       inherit ifName;
     };
 
