@@ -3,8 +3,6 @@
 with pkgs.lib;
 
 let
-  iviDiviPrefix = "2a0c:b641:69c:cb0";
-  iviPrefixV4 = "10.172.176"; # 0xcb0
   # using 0xe for ER-X LAN
   localPrefixV4 = "10.172.190"; # 0xcbe
   localPrefixV6 = "2a0c:b641:69c:cbe0";
@@ -12,7 +10,6 @@ let
   localGatewayV6 = "${localPrefixV6}::1";
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
-  prefixLength = 56;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   chinaServer = "114.114.114.114";
   gravityTable = 3500;
@@ -134,7 +131,6 @@ in
 
     gravity = {
       enable = true;
-      localPrefix = "${iviDiviPrefix}0::/${toString prefixLength}";
       defaultRoute = true; # we do not have IPv6
       inherit gravityTable;
       extraRoutePolicies = [
@@ -157,8 +153,6 @@ in
 
     divi = {
       enable = true;
-      prefix = "${iviDiviPrefix}4:0:4::/96";
-      address = "${iviDiviPrefix}4:0:5:0:3/128";
       inherit ifName;
     };
 
@@ -195,18 +189,15 @@ in
 
     ivi = {
       enable = true;
-      prefix4 = "${iviPrefixV4}.0";
-      prefix6 = "${iviDiviPrefix}5:0:5";
       # accept packets with gravityMark
       fwmark = gravityMark;
       # default map to minato - back to China
-      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
-      inherit prefixLength;
-      # map ETH to hama (shigeru is down)
+      default = "minato";
+      # map ETH to shigeru
       extraConfig = concatStringsSep "\n" (map
-        ({ prefix, len }: pkgs.genIviMap prefix "2a0c:b641:69c:ce24:0:4" len)
-          pkgs.ethzV4Addrs
-        );
+        (pkgs.gravityHostByName "shigeru" pkgs.gravityHostToIviDestMap)
+        pkgs.ethzV4Addrs
+      );
     };
 
     smokeping = {
