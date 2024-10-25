@@ -53,6 +53,7 @@ in
             address = "nagisa.jsteward.moe"; }
         ];
       };
+      babeld.enable = true;
     };
 
     webdav = {

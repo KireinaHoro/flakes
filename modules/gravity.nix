@@ -14,9 +14,6 @@ let
   raitPart = let
     selectService = name: optional (cfg.rait.routeDaemon == name) "gravity-${name}.service";
   in gravityPartDepend (concatMap selectService ["bird" "babeld"]);
-
-  babeldEnable = cfg.rait.enable && cfg.rait.routeDaemon == "babeld";
-  birdEnable = cfg.ranet.enable || (cfg.rait.enable && cfg.rait.routeDaemon == "bird");
 in
 {
   options.services.gravity = {
@@ -65,6 +62,7 @@ in
     # routing daemon selection
     babeld = mkOption {
       type = types.submodule { options = {
+        enable = mkEnableOption "babeld for routing";
         socket = mkOption {
           type = types.str;
           description = "path of babeld control socket";
@@ -75,6 +73,7 @@ in
     };
     bird = mkOption {
       type = types.submodule { options = {
+        enable = mkEnableOption "bird for routing";
         socket = mkOption {
           type = types.str;
           description = "path of bird control socket";
@@ -127,11 +126,26 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
+    assertions = let
+      checkRaitRouteDaemon = impl: {
+        assertion = cfg.rait.routeDaemon == impl -> cfg.${impl}.enable;
+        message = "selected ${impl} for rait but ${impl} not enabled";
+      };
+    in [
+      { assertion = cfg.bird.enable || cfg.babeld.enable;
+        message = "at least one of bird and babeld should be enabled"; }
       { assertion = cfg.rait.enable || cfg.ranet.enable;
         message = "at least one of ranet (IPsec) and rait (WireGuard) should be enabled"; }
       { assertion = cfg.rait.enable -> length cfg.rait.transports >= 1;
         message = "must define at least one transport"; }
+
+      # check compatible routing daemons
+      { assertion = cfg.rait.routeDaemon == "babeld" -> cfg.babeld.enable;
+        message = "ranet does not support babeld, must enable bird"; }
+      (checkRaitRouteDaemon "babeld")
+      (checkRaitRouteDaemon "bird")
+      { assertion = cfg.bird.enable -> (cfg.rait.routeDaemon == "bird" || cfg.ranet.enable);
+        message = "bird enabled but no backbone selects it"; }
 
       # TODO: implement these
       { assertion = !cfg.ranet.enable;
@@ -219,7 +233,7 @@ in
       };
     } // raitPart);
 
-    systemd.services.gravity-babeld = mkIf babeldEnable ({
+    systemd.services.gravity-babeld = mkIf cfg.babeld.enable ({
       serviceConfig = with pkgs; {
         NetworkNamespacePath = "/run/netns/${cfg.netns}";
         ExecStart = "${babeld}/bin/babeld -c ${writeText "babeld.conf" ''
@@ -237,7 +251,7 @@ in
       };
     } // gravityPart);
 
-    systemd.services.gravity-bird = mkIf birdEnable ({
+    systemd.services.gravity-bird = mkIf cfg.bird.enable ({
       serviceConfig = with pkgs; {
         NetworkNamespacePath = "/run/netns/${cfg.netns}";
         Type = "forking";

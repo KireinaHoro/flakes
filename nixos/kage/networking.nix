@@ -68,6 +68,7 @@ in
           { family = "ip6"; sendPort = 56666; mtu = 1400;
             address = "kage.jsteward.moe"; }
         ];
+        babeld.enable = true;
       };
     };
 
