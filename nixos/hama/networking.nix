@@ -52,7 +52,6 @@ in
         transports = [ { family = "ip4"; sendPort = 57779; mtu = 1420; } ];
         routeDaemon = "bird";
       };
-      bird.enable = true;
     };
 
     divi = {

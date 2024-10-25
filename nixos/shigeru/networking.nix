@@ -159,7 +159,6 @@ in
             address = "shigeru.jsteward.moe"; }
         ];
       };
-      babeld.enable = true;
     };
 
     divi = {
