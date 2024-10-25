@@ -171,11 +171,8 @@ in
     # default to minato - back to China
     ivi = {
       enable = true;
-      prefix4 = "${ivi4Prefix}.0";
-      prefix6 = "${iviDiviPrefix}5:0:5";
-      defaultMap = "2a0c:b641:69c:cd04:0:4::/96";
+      default = "minato";
       fwmark = gravityMark;
-      inherit prefixLength;
     };
 
     squid = {

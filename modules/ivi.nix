@@ -2,35 +2,27 @@
 with lib;
 let
   cfg = config.services.ivi;
-  prefix4Length = cfg.prefixLength - 36;
+  hostname = config.networking.hostName;
+  prefix4 = pkgs.gravityHostByName hostname pkgs.gravityHostToIviPrefix4;
+  prefix6 = pkgs.gravityHostByName hostname ({id, ...}:
+    "${pkgs.gravityHomePrefix}:${id}5:0:5");
+  defaultMap = optionalString (cfg.default != null) (let
+    p = pkgs.gravityHostByName cfg.default pkgs.gravityHostToDiviPrefix;
+  in "${p.prefix}/${toString p.len}");
 in
 {
   options.services.ivi = {
     enable = mkEnableOption "ivi nat46";
-    prefix4 = mkOption {
-      type = types.str;
-      description = "nat46 ipv4 prefix";
-      example = "10.172.208.0";
-    };
     fwmark = mkOption {
       type = types.nullOr types.int;
       description = "firewall mark for packets to ivi";
       default = null;
     };
-    prefix6 = mkOption {
-      type = types.str;
-      description = "nat46 ipv6 prefix";
-      example = "2a0c:b641:69c:cd05:0:5";
-    };
-    defaultMap = mkOption {
+    default = mkOption {
       type = types.nullOr types.str;
-      description = "nat46 default destination";
-      example = "2a0c:b641:69c:f254:0:4::/96";
+      description = "nat46 default destination hostname";
+      example = "nick_sin";
       default = null;
-    };
-    prefixLength = mkOption {
-      type = types.int;
-      description = "IPv6 subnet prefix length";
     };
     extraConfig = mkOption {
       type = types.str;
@@ -41,16 +33,19 @@ in
   config = mkIf cfg.enable {
     systemd.services.ivi = {
       serviceConfig = {
-        ExecStart = "${pkgs.tayga}/bin/tayga -d --config ${pkgs.writeText "ivi.conf" ''
+        ExecStart = with pkgs; "${tayga}/bin/tayga -d --config ${writeText "ivi.conf" ''
           tun-device ivi
           ipv4-addr 10.160.0.2
-          ipv6-addr ${cfg.prefix6}::2
-          ${optionalString (cfg.defaultMap != null) "map 0.0.0.0/0 ${cfg.defaultMap}"}
-          ${pkgs.genIviMap cfg.prefix4 cfg.prefix6 prefix4Length}
+          ipv6-addr ${prefix6}::2
+          ${optionalString (cfg.default != null) "map 0.0.0.0/0 ${defaultMap}"}
+          ${genIviMap prefix4.prefix prefix6 prefix4.len}
 
           ${concatStringsSep "\n"
-            (map ({v4, v6, v6Len}: pkgs.genIviMap v4 v6 (v6Len - 36))
-              (pkgs.gravityHostsExcept cfg.prefix4))}
+          (gravityHostsExclude ([hostname] ++ optional (cfg.default != null) cfg.default)
+            (h: let
+              v4 = gravityHostToIviPrefix4 h;
+              v6 = gravityHostToDiviPrefix h;
+            in genIviMap v4.prefix v6.prefix v4.len))}
 
           ${cfg.extraConfig}
         ''}";
@@ -63,8 +58,8 @@ in
         name = "ivi";
         linkConfig = { RequiredForOnline = false; };
         addresses = [
-          { Address = "${removeSuffix "0" cfg.prefix4}1/12"; PreferredLifetime = 0; }
-          { Address = "${cfg.prefix6}::/96"; PreferredLifetime = 0; }
+          { Address = "${removeSuffix "0" prefix4.prefix}1/12"; PreferredLifetime = 0; }
+          { Address = "${prefix6}::/96"; PreferredLifetime = 0; }
         ];
         routes = [
           { Destination = "0.0.0.0/0"; Table = 3500; }
@@ -72,7 +67,7 @@ in
         routingPolicyRules = [
           # first check if is local peer
           {
-            To = "${cfg.prefix4}/${toString prefix4Length}";
+            To = "${prefix4.prefix}/${toString prefix4.len}";
             Priority = 50;
           }
           # then if still gravity, send to ivi for outgoing
@@ -84,7 +79,7 @@ in
             Table = 3500;
             Priority = 100;
           }
-          { To = "${cfg.prefix6}::/96"; Priority = 150; }
+          { To = "${prefix6}::/96"; Priority = 150; }
         ];
       };
     };

@@ -4,16 +4,36 @@ rec {
   injectNetworkNames = mapAttrs (name: n: n // { inherit name; });
   injectNetdevNames = mapAttrs (Name: nd: recursiveUpdate nd { netdevConfig = { inherit Name; }; });
 
-  genIviMap = v4: v6: v4len: "map ${v4}/${toString v4len} ${v6}:${v4}/${toString (v4len + 96)}";
+  genIviMap = v4: v6: v4Len:
+    "map ${v4}/${toString v4Len} ${removeSuffix "::" v6}:${v4}/${toString (v4Len + 96)}";
 
-  gravityHosts = map ({id, len}: let
+  # host definitions
+  gravityHosts = [
+    # our nodes
+    { name = "iori";    id = "cb0"; len = 56; }
+    { name = "minato";  id = "cd0"; len = 56; }
+    { name = "kage";    id = "ce0"; len = 60; }
+    { name = "shigeru"; id = "ce1"; len = 60; }
+    { name = "hama";    id = "ce2"; len = 60; }
+    { name = "nagisa";  id = "cf1"; len = 60; }
+    # listed only for generating mapping
+    { name = "nick_sin";id = "f25"; len = 60; }
+  ];
+  # find host def by name
+  gravityHostByName = name: f: f (head (filter (v: v.name == name) gravityHosts));
+  gravityHostsExclude = names: f: map f (filter (v: !(elem v.name names)) gravityHosts);
+
+  gravityHomePrefix = "2a0c:b641:69c";
+
+  gravityHostToIviPrefix4 = {id, len, ...}: let
     seg2 = toString (fromHexString (substring 0 1 id) + 160);
     seg3 = toString (fromHexString (substring 1 2 id));
-  in { v4 = "10.${seg2}.${seg3}.0"; v6 = "2a0c:b641:69c:${id}4:0:4"; v6Len = len; })
-    [ { id = "ce1"; len = 60; }
-      { id = "ce2"; len = 60; }
-      { id = "cb0"; len = 56; } ];
-  gravityHostsExcept = v4: filter (h: h.v4 != v4) gravityHosts;
+  in { prefix = "10.${seg2}.${seg3}.0"; len = len - 36; };
+  gravityHostToDiviPrefix = {id, len, ...}:
+    { prefix = "${gravityHomePrefix}:${id}4:0:4::"; len = 96; };
+  gravityHostToIviDestMap = h: let
+    dp = gravityHostToDiviPrefix h;
+  in {prefix, len}: genIviMap prefix dp.prefix len;
 
   ethzV4Addrs = [
     { prefix = "82.130.64.0"; len = 18; }
