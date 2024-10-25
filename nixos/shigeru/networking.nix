@@ -8,12 +8,10 @@ let
   ivi4Prefix = removeSuffix ".0" (my pkgs.gravityHostToIviPrefix4).prefix;
   remoteAccessPrefix = my ({id, ...}: "${pkgs.gravityHomePrefix}:${id}f");
   ifName = "enp6s18";
-  prefixLength = 60;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   chinaServer = "114.114.114.114";
 
-  hostname = config.networking.hostName;
-  gravityPrefix = pkgs.gravityHostByName hostname pkgs.gravityHostToPrefix;
+  gravityPrefix = my pkgs.gravityHostToPrefix;
   gravityTable = 3500;
   gravityMark = 333;
 in
@@ -41,7 +39,6 @@ in
   };
 
   systemd.network = {
-    config = { networkConfig = { IPv6Forwarding = true; }; };
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         address = [ "192.33.91.158/24" "2001:67c:10ec:49c3::19e/118" ];

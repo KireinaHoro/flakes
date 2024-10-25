@@ -3,9 +3,10 @@
 with pkgs.lib;
 
 let
-  iviDiviPrefix = "2a0c:b641:69c:ce0";
+  my = pkgs.gravityHostByName config.networking.hostName;
+  gravityPrefix = my pkgs.gravityHostToPrefix;
+
   ifName = "ens3";
-  prefixLength = 60;
   backupHost = "jsteward@toride.g.jsteward.moe";
   backupSecret = config.sops.secrets.toride-backup-key.path;
 in
@@ -26,7 +27,7 @@ in
         chain filter {
           type filter hook forward priority 100;
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
-          oifname "${ifName}" ip6 saddr != ${iviDiviPrefix}0::/${toString prefixLength} log prefix "Unknown source to WAN: " drop
+          oifname "${ifName}" ip6 saddr != ${gravityPrefix} log prefix "Unknown source to WAN: " drop
         }
       }
     '';
@@ -58,7 +59,6 @@ in
 
     gravity = rec {
       enable = true;
-      localPrefix = "${iviDiviPrefix}0::/${toString prefixLength}";
 
       rait = {
         enable = true;
@@ -73,17 +73,12 @@ in
 
     divi = {
       enable = true;
-      prefix = "${iviDiviPrefix}4:0:4::/96";
-      address = "${iviDiviPrefix}4:0:5:0:3/128";
       inherit ifName;
     };
 
     ivi = {
       enable = true;
-      prefix4 = "10.172.224.0";
-      prefix6 = "${iviDiviPrefix}5:0:5";
-      defaultMap = "2a0c:b641:69c:f254:0:4::/96";
-      inherit prefixLength;
+      default = "nick_sin";
     };
 
     squid = {

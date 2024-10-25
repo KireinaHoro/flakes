@@ -41,7 +41,6 @@ in
   # TODO: extract local gravity gateway to module
   # input hybrid port from ER-X: untagged for WAN, 200 for gravity local
   systemd.network = {
-    config = { networkConfig = { IPv6Forwarding = true; }; };
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         DHCP = "yes";

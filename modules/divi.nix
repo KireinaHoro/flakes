@@ -41,6 +41,7 @@ in
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
     };
+    systemd.network.config = { networkConfig = { IPv6Forwarding = true; }; };
     systemd.network.networks = {
       divi = {
         name = "divi";
@@ -49,12 +50,14 @@ in
           { Address = "10.208.0.1/12"; PreferredLifetime = 0; }
           { Address = address; PreferredLifetime = 0; }
         ];
-        networkConfig = { IPv4Forwarding = true; IPv6Forwarding = true; };
+        networkConfig = { IPv4Forwarding = true; };
         routes = [
           { Destination = pre; }
         ];
         routingPolicyRules = [
           { To = pre; Priority = 150; }
+          # make sure this takes precedence cf. ivi default rule with no fwmark
+          { To = "10.208.0.0/12"; Priority = 50; }
         ];
       };
     };

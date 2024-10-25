@@ -19,7 +19,6 @@ in
   };
 
   systemd.network = {
-    config = { networkConfig = { IPv6Forwarding = true; }; };
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         DHCP = "ipv4";
