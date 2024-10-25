@@ -11,7 +11,9 @@ let
     requiredBy = [ "gravity.service" ];
   };
   gravityPart = gravityPartDepend [];
-  raitDeps = gravityPartDepend (optional cfg.babeld.enable "gravity-babeld.service");
+  raitPart = let
+    selectService = name: optional (cfg.rait.routeDaemon == name) "gravity-${name}.service";
+  in gravityPartDepend (concatMap selectService ["bird" "babeld"]);
 in
 {
   options.services.gravity = {
@@ -84,6 +86,12 @@ in
           type = types.str;
           description = "path of bird control socket";
           default = "/run/bird.ctl";
+        };
+        filterExpr = mkOption {
+          type = types.str;
+          description = "filter expression to export to kernel routing table";
+          default = "all";
+          example = "filter { if net ~ [${cfg.route}+] then accept; reject; }";
         };
       }; };
       default = {};
@@ -212,7 +220,7 @@ in
             { To = cfg.route; Table = cfg.gravityTable; Priority = 200; }
             { From = cfg.route; Table = cfg.gravityTable; Priority = 200; }
           ] ++ cfg.extraRoutePolicies
-            ++ lib.optional cfg.defaultRoute { To = "::/0"; Table = cfg.gravityTable; Priority = 300; };
+            ++ optional cfg.defaultRoute { To = "::/0"; Table = cfg.gravityTable; Priority = 300; };
         };
       };
     };
@@ -220,25 +228,25 @@ in
     systemd.timers.gravity-rait-sync = mkIf cfg.rait.enable ({
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnBootSec = "15m";
-        OnUnitActiveSec = "15m";
+        OnBootSec = "5m";
+        OnUnitActiveSec = "5m";
         Unit = "gravity-rait-sync.service";
       };
-    } // raitDeps);
+    } // raitPart);
     systemd.services.gravity-rait-sync = mkIf cfg.rait.enable ({
       serviceConfig = with pkgs; {
         Type = "oneshot";
         User = "root";
         ExecStart = "${rait}/bin/rait sync -c ${raitConfigFile}";
       };
-    } // raitDeps);
+    } // raitPart);
     systemd.services.gravity-rait-up = mkIf cfg.rait.enable ({
       serviceConfig = with pkgs; {
         Type = "oneshot";
         User = "root";
         ExecStart = [ "${rait}/bin/rait up -c ${raitConfigFile}" ];
       };
-    } // raitDeps);
+    } // raitPart);
 
     systemd.services.gravity-babeld = mkIf cfg.babeld.enable ({
       serviceConfig = with pkgs; {
@@ -261,6 +269,7 @@ in
     systemd.services.gravity-bird = mkIf cfg.bird.enable ({
       serviceConfig = with pkgs; {
         NetworkNamespacePath = "/run/netns/${cfg.netns}";
+        Type = "forking";
         ExecStart = "${bird}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
           interfacePatterns = concatStringsSep ", "
             (map (pattern: "\"${pattern}\"") (
@@ -275,10 +284,7 @@ in
           protocol kernel {
             metric 2048;
             ipv6 sadr {
-              export filter {
-                if net ~ [${cfg.route}] then accept;
-                reject;
-              };
+              export ${cfg.bird.filterExpr};
               import none;
             };
           }
@@ -304,7 +310,8 @@ in
           }
         '')}";
         ExecStop = "${bird}/bin/birdc -s ${cfg.bird.socket} down";
-        Restart = "always";
+        ExecReload = "${bird}/bin/birdc -s ${cfg.bird.socket} configure";
+        Restart = "on-failure";
         RestartSec = 5;
       };
     } // gravityPart);
@@ -327,7 +334,9 @@ in
           "${ip} -n ${cfg.netns} addr add ${cfg.netnsAddress} dev host"
           "${ip} -n ${cfg.netns} route add ${cfg.subnet} via fe80::200:ff:fe00:1 dev host metric 1 proto static"
           "${ip} -n ${cfg.netns} addr add ${cfg.subnet} dev lo"
-        ];
+        ] ++ optional (!cfg.babeld.enable)
+          # babeld enables forwarding automatically inside the namespace; bird does not
+          "${ip} netns exec ${cfg.netns} ${procps}/bin/sysctl -w net.ipv6.conf.all.forwarding=1";
         ExecStop = [
           # restore host back to default namespace, or it will be deleted along with the netns
           "${ip} -n ${cfg.netns} link set host netns 1"
