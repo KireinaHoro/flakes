@@ -166,7 +166,6 @@ in
             address = "minato.jsteward.moe"; }
         ];
       };
-      babeld.enable = true;
     };
 
     divi = {

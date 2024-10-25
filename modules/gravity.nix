@@ -11,8 +11,9 @@ let
     requiredBy = [ "gravity.service" ];
   };
   gravityPart = gravityPartDepend [];
+  routeDaemon = if cfg.bird.enable then "bird" else "babeld";
   raitPart = let
-    selectService = name: optional (cfg.rait.routeDaemon == name) "gravity-${name}.service";
+    selectService = name: optional (routeDaemon == name) "gravity-${name}.service";
   in gravityPartDepend (concatMap selectService ["bird" "babeld"]);
 in
 {
@@ -69,7 +70,8 @@ in
           default = "/run/babeld.ctl";
         };
       }; };
-      default = {};
+      # enable babeld by default
+      default = { enable = true; };
     };
     bird = mkOption {
       type = types.submodule { options = {
@@ -93,10 +95,6 @@ in
     rait = mkOption {
       type = types.submodule { options = {
         enable = mkEnableOption "rait for WireGuard backbone";
-        routeDaemon = mkOption {
-          type = types.enum [ "bird" "babeld" ];
-          default = "babeld";
-        };
         secretNames = mkOption {
           type = types.submodule { options = {
             operatorKey = mkOption { type = types.str; default = "rait-operator-key"; };
@@ -126,28 +124,21 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = let
-      checkRaitRouteDaemon = impl: {
-        assertion = cfg.rait.routeDaemon == impl -> cfg.${impl}.enable;
-        message = "selected ${impl} for rait but ${impl} not enabled";
-      };
-    in [
-      { assertion = cfg.bird.enable || cfg.babeld.enable;
-        message = "at least one of bird and babeld should be enabled"; }
+    assertions = [
+      { assertion =
+        (cfg.bird.enable && !cfg.babeld.enable) ||
+        (cfg.babeld.enable && !cfg.bird.enable);
+        message = "exactly one of bird and babeld should be enabled"; }
       { assertion = cfg.rait.enable || cfg.ranet.enable;
         message = "at least one of ranet (IPsec) and rait (WireGuard) should be enabled"; }
+
+      # rait checks
       { assertion = cfg.rait.enable -> length cfg.rait.transports >= 1;
         message = "must define at least one transport"; }
 
-      # check compatible routing daemons
-      { assertion = cfg.rait.routeDaemon == "babeld" -> cfg.babeld.enable;
+      # ranet checks
+      { assertion = cfg.ranet.enable -> cfg.bird.enable;
         message = "ranet does not support babeld, must enable bird"; }
-      (checkRaitRouteDaemon "babeld")
-      (checkRaitRouteDaemon "bird")
-      { assertion = cfg.bird.enable -> (cfg.rait.routeDaemon == "bird" || cfg.ranet.enable);
-        message = "bird enabled but no backbone selects it"; }
-
-      # TODO: implement these
       { assertion = !cfg.ranet.enable;
         message = "ranet (IPsec) not implemented yet"; }
     ];
@@ -175,7 +166,7 @@ in
         }
         '') cfg.rait.transports)}
 
-        ${optionalString (cfg.rait.routeDaemon == "babeld") ''
+        ${optionalString cfg.babeld.enable ''
           babeld {
             enabled = true
             socket_type = "unix"
@@ -263,7 +254,7 @@ in
           interfacePatterns = concatStringsSep ", "
             (map (pattern: "\"${pattern}\"") (
               optional cfg.ranet.enable "swan*" ++
-              optionals (cfg.rait.enable && cfg.rait.routeDaemon == "bird") [ "grv4x*" "grv6x*" ]));
+              optionals cfg.rait.enable [ "grv4x*" "grv6x*" ]));
         in ''
           ipv6 sadr table sadr6;
           router id 10.10.10.10;

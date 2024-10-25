@@ -150,7 +150,6 @@ in
         enable = true;
         transports = [ { family = "ip4"; sendPort = 57778; mtu = 1420; } ];
       };
-      babeld.enable = true;
     };
 
     divi = {
