@@ -71,6 +71,7 @@ in
         networkConfig = {
           DHCPServer = true;
           IPv6SendRA = true;
+          IPMasquerade = "ipv4";
         };
         dhcpServerConfig = {
           DNS = [ "${local4Prefix}.254" ];
@@ -96,6 +97,7 @@ in
       remote-access = {
         address = [ "${remoteAccess4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
         linkConfig = { RequiredForOnline = false; };
+        networkConfig = { IPMasquerade = "ipv4"; };
         routingPolicyRules = [
           {
             From = "${remoteAccessPrefix}::/64";

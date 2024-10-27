@@ -49,6 +49,7 @@ in
       remote-access = {
         address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
         linkConfig = { RequiredForOnline = false; };
+        networkConfig = { IPMasquerade = "ipv4"; };
         routingPolicyRules = [
           {
             # we only feed v6 that go to China into Gravity
