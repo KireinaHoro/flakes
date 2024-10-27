@@ -5,7 +5,8 @@ let
   raitConfigFile = config.sops.templates."rait.conf".path;
   ip = "${pkgs.iproute2}/bin/ip";
 
-  my = pkgs.gravityHostByName config.networking.hostName;
+  hostname = config.networking.hostName;
+  my = pkgs.gravityHostByName hostname;
   localPrefix = my pkgs.gravityHostToPrefix;
 
   gravityPartDepend = after: {
@@ -16,9 +17,12 @@ let
   };
   gravityPart = gravityPartDepend [];
   routeDaemon = if cfg.bird.enable then "bird" else "babeld";
-  raitPart = let
+  backbonePartExtraDep = deps: let
     selectService = name: optional (routeDaemon == name) "gravity-${name}.service";
-  in gravityPartDepend (concatMap selectService ["bird" "babeld"]);
+  in gravityPartDepend ((concatMap selectService ["bird" "babeld"]) ++ deps);
+  backbonePart = backbonePartExtraDep [];
+
+  jsonEmitter = pkgs.formats.json {};
 in
 {
   options.services.gravity = {
@@ -86,13 +90,10 @@ in
     # backbone selection
     rait = {
       enable = mkEnableOption "rait for WireGuard backbone";
-      secretNames = mkOption {
-        type = types.submodule { options = {
-          operatorKey = mkOption { type = types.str; default = "rait-operator-key"; };
-          nodeKey = mkOption { type = types.str; default = "rait-node-key"; };
-          registry = mkOption { type = types.str; default = "rait-registry"; };
-        }; };
-        default = {};
+      secretNames = {
+        operatorKey = mkOption { type = types.str; default = "rait-operator-key"; };
+        nodeKey = mkOption { type = types.str; default = "rait-node-key"; };
+        registry = mkOption { type = types.str; default = "rait-registry"; };
       };
       transports = mkOption {
         type = types.listOf (types.submodule { options = {
@@ -106,6 +107,36 @@ in
     };
     ranet = {
       enable = mkEnableOption "ranet for IPsec backbone";
+      secretNames = {
+        key = mkOption { type = types.str; default = "ranet-key"; };
+        registry = mkOption { type = types.str; default = "ranet-registry"; };
+      };
+      organization = mkOption { type = types.str; default = "jsteward"; };
+      viciSocket = mkOption {
+        type = types.str;
+        description = "path of vici control socket";
+        default = "/run/charon.vici";
+      };
+      port = mkOption {
+        type = types.int;
+        description = "IPsec port for send/receive";
+        default = 13000;
+      };
+      localIf = mkOption {
+        type = types.str;
+        description = "local interface for IPsec traffic";
+      };
+      gravityIfPrefix = mkOption {
+        type = types.str;
+        description = "prefix for gravity interface names inside netns";
+        default = "swan";
+      };
+      endpoints = mkOption {
+        type = types.listOf (types.submodule { options = {
+          address = mkOption { type = types.nullOr types.str; default = null; };
+          address_family = mkOption { type = types.enum [ "ip4" "ip6" ]; };
+        }; });
+      };
     };
   };
 
@@ -125,8 +156,9 @@ in
       # ranet checks
       { assertion = cfg.ranet.enable -> cfg.bird.enable;
         message = "ranet does not support babeld, must enable bird"; }
-      { assertion = !cfg.ranet.enable;
-        message = "ranet (IPsec) not implemented yet"; }
+      { assertion = config.rait.enable ->
+          cfg.ranet.gravityIfPrefix != "grv4x" && cfg.ranet.gravityIfPrefix != "grv6x";
+        message = "dangerous prefix that may collide with rait"; };
     ];
 
     sops.templates."rait.conf".content = mkIf cfg.rait.enable ''
@@ -201,14 +233,93 @@ in
         OnUnitActiveSec = "5m";
         Unit = "gravity-rait-sync.service";
       };
-    } // raitPart);
+    } // backbonePart);
     systemd.services.gravity-rait-sync = mkIf cfg.rait.enable ({
       serviceConfig = with pkgs; {
         Type = "oneshot";
         User = "root";
         ExecStart = "${rait}/bin/rait sync -c ${raitConfigFile}";
       };
-    } // raitPart);
+    } // backbonePart);
+
+    systemd.timers.gravity-ranet-sync = mkIf cfg.ranet.enable ({
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = "5m";
+        OnUnitActiveSec = "5m";
+        Unit = "gravity-ranet-sync.service";
+      };
+    } // backbonePart);
+    systemd.services.gravity-ranet-sync = mkIf cfg.ranet.enable ({
+      serviceConfig = with pkgs; let
+        registryFile = "/run/secrets/ranet-registry";
+      in {
+        Type = "oneshot";
+        User = "root";
+        ExecStartPre = writeShellScript "update-ranet-registry" ''
+          ${curl}/bin/curl -s $(<${config.sops.secrets.${cfg.ranet.secretNames.registry}}) > ${registryFile}
+        '';
+        ExecStart = "${ranet}/bin/ranet \
+          -k ${config.sops.secrets.${cfg.ranet.secretNames.key}} \
+          -v ${cfg.ranet.viciSocket} \
+          -r ${registryFile} \
+          -c ${jsonEmitter "ranet.conf" {
+            organization = cfg.ranet.organization;
+            common_name = hostname;
+            endpoints = imap0 (idx: ep: ep // {
+              serial_number = idx;
+              port = cfg.ranet.port;
+              updown = "${swan-updown}/bin/swan-updown \
+                -p ${cfg.ranet.gravityIfPrefix} \
+                -n ${cfg.netns}";
+            }) cfg.ranet.endpoints;
+          }}";
+      };
+    } // backbonePartExtraDep ["gravity-strongswan.service"]);
+    systemd.services.gravity-strongswan = mkIf cfg.ranet.enable ({
+      # mirror of the upstream strongswan.service
+      serviceConfig = with pkgs; {
+        Type = "notify";
+        ExecStart = "${strongswan}/sbin/charon-systemd";
+        ExecStartPost = "${strongswan}/sbin/swanctl --load-all --noprompt";
+        ExecReload = [
+          "${strongswan}/sbin/swanctl --reload";
+          "${strongswan}/sbin/swanctl --load-all --noprompt";
+        ];
+        Restart = "on-abnormal";
+      };
+      environment = {
+        STRONGSWAN_CONF = pkgs.writeText "strongswan.conf" ''
+          charon {
+            interfaces_use = ${cfg.ranet.localIf}
+            port = 0
+            port_nat_t = ${toString cfg.ranet.port}
+            retransmit_base = 1
+            plugins {
+              socket-default {
+                set_source = yes
+                set_sourceif = yes
+              }
+              dhcp {
+                load = no
+              }
+            }
+            syslog {
+              daemon {
+                default = -1
+                log_level = 0
+              }
+            }
+          }
+          charon-systemd {
+            journal {
+              default = -1
+              ike = 0
+            }
+          }
+        '';
+      };
+    } // backbonePart);
 
     systemd.services.gravity-babeld = mkIf cfg.babeld.enable ({
       serviceConfig = with pkgs; {
@@ -239,7 +350,7 @@ in
         ExecStart = "${bird}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
           interfacePatterns = concatStringsSep ", "
             (map (pattern: "\"${pattern}\"") (
-              optional cfg.ranet.enable "swan*" ++
+              optional cfg.ranet.enable "${cfg.ranet.gravityIfPrefix}*" ++
               optionals cfg.rait.enable [ "grv4x*" "grv6x*" ]));
         in ''
           ipv6 sadr table sadr6;

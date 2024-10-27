@@ -2,7 +2,10 @@ self: { config, pkgs, lib, ... }:
 
 {
   # shared secrets between all nodes
-  sops.secrets = lib.genAttrs [ "rait-operator-key" "rait-registry" "ranet-key" ] (_: {
+  sops.secrets = lib.genAttrs [
+    "rait-operator-key" "rait-registry"
+    "ranet-key" "ranet-registry"
+  ] (_: {
     sopsFile = ./secrets.yaml;
   });
 
