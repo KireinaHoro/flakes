@@ -7,32 +7,32 @@ keys:
   - &iori 1c66b66a62109f653fcb8f63fcd3d7fab9a53fb6
   - &hama d35d58bed6e43d3c981b70ceaaf923671e232ade
 creation_rules:
-  - path_regex: nixos/minato/secrets\.yaml$
+  - path_regex: nixos(/|\\)minato(/|\\)secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
         - *minato
-  - path_regex: nixos/kage/secrets\.yaml$
+  - path_regex: nixos(/|\\)kage(/|\\)secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
         - *kage
-  - path_regex: nixos/shigeru/secrets\.yaml$
+  - path_regex: nixos(/|\\)shigeru(/|\\)secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
         - *shigeru
-  - path_regex: nixos/nagisa/secrets\.yaml$
+  - path_regex: nixos(/|\\)nagisa(/|\\)secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
         - *nagisa
-  - path_regex: nixos/iori/secrets\.yaml$
+  - path_regex: nixos(/|\\)iori(/|\\)secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
         - *iori
-  - path_regex: nixos/hama/secrets\.yaml$
+  - path_regex: nixos(/|\\)hama(/|\\)secrets\.yaml$
     key_groups:
       - pgp:
         - *jsteward
