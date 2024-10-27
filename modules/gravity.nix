@@ -22,7 +22,7 @@ let
   in gravityPartDepend ((concatMap selectService ["bird" "babeld"]) ++ deps);
   backbonePart = backbonePartExtraDep [];
 
-  jsonEmitter = pkgs.formats.json {};
+  jsonEmitter = (pkgs.formats.json {}).generate;
 in
 {
   options.services.gravity = {
@@ -115,7 +115,7 @@ in
       viciSocket = mkOption {
         type = types.str;
         description = "path of vici control socket";
-        default = "/run/charon.vici";
+        default = "/run/gravity-charon.vici";
       };
       port = mkOption {
         type = types.int;
@@ -156,9 +156,9 @@ in
       # ranet checks
       { assertion = cfg.ranet.enable -> cfg.bird.enable;
         message = "ranet does not support babeld, must enable bird"; }
-      { assertion = config.rait.enable ->
+      { assertion = cfg.rait.enable ->
           cfg.ranet.gravityIfPrefix != "grv4x" && cfg.ranet.gravityIfPrefix != "grv6x";
-        message = "dangerous prefix that may collide with rait"; };
+        message = "dangerous prefix that may collide with rait"; }
     ];
 
     sops.templates."rait.conf".content = mkIf cfg.rait.enable ''
@@ -252,39 +252,44 @@ in
     } // backbonePart);
     systemd.services.gravity-ranet-sync = mkIf cfg.ranet.enable ({
       serviceConfig = with pkgs; let
-        registryFile = "/run/secrets/ranet-registry";
+        registryUrlFile = config.sops.secrets.${cfg.ranet.secretNames.registry}.path;
+        keyFile = config.sops.secrets.${cfg.ranet.secretNames.key}.path;
+        registryFile = "/run/secrets/ranet-registry.reg";
+        configFile = jsonEmitter "ranet.conf" {
+          organization = cfg.ranet.organization;
+          common_name = hostname;
+          endpoints = imap0 (idx: ep: ep // {
+            serial_number = toString idx;
+            port = cfg.ranet.port;
+            updown = "${swan-updown}/bin/swan-updown " +
+              "-p ${cfg.ranet.gravityIfPrefix} " +
+              "-n ${cfg.netns}";
+          }) cfg.ranet.endpoints;
+        };
+        doRanet = a: "${ranet}/bin/ranet -k ${keyFile} -v ${cfg.ranet.viciSocket} -r ${registryFile} -c ${configFile} ${a}";
       in {
         Type = "oneshot";
         User = "root";
         ExecStartPre = writeShellScript "update-ranet-registry" ''
-          ${curl}/bin/curl -s $(<${config.sops.secrets.${cfg.ranet.secretNames.registry}}) > ${registryFile}
+          ${curl}/bin/curl -s $(<${registryUrlFile}) > ${registryFile}
         '';
-        ExecStart = "${ranet}/bin/ranet \
-          -k ${config.sops.secrets.${cfg.ranet.secretNames.key}} \
-          -v ${cfg.ranet.viciSocket} \
-          -r ${registryFile} \
-          -c ${jsonEmitter "ranet.conf" {
-            organization = cfg.ranet.organization;
-            common_name = hostname;
-            endpoints = imap0 (idx: ep: ep // {
-              serial_number = idx;
-              port = cfg.ranet.port;
-              updown = "${swan-updown}/bin/swan-updown \
-                -p ${cfg.ranet.gravityIfPrefix} \
-                -n ${cfg.netns}";
-            }) cfg.ranet.endpoints;
-          }}";
+        ExecStart = doRanet "up";
+        ExecReload = doRanet "up";
+        ExecStop = doRanet "down";
       };
     } // backbonePartExtraDep ["gravity-strongswan.service"]);
-    systemd.services.gravity-strongswan = mkIf cfg.ranet.enable ({
+    systemd.services.gravity-strongswan = mkIf cfg.ranet.enable (with pkgs; let
+      viciUri = "unix://${cfg.ranet.viciSocket}";
+      swanctl = a: "${strongswan}/sbin/swanctl ${a} --uri ${viciUri}";
+    in {
       # mirror of the upstream strongswan.service
-      serviceConfig = with pkgs; {
+      serviceConfig = {
         Type = "notify";
         ExecStart = "${strongswan}/sbin/charon-systemd";
-        ExecStartPost = "${strongswan}/sbin/swanctl --load-all --noprompt";
+        ExecStartPost = swanctl "--load-all --noprompt";
         ExecReload = [
-          "${strongswan}/sbin/swanctl --reload";
-          "${strongswan}/sbin/swanctl --load-all --noprompt";
+          (swanctl "--reload")
+          (swanctl "--load-all --noprompt")
         ];
         Restart = "on-abnormal";
       };
@@ -302,6 +307,9 @@ in
               }
               dhcp {
                 load = no
+              }
+              vici {
+                socket = ${viciUri}
               }
             }
             syslog {

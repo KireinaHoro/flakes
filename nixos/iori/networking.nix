@@ -143,6 +143,11 @@ in
         enable = true;
         transports = [ { family = "ip4"; sendPort = 57778; mtu = 1420; } ];
       };
+      ranet = {
+        enable = true;
+        localIf = ifName;
+        endpoints = [ { address_family = "ip4"; } ];
+      };
 
       bird.enable = true;
     };
