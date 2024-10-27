@@ -263,19 +263,20 @@ in
             port = cfg.ranet.port;
             updown = "${swan-updown}/bin/swan-updown " +
               "-p ${cfg.ranet.gravityIfPrefix} " +
-              "-n ${cfg.netns}";
+              "-n ${cfg.netns} -d";
           }) cfg.ranet.endpoints;
         };
         doRanet = a: "${ranet}/bin/ranet -k ${keyFile} -v ${cfg.ranet.viciSocket} -r ${registryFile} -c ${configFile} ${a}";
+        doUpdateReg = writeShellScript "update-ranet-registry" ''
+          ${curl}/bin/curl -s $(<${registryUrlFile}) > ${registryFile}
+        '';
       in {
         Type = "oneshot";
         User = "root";
-        ExecStartPre = writeShellScript "update-ranet-registry" ''
-          ${curl}/bin/curl -s $(<${registryUrlFile}) > ${registryFile}
-        '';
-        ExecStart = doRanet "up";
-        ExecReload = doRanet "up";
-        ExecStop = doRanet "down";
+        ExecStart = [
+          doUpdateReg
+          (doRanet "up")
+        ];
       };
     } // backbonePartExtraDep ["gravity-strongswan.service"]);
     systemd.services.gravity-strongswan = mkIf cfg.ranet.enable (with pkgs; let
