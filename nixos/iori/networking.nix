@@ -11,7 +11,7 @@ let
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
-  chinaServer = "114.114.114.114";
+  dnsToGravity = [ "114.114.114.114" "129.132.98.12" "129.132.250.2" ];
   gravityTable = 3500;
   gravityMark = 333;
 in
@@ -132,14 +132,12 @@ in
       enable = true;
       defaultRoute = true; # we do not have IPv6
       inherit gravityTable;
-      extraRoutePolicies = [
-        # chinese recursive for China DNS
-        {
-          To = chinaServer;
-          Table = gravityTable;
-          Priority = 50;
-        }
-      ];
+      # upstream recursive DNS into gravity
+      extraRoutePolicies = map (s: {
+        To = s;
+        Table = gravityTable;
+        Priority = 50;
+      }) dnsToGravity;
 
       rait = {
         enable = true;
@@ -163,7 +161,7 @@ in
     chinaDNS = {
       enable = true;
       servers = publicDNS;
-      inherit chinaServer;
+      inherit (head dnsToGravity);
       accelAppleGoogle = false;
     };
     localResolver = {
