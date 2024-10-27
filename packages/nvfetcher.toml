@@ -17,3 +17,7 @@ fetch.github = "jremmen/vim-ripgrep"
 [vim-haskell-indent]
 src.git = "https://github.com/itchyny/vim-haskell-indent"
 fetch.git = "https://github.com/itchyny/vim-haskell-indent"
+
+[swan-updown]
+src.git = "https://github.com/6-6-6/swan-updown"
+fetch.git = "https://github.com/6-6-6/swan-updown"

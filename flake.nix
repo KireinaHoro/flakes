@@ -21,6 +21,13 @@
     };
     home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
     nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs"; };
+    ranet = {
+      url = "github:NickCao/ranet";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
@@ -35,6 +42,7 @@
       config.allowUnfree = true;
       overlays = [
         inputs.blog.overlay
+        inputs.ranet.overlays.default
         self.overlays.default
       ];
     };

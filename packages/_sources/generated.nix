@@ -3,16 +3,16 @@
 {
   dnsmasq-china-list = {
     pname = "dnsmasq-china-list";
-    version = "7eb2855f5195287feac4a82d235d18f06b9bcd76";
+    version = "201ebe037740302d51df17b59ad2fd3fcea03393";
     src = fetchgit {
       url = "https://github.com/felixonmars/dnsmasq-china-list";
-      rev = "7eb2855f5195287feac4a82d235d18f06b9bcd76";
+      rev = "201ebe037740302d51df17b59ad2fd3fcea03393";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-Szljxn4gddp6Z8/F7CzWZVJKOvQSjVjBZEBS/RfhuYM=";
+      sha256 = "sha256-74w4Yhi2eXeBON6X1xR1FFZiuxNx1FuBjlQoVRMarTM=";
     };
-    date = "2024-01-18";
+    date = "2024-10-24";
   };
   hosts-blocklists = {
     pname = "hosts-blocklists";
@@ -40,18 +40,31 @@
     };
     date = "2022-10-07";
   };
-  vim-haskell-indent = {
-    pname = "vim-haskell-indent";
-    version = "a7423fe3968f04e60d33c76b64c9d4c404c73665";
+  swan-updown = {
+    pname = "swan-updown";
+    version = "600c2969e5ddbf2bc1a015e46bbd76bf00e1e98f";
     src = fetchgit {
-      url = "https://github.com/itchyny/vim-haskell-indent";
-      rev = "a7423fe3968f04e60d33c76b64c9d4c404c73665";
+      url = "https://github.com/6-6-6/swan-updown";
+      rev = "600c2969e5ddbf2bc1a015e46bbd76bf00e1e98f";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-uU4UAdHqOPrnWaKApuFATA+CklZ0DqdcKzP6mTxUN6g=";
+      sha256 = "sha256-cj5aJGscILd1odCXd9jxM3+MNgDjt1pduu2BIFkrluM=";
     };
-    date = "2023-11-07";
+    date = "2024-04-17";
+  };
+  vim-haskell-indent = {
+    pname = "vim-haskell-indent";
+    version = "bf6a26579b3296ac93f05d073625b54f09a4eddf";
+    src = fetchgit {
+      url = "https://github.com/itchyny/vim-haskell-indent";
+      rev = "bf6a26579b3296ac93f05d073625b54f09a4eddf";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "sha256-Fqp6BRwfIWrS/ZC2Fg/h8V4y2VSV1sT8klajHwO2qis=";
+    };
+    date = "2024-10-27";
   };
   vim-ripgrep = {
     pname = "vim-ripgrep";

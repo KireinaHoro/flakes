@@ -296,6 +296,29 @@
         "type": "github"
       }
     },
+    "ranet": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1728965628,
+        "narHash": "sha256-GB8FXnHzaM06MivfpYEFFIp4q0WfH3a7+jmoC3Tpwbs=",
+        "owner": "NickCao",
+        "repo": "ranet",
+        "rev": "964565690eddec2a660a887aea924c36f358f2a0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NickCao",
+        "repo": "ranet",
+        "type": "github"
+      }
+    },
     "rock5b-nixos": {
       "inputs": {
         "fan-control": "fan-control",
@@ -329,6 +352,7 @@
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
+        "ranet": "ranet",
         "rock5b-nixos": "rock5b-nixos",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
         "sops-nix": "sops-nix",
