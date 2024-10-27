@@ -66,6 +66,7 @@ in
             address = "kage.jsteward.moe"; }
         ];
       };
+      babeld.enable = true;
     };
 
     divi = {

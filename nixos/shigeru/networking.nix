@@ -157,7 +157,6 @@ in
         ];
       };
 
-      babeld.enable = false;
       bird.enable = true;
     };
 

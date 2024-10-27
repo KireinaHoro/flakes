@@ -60,65 +60,52 @@ in
     };
 
     # routing daemon selection
-    babeld = mkOption {
-      type = types.submodule { options = {
-        enable = mkEnableOption "babeld for routing";
-        socket = mkOption {
-          type = types.str;
-          description = "path of babeld control socket";
-          default = "/run/babeld.ctl";
-        };
-      }; };
-      # enable babeld by default
-      default = { enable = true; };
+    babeld = {
+      enable = mkEnableOption "babeld for routing";
+      socket = mkOption {
+        type = types.str;
+        description = "path of babeld control socket";
+        default = "/run/babeld.ctl";
+      };
     };
-    bird = mkOption {
-      type = types.submodule { options = {
-        enable = mkEnableOption "bird for routing";
-        socket = mkOption {
-          type = types.str;
-          description = "path of bird control socket";
-          default = "/run/bird.ctl";
-        };
-        filterExpr = mkOption {
-          type = types.str;
-          description = "filter expression to export to kernel routing table";
-          default = "all";
-          example = "filter { if net ~ [${cfg.homePrefix}+] then accept; reject; }";
-        };
-      }; };
-      default = {};
+    bird = {
+      enable = mkEnableOption "bird for routing";
+      socket = mkOption {
+        type = types.str;
+        description = "path of bird control socket";
+        default = "/run/bird.ctl";
+      };
+      filterExpr = mkOption {
+        type = types.str;
+        description = "filter expression to export to kernel routing table";
+        default = "all";
+        example = "filter { if net ~ [${cfg.homePrefix}+] then accept; reject; }";
+      };
     };
 
     # backbone selection
-    rait = mkOption {
-      type = types.submodule { options = {
-        enable = mkEnableOption "rait for WireGuard backbone";
-        secretNames = mkOption {
-          type = types.submodule { options = {
-            operatorKey = mkOption { type = types.str; default = "rait-operator-key"; };
-            nodeKey = mkOption { type = types.str; default = "rait-node-key"; };
-            registry = mkOption { type = types.str; default = "rait-registry"; };
-          }; };
-          default = {};
-        };
-        transports = mkOption {
-          type = types.listOf (types.submodule { options = {
-            family = mkOption { type = types.enum [ "ip4" "ip6" ]; };
-            address = mkOption { type = types.nullOr types.str; default = null; };
-            sendPort = mkOption { type = types.int; };
-            mtu = mkOption { type = types.int; };
-            randomPort = mkOption { type = types.bool; default = false; };
-          }; });
-        };
-      }; };
-      default = {};
+    rait = {
+      enable = mkEnableOption "rait for WireGuard backbone";
+      secretNames = mkOption {
+        type = types.submodule { options = {
+          operatorKey = mkOption { type = types.str; default = "rait-operator-key"; };
+          nodeKey = mkOption { type = types.str; default = "rait-node-key"; };
+          registry = mkOption { type = types.str; default = "rait-registry"; };
+        }; };
+        default = {};
+      };
+      transports = mkOption {
+        type = types.listOf (types.submodule { options = {
+          family = mkOption { type = types.enum [ "ip4" "ip6" ]; };
+          address = mkOption { type = types.nullOr types.str; default = null; };
+          sendPort = mkOption { type = types.int; };
+          mtu = mkOption { type = types.int; };
+          randomPort = mkOption { type = types.bool; default = false; };
+        }; });
+      };
     };
-    ranet = mkOption {
-      type = types.submodule { options = {
-        enable = mkEnableOption "ranet for IPsec backbone";
-      }; };
-      default = {};
+    ranet = {
+      enable = mkEnableOption "ranet for IPsec backbone";
     };
   };
 

@@ -52,7 +52,6 @@ in
             address = "nagisa.jsteward.moe"; }
         ];
       };
-      babeld.enable = false;
       bird.enable = true;
     };
 
