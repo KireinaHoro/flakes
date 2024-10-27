@@ -37,10 +37,7 @@ in
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         DHCP = "ipv4";
-        networkConfig = {
-          IPMasquerade = "ipv4";
-          IPv6PrivacyExtensions = "prefer-public";
-        };
+        networkConfig = { IPv6PrivacyExtensions = "prefer-public"; };
       };
     };
   };

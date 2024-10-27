@@ -45,7 +45,6 @@ in
         gateway = [ "192.33.91.1" ];
         domains = [ "ethz.ch" ];
         dns = [ "129.132.98.12" "129.132.250.2" ];
-        networkConfig = { IPMasquerade = "ipv4"; };
       };
       remote-access = {
         address = [ "${ivi4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];

@@ -50,7 +50,10 @@ in
           { Address = "10.208.0.1/12"; PreferredLifetime = 0; }
           { Address = address; PreferredLifetime = 0; }
         ];
-        networkConfig = { IPv4Forwarding = true; };
+        networkConfig = {
+          IPv4Forwarding = true;
+          IPMasquerade = "ipv4";
+        };
         routes = [
           { Destination = pre; }
         ];

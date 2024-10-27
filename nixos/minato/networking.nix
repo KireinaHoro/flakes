@@ -58,11 +58,7 @@ in
       ${ifName} = {
         DHCP = "ipv4";
         vlan = [ "${ifName}.200" ];
-        # chinaRoute packets NAT
-        networkConfig = {
-          IPMasquerade = "ipv4";
-          IPv6PrivacyExtensions = "prefer-public";
-        };
+        networkConfig = { IPv6PrivacyExtensions = "prefer-public"; };
         # chinaRoute packets lookup main
         routingPolicyRules = [
           { Family = "both"; FirewallMark = gravityMark; Priority = 60; }
