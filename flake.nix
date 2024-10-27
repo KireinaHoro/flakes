@@ -63,6 +63,7 @@
         inputs.ssh-to-pgp.packages.${system}.ssh-to-pgp
         nvfetcher
         rait
+        openssl
       ];
     };
   }) // {

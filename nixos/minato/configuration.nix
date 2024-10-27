@@ -4,9 +4,7 @@
   sops = {
     defaultSopsFile = ./secrets.yaml;
     secrets = with pkgs; {
-      rait-operator-key = {};
       rait-node-key = {};
-      rait-registry = {};
       forward_wg_ipv4 = userToSops config.users.users.forward_ipv4;
       remote-access-priv = userToSops config.users.users.systemd-network;
       inadyn-cfg = userToSops config.users.users.inadyn;

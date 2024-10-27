@@ -4,9 +4,7 @@
   sops = {
     defaultSopsFile = ./secrets.yaml;
     secrets = {
-      rait-operator-key = {};
       rait-node-key = {};
-      rait-registry = {};
       webdav-env = {};
     };
   };

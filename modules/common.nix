@@ -1,6 +1,11 @@
 self: { config, pkgs, lib, ... }:
 
 {
+  # shared secrets between all nodes
+  sops.secrets = lib.genAttrs [ "rait-operator-key" "rait-registry" "ranet-key" ] (_: {
+    sopsFile = ./secrets.yaml;
+  });
+
   networking.domain = "g.jsteward.moe";
 
   users.users.jsteward = {
