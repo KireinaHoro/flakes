@@ -3,7 +3,7 @@
 rustPlatform.buildRustPackage {
   inherit (source) pname version src;
 
-  cargoHash = lib.fakeHash;
+  cargoLock.lockFile = source.src + "/Cargo.lock";
 
   meta = with lib; {
     description = "swan-updown helps create XFRM interfaces on demand";

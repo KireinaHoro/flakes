@@ -3,16 +3,16 @@
 {
   dnsmasq-china-list = {
     pname = "dnsmasq-china-list";
-    version = "201ebe037740302d51df17b59ad2fd3fcea03393";
+    version = "16e4ab4c454898d396e405de6c888207571734c9";
     src = fetchgit {
       url = "https://github.com/felixonmars/dnsmasq-china-list";
-      rev = "201ebe037740302d51df17b59ad2fd3fcea03393";
+      rev = "16e4ab4c454898d396e405de6c888207571734c9";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-74w4Yhi2eXeBON6X1xR1FFZiuxNx1FuBjlQoVRMarTM=";
+      sha256 = "sha256-1noSir2jDU4f6KLwz9jKTaf1jQfODF6cVJepejPOFhY=";
     };
-    date = "2024-10-24";
+    date = "2024-10-27";
   };
   hosts-blocklists = {
     pname = "hosts-blocklists";
@@ -42,16 +42,16 @@
   };
   swan-updown = {
     pname = "swan-updown";
-    version = "600c2969e5ddbf2bc1a015e46bbd76bf00e1e98f";
+    version = "bc9851409c8b479e6546722ec6448f27a692be78";
     src = fetchgit {
       url = "https://github.com/6-6-6/swan-updown";
-      rev = "600c2969e5ddbf2bc1a015e46bbd76bf00e1e98f";
+      rev = "bc9851409c8b479e6546722ec6448f27a692be78";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-cj5aJGscILd1odCXd9jxM3+MNgDjt1pduu2BIFkrluM=";
+      sha256 = "sha256-MtM+3rzsTXqoR6Qa1BbZQD24X/4ZG1j40gG66gne8Xg=";
     };
-    date = "2024-04-17";
+    date = "2024-10-27";
   };
   vim-haskell-indent = {
     pname = "vim-haskell-indent";
