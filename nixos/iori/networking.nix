@@ -234,69 +234,48 @@ in
         binary = ${config.security.wrapperDir}/fping-gravity
         protocol = 6
       '';
-      targetConfig = ''
+      targetConfig = with pkgs; let
+        gravityHostToTarget = h@{name, remarks ? "(no remarks)", ...}: ''
+          ++ ${name}
+          menu = ${name}
+          title = ${name} @ ${remarks}
+          remark = Gravity host ${name}.g.jsteward.moe (${gravityHomePrefix h})
+        '';
+        externalHostsV6 = [
+          { name = "YouTube"; host = "youtube.com"; }
+          { name = "Google"; host = "google.com"; }
+          { name = "GitHub"; host = "github.com"; }
+        ];
+        externalHostsV4 = [
+          { name = "Enzian Gateway (ETH SG)"; host = "enzian-gateway.inf.ethz.ch"; }
+          { name = "Shigeru VSOS"; host = "shigeru.vsos.ethz.ch"; }
+        ] ++ externalHostsV6;
+        externalToTarget = {name, host}: ''
+          ++ ${name}
+          menu = ${name}
+          title = ${name} (${host})
+          host = ${host}
+        '';
+      in ''
         probe = FPing46
         menu = Top
         title = Network Latency Grapher (iori)
         remark = Latency graphs of hosts in and outside of Gravity, observed from iori @ \
           Monzoon Networks, Zürich, Switzerland.  Contact the maintainer (linked at the bottom \
           of page) for more hosts to be included.
-        + Gravity-WireGuard
-        menu = Gravity WireGuard
-        title = Gravity WireGuard Links
-        remark = Link-local IPv6 hosts.  These show direct connectivity over WireGuard from iori.
-        probe = GravityPing
-        ++ Shigeru
-        menu = Shigeru
-        title = Shigeru (fe80::216:3eff:fe10:7610%grv4x57777)
-        host = fe80::216:3eff:fe10:7610%grv4x57777
         + Gravity
         menu = Gravity
         title = Gravity Hosts
         remark = Selected hosts in Gravity.
         probe = FPing6
-        ++ Shigeru
-        menu = Shigeru (Zürich, Switzerland)
-        title = shigeru @ ETH Zürich (VSOS), Switzerland
-        remark = Temporarily down.
-        host = shigeru.g.jsteward.moe
-        ++ Hama
-        menu = Hama (Zürich, Switzerland)
-        title = hama @ ETH Zürich (SG, STF G 222), Switzerland
-        remark = Selected for masquerade exit (also over divi/ivi) for IPv4 ranges of ETH.
-        host = hama.g.jsteward.moe
-        ++ Minato
-        menu = Minato (Beijing, China)
-        title = minato @ China Unicom, Beijing, China
-        remark = Selected for masquerade exit (also over divi/ivi) for IPv4 ranges of Chinese \
-          servers according to the APNIC list (github:KireinaHoro/flakes#chnroute).
-        host = minato.g.jsteward.moe
+        ${concatStringsSep "\n" (map gravityHostToTarget gravityHosts)}
         + External
         menu = External Hosts (v4)
         title = External Hosts from iori over IPv4
         remark = Observation of common IPv4 sites from iori, which uses the provider's default \
           route.  They should give a good estimation of the external provider's connectivity.
         probe = FPing4
-        ++ YouTube
-        menu = YouTube
-        title = YouTube (youtube.com)
-        host = youtube.com
-        ++ Google
-        menu = Google
-        title = Google (google.com)
-        host = google.com
-        ++ GitHub
-        menu = GitHub
-        title = GitHub (github.com)
-        host = github.com
-        ++ ETH-SG
-        menu = ETH Systems Group
-        title = ETH Systems Group (enzian-gateway)
-        host = enzian-gateway.inf.ethz.ch
-        ++ ETH-VSOS
-        menu = ETH VSOS
-        title = ETH VSOS (shigeru v4 on public Internet)
-        host = shigeru.vsos.ethz.ch
+        ${concatStringsSep "\n" (map externalToTarget externalHostsV4)}
         + Gravity-DefaultRoute
         menu = External Hosts (v6 Gravity)
         title = External Hosts from iori over default route from Gravity
@@ -304,18 +283,7 @@ in
           Gravity.  As most of major websites have IPv6 access already, they should give a good \
           estimation of the surfing experience of a client on iori.
         probe = FPing6
-        ++ YouTube
-        menu = YouTube
-        title = YouTube (youtube.com)
-        host = youtube.com
-        ++ Google
-        menu = Google
-        title = Google (google.com)
-        host = google.com
-        ++ GitHub
-        menu = GitHub
-        title = GitHub (github.com)
-        host = github.com
+        ${concatStringsSep "\n" (map externalToTarget externalHostsV4)}
       '';
     };
 

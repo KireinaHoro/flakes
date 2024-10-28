@@ -10,12 +10,12 @@ rec {
   # host definitions
   gravityHosts = [
     # our nodes
-    { name = "iori";    id = "cb0"; len = 56; }
-    { name = "minato";  id = "cd0"; len = 56; }
-    { name = "kage";    id = "ce0"; len = 60; }
-    { name = "shigeru"; id = "ce1"; len = 60; }
-    { name = "hama";    id = "ce2"; len = 60; }
-    { name = "nagisa";  id = "cf1"; len = 60; }
+    { name = "iori";    id = "cb0"; len = 56; remarks = "Monzoon Networks (Zurich)"; }
+    { name = "minato";  id = "cd0"; len = 56; remarks = "China Unicom (Beijing)"; }
+    { name = "kage";    id = "ce0"; len = 60; remarks = "Vultr (Tokyo)"; }
+    { name = "shigeru"; id = "ce1"; len = 60; remarks = "ETH VSOS (Zurich)"; }
+    { name = "hama";    id = "ce2"; len = 60; remarks = "ETH ISGINF (Zurich)"; }
+    { name = "nagisa";  id = "cf1"; len = 60; remarks = "Oracle Cloud (Zurich)"; }
     # listed only for generating mapping
     { name = "nick_sin";id = "f25"; len = 60; }
   ];
