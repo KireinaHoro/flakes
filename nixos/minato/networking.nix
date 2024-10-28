@@ -162,8 +162,16 @@ in
             address = "minato.jsteward.moe"; }
         ];
       };
+      ranet = {
+        enable = true;
+        localIf = ifName;
+        endpoints = [
+          { address_family = "ip4"; }
+          { address_family = "ip6"; address = "minato.jsteward.moe"; }
+        ];
+      };
 
-      babeld.enable = true;
+      bird.enable = true;
     };
 
     divi = {

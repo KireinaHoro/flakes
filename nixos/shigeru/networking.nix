@@ -156,6 +156,14 @@ in
             address = "shigeru.jsteward.moe"; }
         ];
       };
+      ranet = {
+        enable = true;
+        localIf = ifName;
+        endpoints = [
+          { address_family = "ip4"; address = "shigeru.jsteward.moe"; }
+          { address_family = "ip6"; address = "shigeru.jsteward.moe"; }
+        ];
+      };
 
       bird.enable = true;
     };

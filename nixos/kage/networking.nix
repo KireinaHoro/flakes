@@ -66,7 +66,15 @@ in
             address = "kage.jsteward.moe"; }
         ];
       };
-      babeld.enable = true;
+      ranet = {
+        enable = true;
+        localIf = ifName;
+        endpoints = [
+          { address_family = "ip4"; address = "kage.jsteward.moe"; }
+          { address_family = "ip6"; address = "kage.jsteward.moe"; }
+        ];
+      };
+      bird.enable = true;
     };
 
     divi = {

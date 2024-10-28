@@ -7,9 +7,9 @@ nixpkgs.lib.nixosSystem {
     ./configuration.nix
     ./hardware.nix
     ./networking.nix
- 
+
     gravity divi ivi
-    { nixpkgs.overlays = [ self.overlays.default ]; }
+    { nixpkgs.overlays = [ self.overlays.default inputs.ranet.overlays.default ]; }
     inputs.sops-nix.nixosModules.sops
   ];
 }

@@ -9,7 +9,7 @@ nixpkgs.lib.nixosSystem {
     ./networking.nix
 
     gravity
-    { nixpkgs.overlays = [ self.overlays.default ]; }
+    { nixpkgs.overlays = [ self.overlays.default inputs.ranet.overlays.default ]; }
     inputs.sops-nix.nixosModules.sops
   ];
 }

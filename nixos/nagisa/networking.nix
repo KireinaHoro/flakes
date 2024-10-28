@@ -52,6 +52,14 @@ in
             address = "nagisa.jsteward.moe"; }
         ];
       };
+      ranet = {
+        enable = true;
+        localIf = ifName;
+        endpoints = [
+          { address_family = "ip4"; address = "nagisa.jsteward.moe"; }
+        ];
+      };
+
       bird.enable = true;
     };
 
