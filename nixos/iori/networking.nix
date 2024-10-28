@@ -20,6 +20,9 @@ in
   # networking utils
   environment.systemPackages = with pkgs; [ mtr tcpdump socat ];
 
+  # allow nginx to access smokeping home
+  users.groups.smokeping.members = [ "nginx" ];
+
   networking = {
     hostName = "iori";
     useDHCP = false;
