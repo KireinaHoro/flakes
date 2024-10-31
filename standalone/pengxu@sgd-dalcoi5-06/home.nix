@@ -32,6 +32,7 @@ in
 
     packages = with pkgs; [
       texlive.combined.scheme-full
+      texlivePackages.fontawesome
       ffmpeg-headless
       # spinalhdl formal
       symbiyosys
