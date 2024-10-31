@@ -43,6 +43,8 @@ in
   };
 
   services = {
+    fail2ban.enable = true;
+
     # workaround in https://github.com/NixOS/nixpkgs/pull/275031#issuecomment-1891052685
     dovecot2.sieve = {
       plugins = [ "sieve_imapsieve" "sieve_extprograms" ];
