@@ -293,6 +293,9 @@ in
           (swanctl "--load-all --noprompt")
         ];
         Restart = "on-abnormal";
+        MemoryMax = "30%";
+        CPUQuota = "50%";
+        CPUWeight = 20;
       };
       environment = {
         STRONGSWAN_CONF = pkgs.writeText "strongswan.conf" ''
