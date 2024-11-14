@@ -239,7 +239,7 @@ in
           ++ ${name}
           menu = ${name}
           title = ${name} @ ${remarks}
-          remark = Gravity host ${name}.g.jsteward.moe (${gravityHomePrefix h})
+          remark = Gravity host ${name}.g.jsteward.moe (${gravityHostToPrefix h})
         '';
         externalHostsV6 = [
           { name = "YouTube"; host = "youtube.com"; }
