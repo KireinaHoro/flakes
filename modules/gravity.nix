@@ -293,6 +293,8 @@ in
           (swanctl "--load-all --noprompt")
         ];
         Restart = "on-abnormal";
+        CPUAccounting = true;
+        MemoryAccounting = true;
         MemoryMax = "30%";
         CPUQuota = "50%";
         CPUWeight = 20;
