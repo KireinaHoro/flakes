@@ -6,6 +6,7 @@ let
 in
 
 {
+  system.stateVersion = 5;
   users.users.${username}.home = homeDir;
 
   home-manager.users."${username}" = {
@@ -13,9 +14,11 @@ in
       sessionPath = [
         "${homeDir}/sdk/go1.20.3/bin"
         "${homeDir}/go/bin"
-        "${homeDir}/.ghcup/bin"
       ];
-      packages = with pkgs; [ coreutils jdk verilator ];
+      packages = with pkgs; [
+        coreutils jdk verilator gtkwave sby yices
+        texlive.combined.scheme-full
+      ];
     };
 
     programs.zsh.initExtra = ''
