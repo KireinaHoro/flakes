@@ -16,7 +16,9 @@ in
         "${homeDir}/go/bin"
       ];
       packages = with pkgs; [
-        coreutils jdk verilator gtkwave sby yices
+        coreutils jdk
+        verilator clang
+        gtkwave sby yices
         texlive.combined.scheme-full
       ];
     };
