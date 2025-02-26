@@ -1,8 +1,6 @@
 { pkgs, ... }:
 
 {
-  services.nix-daemon.enable = true;
-
   # setup zsh global profile (nix path, etc.)
   programs.zsh.enable = true;
 

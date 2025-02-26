@@ -6,7 +6,7 @@ let
 in
 
 {
-  system.stateVersion = 5;
+  system.stateVersion = 4;
   users.users.${username}.home = homeDir;
 
   home-manager.users."${username}" = {
