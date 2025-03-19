@@ -10,7 +10,10 @@ in
 
 {
   nixpkgs.config.allowUnfree = true;
-  programs.vscode.enable = true;
+  programs = {
+    vscode.enable = true;
+    neovim.enable = true;
+  };
 
   home = {
     inherit username homeDirectory;
