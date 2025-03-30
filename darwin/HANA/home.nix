@@ -16,9 +16,7 @@ in
         "${homeDir}/go/bin"
       ];
       packages = with pkgs; [
-        coreutils jdk
-        verilator clang
-        gtkwave sby yices
+        coreutils jdk clang
         texlive.combined.scheme-full
       ];
     };
@@ -35,5 +33,7 @@ in
       # remove walters RPS1
       unset RPS1
     '';
+
+    programs.neovim.enable = true;
   };
 }

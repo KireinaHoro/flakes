@@ -12,9 +12,6 @@ homeConf = { lib, ... }: {
       default-cache-ttl 18000
       enable-ssh-support
     '';
-    sessionPath = [
-      "${homeConfUpper.home.homeDirectory}/.local/bin" # XXX: express with XDG?
-    ];
   };
 
   programs = {
