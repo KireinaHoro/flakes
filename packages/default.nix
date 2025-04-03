@@ -20,7 +20,6 @@ in {
     in final.callPackage package args) // {
       # override existing packages
       tayga = prev.tayga.overrideAttrs (oldAttrs: rec {
-        version = "0.9.2-8";
         patches = getDebianPatches (fetchTarball {
           url = http://deb.debian.org/debian/pool/main/t/tayga/tayga_0.9.2-8.debian.tar.xz;
           sha256 = "17lq6ddildf0lw2zwsp89d6vgqds4m53jq8syh4hbcwmps3dhgc5";
