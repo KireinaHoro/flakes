@@ -16,7 +16,7 @@ in
         "${homeDir}/go/bin"
       ];
       packages = with pkgs; [
-        coreutils jdk clang
+        coreutils clang
         texlive.combined.scheme-full
       ];
     };
