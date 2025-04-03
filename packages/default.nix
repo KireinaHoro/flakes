@@ -25,7 +25,7 @@ in {
           sha256 = "17lq6ddildf0lw2zwsp89d6vgqds4m53jq8syh4hbcwmps3dhgc5";
         });
       });
-      bird = prev.bird.overrideAttrs (oldAttrs: rec {
+      bird2 = prev.bird2.overrideAttrs (oldAttrs: rec {
         version = "2.15.1-nickcao3";
         # apply NickCao's ETX Babel patch
         patches = oldAttrs.patches ++ [ (fetchurl {
