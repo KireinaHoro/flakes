@@ -148,7 +148,6 @@ in
       enable = true;
       autoIndex = true;
       autoIndexExclude = [ "\\Junk" ];
-      indexAttachments = false;
       enforced = "body";
       memoryLimit = 500;
     };
