@@ -361,7 +361,7 @@ in
           # babeld enables forwarding automatically inside the namespace; bird does not
           "${ip} netns exec ${cfg.netns} ${procps}/bin/sysctl -w net.ipv6.conf.all.forwarding=1"
         ];
-        ExecStart = "${bird}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
+        ExecStart = "${bird2}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
           interfacePatterns = concatStringsSep ", "
             (map (pattern: "\"${pattern}\"") (
               optional cfg.ranet.enable "${cfg.ranet.gravityIfPrefix}*" ++
@@ -400,8 +400,8 @@ in
             };
           }
         '')}";
-        ExecStop = "${bird}/bin/birdc -s ${cfg.bird.socket} down";
-        ExecReload = "${bird}/bin/birdc -s ${cfg.bird.socket} configure";
+        ExecStop = "${bird2}/bin/birdc -s ${cfg.bird.socket} down";
+        ExecReload = "${bird2}/bin/birdc -s ${cfg.bird.socket} configure";
         Restart = "on-failure";
         RestartSec = 5;
       };
