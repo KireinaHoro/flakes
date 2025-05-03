@@ -37,7 +37,7 @@ self: { config, pkgs, lib, ... }:
   environment = {
     systemPackages = with pkgs; [
       vim wget tmux htop ripgrep bat git
-      direnv nix-direnv pciutils
+      direnv nix-direnv pciutils file
     ];
     interactiveShellInit = ''
       eval "$(direnv hook bash)"

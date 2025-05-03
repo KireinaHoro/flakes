@@ -14,10 +14,11 @@ in {
   packages = pkgs: mapPackages (name: pkgs.${name}) // mapVimPlugins (name: pkgs.vimPlugins.${name});
   overlay = final: prev: let
       sources = import ./_sources/generated.nix { inherit (final) fetchurl fetchgit fetchFromGitHub dockerTools; };
+      a64pkgs = prev.pkgsCross.aarch64-multiplatform;
     in mapPackages (name: let
       package = import (./. + "/${name}");
       args = intersectAttrs (functionArgs package) { source = sources.${name}; };
-    in final.callPackage package args) // {
+    in final.callPackage package args) // rec {
       # override existing packages
       tayga = prev.tayga.overrideAttrs (oldAttrs: rec {
         patches = getDebianPatches (fetchTarball {
@@ -33,6 +34,33 @@ in {
           sha256 = "1nr8chy3w8kfmy6rbm8kkqxk0kp6ipngf47jb01xy145p4gjjhm1";
         }) ];
       });
+
+      # use 115200 baud rate for DDR binary
+      rock5b-tpl = prev.rkbin.overrideAttrs (oldAttrs: {
+        installPhase = ''
+          patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" tools/ddrbin_tool
+          sed -i -e '/uart baudrate=/s/$/115200/' tools/ddrbin_param.txt
+          tools/ddrbin_tool rk3588 tools/ddrbin_param.txt bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin
+          mkdir $out
+          cp bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin $out/rock5b-tpl.bin
+        '';
+      });
+
+      # use 115200 baud rate for ARM Trusted Firmware for iori
+      rock5b-atf = a64pkgs.armTrustedFirmwareRK3588.overrideAttrs {
+        patchPhase = ''
+          sed -i '/^#define RK_DBG_UART_BAUDRATE/s/[0-9]\+$/115200/' plat/rockchip/rk3588/rk3588_def.h
+        '';
+      };
+
+      # use 115200 baud rate for U-Boot for iori
+      rock5b-uboot = a64pkgs.ubootRock5ModelB.overrideAttrs {
+        BL31 = "${rock5b-atf}/bl31.elf";
+        ROCKCHIP_TPL = "${rock5b-tpl}/rock5b-tpl.bin";
+        extraConfig = ''
+          CONFIG_BAUDRATE=115200
+        '';
+      };
     } // (let
       newPlugins = mapVimPlugins (name: final.vimUtils.buildVimPlugin { # vim plugins
           inherit name;
