@@ -27,11 +27,11 @@ in {
         });
       });
       bird2 = prev.bird2.overrideAttrs (oldAttrs: rec {
-        version = "2.15.1-nickcao3";
+        version = "2.17-nickcao";
         # apply NickCao's ETX Babel patch
         patches = oldAttrs.patches ++ [ (fetchurl {
-          url = https://github.com/NickCao/bird/commit/dac2ce348f5ee321c80d219719118292f027c2d2.patch;
-          sha256 = "1nr8chy3w8kfmy6rbm8kkqxk0kp6ipngf47jb01xy145p4gjjhm1";
+          url = https://github.com/NickCao/bird/commit/6de40f71bb4b574918a9f5ba67127cfd415318dd.patch;
+          sha256 = "03khjk6zs5mc7m49la0wxdnk9449iyksggl8rh4br2l2kbn2fpnd";
         }) ];
       });
 

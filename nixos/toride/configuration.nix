@@ -1,9 +1,6 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
-  # we are not a gravity node!
-  sops.secrets = lib.mkForce {};
-
   # emulate aarch64 for building
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
