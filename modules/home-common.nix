@@ -256,7 +256,7 @@ homeConf = { lib, ... }: {
         ls = "ls -G --color=auto";
       };
 
-      initExtra = ''
+      initContent = ''
           # TMUX auto attach
           if which tmux >/dev/null 2>&1; then
             case $- in
