@@ -219,6 +219,46 @@ homeConf = { lib, ... }: {
       '';
     };
 
+    tmux = {
+      enable = true;
+      plugins = with pkgs.tmuxPlugins; let
+        maglev = mkTmuxPlugin {
+          pluginName = "maglev";
+          version = "unstable-2017-02-16";
+          src = pkgs.fetchFromGitHub {
+            owner = "caiogondim";
+            repo = "maglev";
+            rev = "0ddafa7487c240d6701188709f641c28a15f5ed1";
+            sha256 = "sha256-jClBSHZws+mr8zTBfwSnm5OG0aDU7mhdSaaRgVQDhHU=";
+          };
+        };
+      in [
+        {
+          plugin = maglev;
+          # maglev checks TPM's plugin list
+          extraConfig = ''
+            set -g @tpm_plugins "tmux-cpu tmux-battery"
+          '';
+        }
+        sensible resurrect continuum yank
+        pain-control copycat open battery cpu
+      ];
+      extraConfig = ''
+        # Start windows and panes at 1, not 0
+        set -g base-index 1
+        set -g pane-base-index 1
+
+        set -g status-position top
+        set -g repeat-time 0
+
+        # escape time to prevent terminal spitting garbage
+        set -s escape-time 50
+
+        setw -g mode-keys vi
+        setw -g mouse on
+      '';
+    };
+
     direnv = {
       enable = true;
       nix-direnv.enable = true;
