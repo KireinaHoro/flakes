@@ -37,6 +37,7 @@
           # speed-up build
           DEBUG_INFO_BTF = lib.mkForce no;
         };
+        ignoreConfigErrors = true;
         kernelPatches = (builtins.map (patch: { inherit patch; }) [
           ./patches/0002-disable-dp0.patch
         ]) ++ old.kernelPatches;
