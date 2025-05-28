@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs";
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
-    ssh-to-pgp = { url = "github:Mic92/ssh-to-pgp/1.1.2"; inputs.nixpkgs.follows = "nixpkgs"; };
+    ssh-to-pgp = { url = "github:Mic92/ssh-to-pgp"; inputs.nixpkgs.follows = "nixpkgs"; };
     flake-utils.url = "github:numtide/flake-utils";
     blog = {
       url = "github:KireinaHoro/jsteward.moe";
