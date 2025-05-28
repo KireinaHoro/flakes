@@ -136,7 +136,7 @@ homeConf = { lib, ... }: {
         let g:clang_format#code_style = "llvm"
         let g:clang_format#detect_style_file = 1
         let g:clang_format#auto_format = 1
-        let g:clang_format#auto_format_on_insert_leave = 1
+        " let g:clang_format#auto_format_on_insert_leave = 1
 
         au FileType c,cpp,objc setlocal tabstop=2 shiftwidth=2 softtabstop=2
         au FileType c,cpp,objc nnoremap <buffer><Leader>C :ClangFormatAutoToggle<CR>
