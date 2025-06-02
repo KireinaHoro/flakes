@@ -27,7 +27,7 @@ in
     '';
 
     packages = with pkgs; [
-      texlive.combined.scheme-full
+      texlive.combined.scheme-full librsvg
       texlivePackages.fontawesome
       ffmpeg-headless
       typst pdf2svg
