@@ -104,6 +104,9 @@ homeConf = { lib, ... }: {
         " for copying out of the terminal, toggle line number display and control chars expansion
         nnoremap <Leader>N :set invnu invrnu invlist<CR>
 
+        " for pasting verbatim, toggle paste mode
+        nnoremap <Leader>P :set invpaste<CR>
+
         set tabstop=4
         set shiftwidth=4
         set softtabstop=4
