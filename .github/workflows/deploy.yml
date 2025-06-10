@@ -20,3 +20,9 @@ jobs:
           flake: 'github:KireinaHoro/flakes'
           privkey: ${{ secrets.ACTIONS_PRIVKEY }}
           host: kage
+      - name: deploy flake on shigeru
+        uses: ./.github/actions/deploy
+        with:
+          flake: 'github:KireinaHoro/flakes'
+          privkey: ${{ secrets.ACTIONS_PRIVKEY }}
+          host: shigeru
