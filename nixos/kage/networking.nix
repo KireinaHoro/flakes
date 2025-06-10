@@ -134,6 +134,7 @@ in
   };
 
   mailserver = {
+    stateVersion = 1;
     enable = true;
     fqdn = "mail.jsteward.moe";
     domains = [ "jsteward.moe" ];
