@@ -31,6 +31,7 @@ in
       texlivePackages.fontawesome
       ffmpeg-headless
       typst pdf2svg
+      gh
     ];
   };
 }
