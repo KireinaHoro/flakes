@@ -7,7 +7,7 @@ Packages local to this flake are at `pkgs/` and are managed by `nvfetcher`.
 Standalone ones not using `nvfetcher` should allow arbitrary arguments (for the
 `source` parameter from `nvfetcher`).
 
-## Updating
+## Updating to the latest `nixpkgs`
 
 ```console
 $ nix flake update
@@ -23,7 +23,14 @@ group).
 
 ```console
 $ cd ci-images
-$ make
+$ make push
+```
+
+You might also need to clear the CI image cache of the older Docker image,
+used by the GitHub Action runners:
+
+```console
+$ gh cache delete --all
 ```
 
 ## Checking if a (NixOS) host is up to date
@@ -78,6 +85,41 @@ $ sops nixos/<hostname>/secrets.yaml
 ```
 
 We can then rebuild again with everything working.
+
+## Deploying with `deploy-rs`
+
+`deploy-rs` should already be available inside the devShell.  We skip checks
+since that evaluates unnecessary kernel builds for the ARM systems.  Also, the
+auto-rollback feature causes problems and is not that useful for interactive
+deployments.  Run:
+
+```console
+$ deploy --auto-rollback=false --skip-checks .#<hostname>
+```
+
+The list of available hosts can be found in `flake.nix` under `deploy.nodes`.
+
+### Building a configuration without deploying
+
+```console
+$ nix build .#nixosConfigurations.<hostname>.config.system.build.toplevel
+```
+
+### Building for a `aarch64-linux` host
+
+Setup `binfmt` support for emulating aarch64 binaries.  On NixOS this is as
+simple as setting `boot.binfmt.emulatedSystems`; for standalone systems we need
+to install QEMU user and then setup Nix to take `aarch64-linux` as
+`extra-platforms`:
+
+```console
+$ sudo apt install binfmt-support qemu-user-static
+$ sudo tee -a /etc/nix/nix.conf << EOF
+extra-platforms = aarch64-linux armv7l-linux
+extra-sandbox-paths = /usr/libexec/qemu-binfmt /usr/bin/qemu-aarch64-static /usr/bin/qemu-arm-static
+EOF
+$ sudo systemctl restart nix-daemon
+```
 
 ## Blog
 
