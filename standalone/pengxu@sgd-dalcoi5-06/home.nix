@@ -32,6 +32,8 @@ in
       ffmpeg-headless
       typst pdf2svg
       gh
+      nix-search-cli
+      shellcheck
     ];
   };
 }
