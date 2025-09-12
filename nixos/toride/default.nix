@@ -12,6 +12,8 @@ nixpkgs.lib.nixosSystem {
     { nixpkgs.overlays = [ self.overlays.default ]; }
     inputs.sops-nix.nixosModules.sops
 
+    { _module.args = { inherit inputs; }; }
+
     inputs.home-manager.nixosModules.home-manager
     (defaultHome { username = "jsteward"; })
     ./home.nix
