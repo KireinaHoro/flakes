@@ -11,7 +11,5 @@ nixpkgs.lib.nixosSystem {
     gravity divi ivi chinaRoute chinaDNS localResolver
     { nixpkgs.overlays = [ self.overlays.default inputs.ranet.overlays.default ]; }
     inputs.sops-nix.nixosModules.sops
-
-    inputs.rock5b-nixos.nixosModules.apply-overlay
   ];
 }

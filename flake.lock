@@ -61,22 +61,6 @@
         "type": "github"
       }
     },
-    "fan-control": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1698501344,
-        "narHash": "sha256-TuilsK62MovO9WpwUlQTf9K1ClDFk2P3exWYiITONs0=",
-        "owner": "pymumu",
-        "repo": "fan-control-rock5b",
-        "rev": "3a119fa4783223dfed4a73474761b883ee425cf0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "pymumu",
-        "repo": "fan-control-rock5b",
-        "type": "github"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -110,24 +94,6 @@
       }
     },
     "flake-parts": {
-      "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib"
-      },
-      "locked": {
-        "lastModified": 1719994518,
-        "narHash": "sha256-pQMhCCHyQGRzdfAkdJ4cIWiw+JNuWsTX7f0ZYSyz0VY=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "9227223f6d922fee3c7b190b2cc238a99527bbb7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
-    "flake-parts_2": {
       "inputs": {
         "nixpkgs-lib": [
           "ssh-to-pgp",
@@ -234,23 +200,6 @@
         "type": "github"
       }
     },
-    "kernel-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1676631659,
-        "narHash": "sha256-TjAF7BPSDy5iHSk8byp+vsKop0V+rqrmr+TXLqXLB2M=",
-        "owner": "radxa",
-        "repo": "kernel",
-        "rev": "a9583fb47e9b96c552f458a376207141602c0025",
-        "type": "github"
-      },
-      "original": {
-        "owner": "radxa",
-        "repo": "kernel",
-        "rev": "a9583fb47e9b96c552f458a376207141602c0025",
-        "type": "github"
-      }
-    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -302,18 +251,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-lib": {
-      "locked": {
-        "lastModified": 1719876945,
-        "narHash": "sha256-Fm2rDDs86sHy0/1jxTOKB1118Q0O3Uc7EC0iXvXKpbI=",
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/5daf0514482af3f97abaefc78a6606365c9108e2.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/5daf0514482af3f97abaefc78a6606365c9108e2.tar.gz"
-      }
-    },
     "ranet": {
       "inputs": {
         "flake-utils": [
@@ -337,31 +274,6 @@
         "type": "github"
       }
     },
-    "rock5b-nixos": {
-      "inputs": {
-        "fan-control": "fan-control",
-        "flake-parts": "flake-parts",
-        "kernel-src": "kernel-src",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "tow-boot": "tow-boot",
-        "treefmt-nix": "treefmt-nix"
-      },
-      "locked": {
-        "lastModified": 1721311238,
-        "narHash": "sha256-WlnGOExMMemcNQKBrWyzGl3lEXTpdXj62gUr0DTK7ek=",
-        "owner": "KireinaHoro",
-        "repo": "rock5b-nixos",
-        "rev": "aaa8c07c60e9fa94c674f3f59728b60976f87b41",
-        "type": "github"
-      },
-      "original": {
-        "owner": "KireinaHoro",
-        "repo": "rock5b-nixos",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "blog": "blog",
@@ -371,7 +283,6 @@
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
         "ranet": "ranet",
-        "rock5b-nixos": "rock5b-nixos",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
         "sops-nix": "sops-nix",
         "ssh-to-pgp": "ssh-to-pgp"
@@ -423,11 +334,11 @@
     },
     "ssh-to-pgp": {
       "inputs": {
-        "flake-parts": "flake-parts_2",
+        "flake-parts": "flake-parts",
         "nixpkgs": [
           "nixpkgs"
         ],
-        "treefmt-nix": "treefmt-nix_2"
+        "treefmt-nix": "treefmt-nix"
       },
       "locked": {
         "lastModified": 1757214191,
@@ -473,45 +384,7 @@
         "type": "github"
       }
     },
-    "tow-boot": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1696375616,
-        "narHash": "sha256-iCo5KF9+WMYww02cdlwEm+Y7Y8oo2b9eU4R3gyTUHmY=",
-        "owner": "aciceri",
-        "repo": "Tow-Boot",
-        "rev": "f2aa25ce26be9756e91eafc9a98eae871720f14e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "aciceri",
-        "ref": "rock5b",
-        "repo": "Tow-Boot",
-        "type": "github"
-      }
-    },
     "treefmt-nix": {
-      "inputs": {
-        "nixpkgs": [
-          "rock5b-nixos",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1721059077,
-        "narHash": "sha256-gCICMMX7VMSKKt99giDDtRLkHJ0cwSgBtDijJAqTlto=",
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "rev": "0fb28f237f83295b4dd05e342f333b447c097398",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "treefmt-nix_2": {
       "inputs": {
         "nixpkgs": [
           "ssh-to-pgp",
