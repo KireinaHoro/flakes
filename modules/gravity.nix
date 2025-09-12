@@ -152,13 +152,11 @@ in
         message = "dangerous prefix that may collide with rait"; }
     ];
 
-    # shared secrets between all nodes
+    # rait-node-key is provided by node, everything else by this module
     sops.secrets = lib.genAttrs [
       "rait-operator-key" "rait-registry"
       "ranet-key" "ranet-registry"
-    ] (_: {
-      sopsFile = ./secrets.yaml;
-    });
+    ] (_: { sopsFile = ./gravity-secrets.yaml; });
 
     sops.templates."rait.conf".content = mkIf cfg.rait.enable ''
       registry = "${config.sops.placeholder.rait-registry}"

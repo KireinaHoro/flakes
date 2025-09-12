@@ -7,7 +7,7 @@ keys:
   - &iori 1c66b66a62109f653fcb8f63fcd3d7fab9a53fb6
   - &hama d35d58bed6e43d3c981b70ceaaf923671e232ade
 creation_rules:
-  - path_regex: modules(/|\\)secrets\.yaml$
+  - path_regex: modules(/|\\)gravity-secrets\.yaml$
     key_groups:
       - pgp: [*jsteward, *minato, *kage, *shigeru, *nagisa, *iori, *hama]
   - path_regex: nixos(/|\\)minato(/|\\)secrets\.yaml$

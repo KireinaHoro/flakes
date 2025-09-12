@@ -14,9 +14,11 @@ runs:
   image: 'docker://kireinahoro/flakes-base:v1'
   args:
     - >-
+      rm -f privkey &&
       echo "${{inputs.privkey}}" > privkey &&
       chmod 400 privkey &&
       nix develop ${{inputs.flake}} -c deploy
+      --skip-checks
       --ssh-opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i privkey"
       --auto-rollback=false
       ${{inputs.flake}}#${{inputs.host}}
