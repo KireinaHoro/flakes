@@ -6,8 +6,6 @@ with nixpkgs.lib;
 let
   mapPackages = f: mapAttrs (name: _: f name)
     (filterAttrs (k: v: v == "directory" && k != "_sources") (readDir ./.));
-  getDebianPatches = p: map (x: p + "/patches/${x}")
-    (filter (x: x != "") (splitString "\n" (readFile (p + "/patches/series"))));
   mapVimPlugins = f: listToAttrs (map (name: { inherit name; value = f name; }) [ "vim-ripgrep" "vim-haskell-indent" ]);
 in {
   # collect flakes output packages from nixpkgs overlay
@@ -20,6 +18,14 @@ in {
       args = intersectAttrs (functionArgs package) { source = sources.${name}; };
     in final.callPackage package args) // rec {
       # override existing packages
+      tayga = prev.tayga.overrideAttrs (oldAttrs: rec {
+        src = prev.fetchFromGitHub {
+          owner = "apalrd";
+          repo = "tayga";
+          rev = "refs/pull/138/head";
+          hash = "sha256-qeYlnSwSLBk2csdjXzRVDgx5tTCJB8mJ5ogWYhkFaWo=";
+        };
+      });
       bird2 = prev.bird2.overrideAttrs (oldAttrs: rec {
         # apply NickCao's ETX Babel patch
         patches = oldAttrs.patches ++ [ (fetchurl {
