@@ -97,25 +97,6 @@ in
     };
   };
 
-  # automatic login to Monzoon Networks
-  systemd.timers."monzoon-login" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnBootSec = "5m";
-      OnUnitActiveSec = "5m";
-      Unit = "monzoon-login.service";
-    };
-  };
-  systemd.services."monzoon-login" = {
-    path = with pkgs; [ curl bash ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${./monzoon-login.sh}";
-      EnvironmentFile = config.sops.secrets.monzoon_env.path;
-    };
-  };
-
   # same as fping setuid as in smokeping
   security.wrappers."fping-gravity" = {
     setuid = true;
