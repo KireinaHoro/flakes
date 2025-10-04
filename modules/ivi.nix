@@ -38,7 +38,7 @@ in
           tun-device ivi
           ipv4-addr 10.160.0.2
           ipv6-addr ${prefix6}::2
-          ${optionalString (cfg.default != null) "map 0.0.0.0/0 ${defaultMap}"}
+          ${optionalString (cfg.default != null) "prefix ${defaultMap}"}
           ${genIviMap prefix4.prefix prefix6 prefix4.len}
 
           ${concatStringsSep "\n"

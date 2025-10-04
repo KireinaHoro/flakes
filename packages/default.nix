@@ -18,14 +18,6 @@ in {
       args = intersectAttrs (functionArgs package) { source = sources.${name}; };
     in final.callPackage package args) // rec {
       # override existing packages
-      tayga = prev.tayga.overrideAttrs (oldAttrs: rec {
-        src = prev.fetchFromGitHub {
-          owner = "apalrd";
-          repo = "tayga";
-          rev = "refs/pull/138/head";
-          hash = "sha256-qeYlnSwSLBk2csdjXzRVDgx5tTCJB8mJ5ogWYhkFaWo=";
-        };
-      });
       bird2 = prev.bird2.overrideAttrs (oldAttrs: rec {
         # apply NickCao's ETX Babel patch
         patches = oldAttrs.patches ++ [ (fetchurl {
