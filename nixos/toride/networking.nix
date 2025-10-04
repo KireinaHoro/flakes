@@ -19,8 +19,11 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "yes";
-        domains = [ "g.jsteward.moe" ];
+        address = [ "192.168.0.2/24" ];
+        routes = [
+          { Gateway = "192.168.0.1"; }
+        ];
+        linkConfig.RequiredForOnline = "routable";
       };
     };
   };
