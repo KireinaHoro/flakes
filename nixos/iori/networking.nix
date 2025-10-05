@@ -29,6 +29,13 @@ in
     firewall.enable = false;
   };
 
+  networking.wireless = {
+    enable = true;
+    interfaces = [ wifiIfName ];
+    secretsFile = config.sops.secrets.wireless-secrets.path;
+    networks."FRITZ!Box 4040 ON".pskRaw = "ext:psk_home";
+  };
+
   networking.nftables = {
     ruleset = ''
       table inet local-wan {
@@ -46,24 +53,24 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "yes";
+        DHCP = "no";
         vlan = [ "${ifName}.200" ];
         networkConfig = {
-          LinkLocalAddressing = "ipv4";
+          LinkLocalAddressing = "no";
           IPv6AcceptRA = "no";
         };
       };
       "${ifName}.200" = {
-        linkConfig = { RequiredForOnline = false; };
-        networkConfig = { Bridge = "local-devs"; };
+        linkConfig.RequiredForOnline = false;
+        networkConfig.Bridge = "local-devs";
       };
       ${wifiIfName} = {
-        linkConfig = { RequiredForOnline = false; };
-        networkConfig = { Bridge = "local-devs"; };
+        DHCP = "yes";
+        networkConfig.IgnoreCarrierLoss = "3s";
       };
       local-devs = {
         address = [ "${localGatewayV4}/24" "${localGatewayV6}/64" ];
-        linkConfig = { RequiredForOnline = false; };
+        linkConfig.RequiredForOnline = false;
         networkConfig = {
           DHCPServer = true;
           IPv6SendRA = true;
@@ -93,7 +100,7 @@ in
     };
     netdevs = pkgs.injectNetdevNames {
       "${ifName}.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
-      "local-devs" = { netdevConfig = { Kind = "bridge"; }; };
+      "local-devs" = { netdevConfig.Kind = "bridge"; };
     };
   };
 
@@ -266,36 +273,6 @@ in
         probe = FPing6
         ${concatStringsSep "\n" (map externalToTarget externalHostsV4)}
       '';
-    };
-
-    hostapd = {
-      # disabled in favour of NetGear device
-      enable = false;
-      radios = {
-        ${wifiIfName} = {
-          countryCode = "CH";
-          band = "2g";
-          channel = 11;
-          wifi6.enable = true;
-          networks = let
-            # we don't bother with sops for the wifi password
-            password = "Project$Dark$Velvet";
-          in {
-            ${wifiIfName} = {
-              ssid = "JSteward Tech";
-              authentication = {
-                mode = "wpa3-sae-transition";
-                saePasswords = [ { inherit password; } ];
-                wpaPassword = password;
-              };
-              settings = {
-                # Garmin Index S2 only supports wpa2-sha256, but we still want wpa3-sae
-                wpa_key_mgmt = pkgs.lib.mkForce "WPA-PSK SAE";
-              };
-            };
-          };
-        };
-      };
     };
 
     squid = {
