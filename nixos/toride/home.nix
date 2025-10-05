@@ -1,21 +1,15 @@
-{ config, pkgs, inputs, ... }:
-
-let
-  username = "jsteward";
-in
+{ pkgs, inputs, ... }:
 
 {
-  home-manager.users."${username}" = {
-    imports = [
-      inputs.vscode-server.homeModules.default
-    ];
-    home = {
-      packages = with pkgs; [
-        texlive.combined.scheme-full
-        gnumake
-        python310Packages.pygments
-      ];
-    };
-    services.vscode-server.enable = true;
-  };
+  imports = [
+    inputs.vscode-server.homeModules.default
+    ../../modules/home-common.nix
+  ];
+
+  home.packages = with pkgs; [
+    texlive.combined.scheme-full
+    gnumake
+    python310Packages.pygments
+  ];
+  services.vscode-server.enable = true;
 }

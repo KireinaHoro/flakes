@@ -1,4 +1,4 @@
-self: { config, pkgs, lib, ... }:
+rev: { config, pkgs, lib, ... }:
 
 {
   networking.domain = "g.jsteward.moe";
@@ -15,7 +15,7 @@ self: { config, pkgs, lib, ... }:
     extraConfig = ''StreamLocalBindUnlink yes'';
   };
 
-  system.configurationRevision = if self ? rev then self.rev else "dirty";
+  system.configurationRevision = rev;
 
   nix = {
     settings = {

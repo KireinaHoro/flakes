@@ -7,7 +7,17 @@ inputs.nix-darwin.lib.darwinSystem {
     { nixpkgs.overlays = [ self.overlays.default ]; }
 
     inputs.home-manager.darwinModules.home-manager
-    (defaultHome { username = "jsteward"; })
-    ./home.nix
+    {
+      home-manager = {
+        useUserPackages = true;
+        useGlobalPkgs = true;
+        users.jsteward = import ./home.nix;
+        extraSpecialArgs = {
+          inherit inputs;
+          username = "jsteward";
+          standalone = false;
+        };
+      };
+    }
   ];
 }

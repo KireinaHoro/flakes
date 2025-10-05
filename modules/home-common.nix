@@ -1,8 +1,8 @@
-{ username, standalone ? false }: { config, pkgs, lib, ...  }:
+{ pkgs, lib, username, standalone, ... }:
+with builtins;
+with lib;
 
-let
-homeConfUpper = if standalone then config else config.home-manager.users."${username}";
-homeConf = { lib, ... }: {
+{
   home = {
     inherit username;
     stateVersion = "24.05";
@@ -15,7 +15,7 @@ homeConf = { lib, ... }: {
   };
 
   programs = {
-    ssh = with builtins; with lib.hm.dag; {
+    ssh = with hm.dag; {
       enable = true;
       matchBlocks = let
         vncForward = { localForwards = [ {
@@ -37,7 +37,7 @@ homeConf = { lib, ... }: {
             match = "host *.ethz.ch";
             extraOptions = {
               ControlMaster = "no";
-            } // lib.optionalAttrs standalone {
+            } // optionalAttrs standalone {
               # these only supported in the ubuntu ssh
               GSSAPIAuthentication = "yes";
               GSSAPIDelegateCredentials = "yes";
@@ -327,8 +327,4 @@ homeConf = { lib, ... }: {
     bat.enable = true;
     home-manager.enable = true;
   };
-}; in if standalone then homeConf { inherit lib; } else {
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-  home-manager.users."${username}" = homeConf;
 }

@@ -73,7 +73,7 @@
       ];
     };
   }) // {
-    nixosModules = import ./modules self;
+    nixosModules = import ./modules (if self ? rev then self.rev else "dirty");
     overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
     nixosConfigurations = findConfs ./nixos;
     darwinConfigurations = findConfs ./darwin;
