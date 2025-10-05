@@ -15,18 +15,15 @@ homeConf = { lib, ... }: {
   };
 
   programs = {
-    ssh = {
+    ssh = with builtins; with lib.hm.dag; {
       enable = true;
-      forwardAgent = true;
-      compression = true;
-      controlMaster = "auto";
-      controlPersist = "yes";
-      matchBlocks = (let
+      matchBlocks = let
         vncForward = { localForwards = [ {
           bind.port = 59000;
           host.address = "localhost";
           host.port = 5901;
         } ]; };
+        # these are concrete hosts
         actualHosts = {
           "fpga1" = { hostname = "fpga1.inf.ethz.ch"; user = "jsteward"; } // vncForward;
           "workstation" = { hostname = "sgd-dalcoi5-06.ethz.ch"; };
@@ -34,38 +31,48 @@ homeConf = { lib, ... }: {
           "minato" = { hostname = "minato.g.jsteward.moe"; };
           "shigeru" = { hostname = "shigeru.g.jsteward.moe"; };
         };
-      in actualHosts // {
-        "ethz-sg" = lib.hm.dag.entryAfter (builtins.attrNames actualHosts) {
-          match = "host *.ethz.ch";
-          extraOptions = {
-            ControlMaster = "no";
-          } // lib.optionalAttrs standalone {
-            # these only supported in the ubuntu ssh
-            GSSAPIAuthentication = "yes";
-            GSSAPIDelegateCredentials = "yes";
-            GSSAPIRenewalForcesRekey = "yes";
-            GSSAPIKeyExchange = "yes";
+        # these are all hosts, concrete and matched
+        allHosts = actualHosts // {
+          "ethz-sg" = entryAfter (attrNames actualHosts) {
+            match = "host *.ethz.ch";
+            extraOptions = {
+              ControlMaster = "no";
+            } // lib.optionalAttrs standalone {
+              # these only supported in the ubuntu ssh
+              GSSAPIAuthentication = "yes";
+              GSSAPIDelegateCredentials = "yes";
+              GSSAPIRenewalForcesRekey = "yes";
+              GSSAPIKeyExchange = "yes";
+            };
+            user = "pengxu";
           };
-          user = "pengxu";
-        };
-        "enzian-infras" = {
-          match = "host enzian-*";
-          user = "pengxu";
-          extraOptions = {
-            CanonicalDomains = "ethz.ch";
-            CanonicalizeHostname = "yes";
+          "enzian-infras" = {
+            match = "host enzian-*";
+            user = "pengxu";
+            extraOptions = {
+              CanonicalDomains = "ethz.ch";
+              CanonicalizeHostname = "yes";
+            };
+          };
+          "enzians" = {
+            match = "host zuestoll*";
+            user = "enzian";
+            proxyJump = "enzian-gateway";
+          };
+          "jsteward.moe" = {
+            match = "host *.jsteward.moe";
+            user = "jsteward";
           };
         };
-        "enzians" = {
-          match = "host zuestoll*";
-          user = "enzian";
-          proxyJump = "enzian-gateway";
+      in allHosts // {
+        # default options
+        "*" = entryBefore (attrNames allHosts) {
+          controlMaster = "auto";
+          controlPersist = "yes";
+          forwardAgent = true;
+          compression = true;
         };
-        "jsteward.moe" = {
-          match = "host *.jsteward.moe";
-          user = "jsteward";
-        };
-      });
+      };
     };
 
     vim = {
