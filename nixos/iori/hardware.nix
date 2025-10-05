@@ -5,7 +5,7 @@
     loader.grub.enable = false;
     loader.generic-extlinux-compatible.enable = true;
 
-    kernelPackages = pkgs.linuxKernel.packages.linux_6_16;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [];
     kernelParams = lib.mkAfter [
       "console=ttyFIQ0,115200n8"
