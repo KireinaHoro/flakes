@@ -29,9 +29,8 @@ in {
       # use 115200 baud rate for DDR binary
       rock5b-tpl = prev.rkbin.overrideAttrs (oldAttrs: {
         installPhase = ''
-          patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" tools/ddrbin_tool
           sed -i -e '/uart baudrate=/s/$/115200/' tools/ddrbin_param.txt
-          tools/ddrbin_tool rk3588 tools/ddrbin_param.txt bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin
+          ${prev.python3}/bin/python3 tools/ddrbin_tool.py rk3588 tools/ddrbin_param.txt bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin
           mkdir $out
           cp bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin $out/rock5b-tpl.bin
         '';
