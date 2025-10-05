@@ -33,10 +33,31 @@
             "name": null,
             "rev": "2ab426e806985d0d3d1c3eb447d7e772a836e10d",
             "sha256": "sha256-nKNz9ux1FPxoL14VZtH/1tfnn67LeXmdVQJz7I9+Srk=",
+            "sparseCheckout": [],
             "type": "git",
             "url": "https://github.com/notracking/hosts-blocklists"
         },
         "version": "2ab426e806985d0d3d1c3eb447d7e772a836e10d"
+    },
+    "myrktop": {
+        "cargoLocks": null,
+        "date": "2025-04-22",
+        "extract": null,
+        "name": "myrktop",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "246d8285aa21ae08bbfeb99ebdb34819561b021f",
+            "sha256": "sha256-X70xgIBhxDs8LSvgOzICWBUON6faY+d0vEVu1xOS378=",
+            "sparseCheckout": [],
+            "type": "git",
+            "url": "https://github.com/mhl221135/myrktop"
+        },
+        "version": "246d8285aa21ae08bbfeb99ebdb34819561b021f"
     },
     "rait": {
         "cargoLocks": null,

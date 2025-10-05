@@ -24,9 +24,24 @@
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
+      sparseCheckout = [ ];
       sha256 = "sha256-nKNz9ux1FPxoL14VZtH/1tfnn67LeXmdVQJz7I9+Srk=";
     };
     date = "2023-06-26";
+  };
+  myrktop = {
+    pname = "myrktop";
+    version = "246d8285aa21ae08bbfeb99ebdb34819561b021f";
+    src = fetchgit {
+      url = "https://github.com/mhl221135/myrktop";
+      rev = "246d8285aa21ae08bbfeb99ebdb34819561b021f";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sparseCheckout = [ ];
+      sha256 = "sha256-X70xgIBhxDs8LSvgOzICWBUON6faY+d0vEVu1xOS378=";
+    };
+    date = "2025-04-22";
   };
   rait = {
     pname = "rait";
