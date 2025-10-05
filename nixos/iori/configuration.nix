@@ -5,6 +5,7 @@
     defaultSopsFile = ./secrets.yaml;
     secrets = {
       rait-node-key = {};
+      wireless-secrets = {};
     };
   };
 
