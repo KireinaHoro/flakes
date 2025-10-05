@@ -18,6 +18,7 @@ in
     hosts = {
       # we use local network address to deploy iori
       "10.172.190.254" = [ "iori.jsteward.moe" ];
+      "192.168.178.67" = [ "iori.jsteward.moe" ];
     };
   };
 
