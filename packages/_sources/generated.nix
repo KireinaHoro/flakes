@@ -3,16 +3,17 @@
 {
   dnsmasq-china-list = {
     pname = "dnsmasq-china-list";
-    version = "16e4ab4c454898d396e405de6c888207571734c9";
+    version = "aacfedad744977006e6a3cbc01195432b798ef68";
     src = fetchgit {
       url = "https://github.com/felixonmars/dnsmasq-china-list";
-      rev = "16e4ab4c454898d396e405de6c888207571734c9";
+      rev = "aacfedad744977006e6a3cbc01195432b798ef68";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-1noSir2jDU4f6KLwz9jKTaf1jQfODF6cVJepejPOFhY=";
+      sparseCheckout = [ ];
+      sha256 = "sha256-EO/9JCGqCYjDBCVH/8EgcTPEwrZPib+s5IYnwY82TyM=";
     };
-    date = "2024-10-27";
+    date = "2025-10-04";
   };
   hosts-blocklists = {
     pname = "hosts-blocklists";
@@ -36,35 +37,38 @@
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
+      sparseCheckout = [ ];
       sha256 = "sha256-6Y0s5/HUmWrZA6QmV5wYjB1M0Ab/jHM3TSruRpMRwtA=";
     };
     date = "2022-10-07";
   };
   swan-updown = {
     pname = "swan-updown";
-    version = "bc9851409c8b479e6546722ec6448f27a692be78";
+    version = "b16d2459003c19d93b0adf3a918207c22d0d7d4f";
     src = fetchgit {
       url = "https://github.com/6-6-6/swan-updown";
-      rev = "bc9851409c8b479e6546722ec6448f27a692be78";
+      rev = "b16d2459003c19d93b0adf3a918207c22d0d7d4f";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-MtM+3rzsTXqoR6Qa1BbZQD24X/4ZG1j40gG66gne8Xg=";
+      sparseCheckout = [ ];
+      sha256 = "sha256-Tb3YLgPXzH14W25z9t+KHWEgVMclUMQRqKcyqKMldhE=";
     };
-    date = "2024-10-27";
+    date = "2024-11-08";
   };
   vim-haskell-indent = {
     pname = "vim-haskell-indent";
-    version = "bf6a26579b3296ac93f05d073625b54f09a4eddf";
+    version = "67d33a27c3f31f0a31980e532abd6c0dda4d238d";
     src = fetchgit {
       url = "https://github.com/itchyny/vim-haskell-indent";
-      rev = "bf6a26579b3296ac93f05d073625b54f09a4eddf";
+      rev = "67d33a27c3f31f0a31980e532abd6c0dda4d238d";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-Fqp6BRwfIWrS/ZC2Fg/h8V4y2VSV1sT8klajHwO2qis=";
+      sparseCheckout = [ ];
+      sha256 = "sha256-DMQRtuEm/L6WWDhdfCJAfik4BzUCb00rGBw+m06w9C0=";
     };
-    date = "2024-10-27";
+    date = "2025-04-15";
   };
   vim-ripgrep = {
     pname = "vim-ripgrep";
