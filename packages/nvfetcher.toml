@@ -21,3 +21,7 @@ fetch.git = "https://github.com/itchyny/vim-haskell-indent"
 [swan-updown]
 src.git = "https://github.com/6-6-6/swan-updown"
 fetch.git = "https://github.com/6-6-6/swan-updown"
+
+[myrktop]
+src.git = "https://github.com/mhl221135/myrktop"
+fetch.git = "https://github.com/mhl221135/myrktop"

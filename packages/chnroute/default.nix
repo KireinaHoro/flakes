@@ -1,6 +1,6 @@
 { pkgs, ... }:
 
-pkgs.stdenv.mkDerivation rec {
+pkgs.stdenvNoCC.mkDerivation rec {
   pname = "chnroute";
   version = "20210720";
 
