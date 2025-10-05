@@ -235,8 +235,8 @@ in
           { name = "GitHub"; host = "github.com"; }
         ];
         externalHostsV4 = [
-          { name = "Enzian Gateway (ETH SG)"; host = "enzian-gateway.inf.ethz.ch"; }
-          { name = "Shigeru VSOS"; host = "shigeru.vsos.ethz.ch"; }
+          { name = "EnzianGateway"; host = "enzian-gateway.inf.ethz.ch"; }
+          { name = "ShigeruVSOS"; host = "shigeru.vsos.ethz.ch"; }
         ] ++ externalHostsV6;
         externalToTarget = {name, host}: ''
           ++ ${name}
