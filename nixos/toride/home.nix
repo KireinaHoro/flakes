@@ -3,7 +3,7 @@
 {
   imports = [
     inputs.vscode-server.homeModules.default
-    ../../modules/home-common.nix
+    ../../hm-modules/home-common.nix
   ];
 
   home.packages = with pkgs; [

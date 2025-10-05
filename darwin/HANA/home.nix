@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  imports = [ ../../modules/home-common.nix ];
+  imports = [ ../../hm-modules/home-common.nix ];
 
   home = {
     sessionPath = [
