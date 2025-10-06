@@ -11,7 +11,14 @@ let
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
-  dnsToGravity = [ "114.114.114.114" "129.132.98.12" "129.132.250.2" ];
+  hostsToGravity = [
+    # Chinese DNS server
+    "114.114.114.114"
+    # ETH DNS servers -- we shouldn't keep pinging these...
+    "129.132.98.12" "129.132.250.2"
+    # ETH workstation (sgd-dalcoi5-06.ethz.ch)
+    "129.132.102.8"
+  ];
   gravityTable = 3500;
   gravityMark = 333;
 in
@@ -128,7 +135,7 @@ in
         To = s;
         Table = gravityTable;
         Priority = 50;
-      }) dnsToGravity;
+      }) hostsToGravity;
 
       rait = {
         enable = true;
@@ -157,7 +164,7 @@ in
     chinaDNS = {
       enable = true;
       servers = publicDNS;
-      chinaServer = head dnsToGravity;
+      chinaServer = head hostsToGravity;
       accelAppleGoogle = false;
     };
     localResolver = {
@@ -206,65 +213,74 @@ in
       probeConfig = ''
         + FPing
         binary = ${config.security.wrapperDir}/fping
-        ++ FPing46
-        ++ FPing4
+        packetsize = 1000
+        ++ FP4
         protocol = 4
-        ++ FPing6
+        ++ FP6
         protocol = 6
-        ++ GravityPing
+        ++ GP6
+        protocol = 6
         binary = ${config.security.wrapperDir}/fping-gravity
-        protocol = 6
       '';
       targetConfig = with pkgs; let
         gravityHostToTarget = h@{name, remarks ? "(no remarks)", ...}: ''
           ++ ${name}
+          probe = GP6
           menu = ${name}
           title = ${name} @ ${remarks}
           remark = Gravity host ${name}.g.jsteward.moe (${gravityHostToPrefix h})
+          host = ${name}.g.jsteward.moe
         '';
         externalHostsV6 = [
           { name = "YouTube"; host = "youtube.com"; }
           { name = "Google"; host = "google.com"; }
-          { name = "GitHub"; host = "github.com"; }
         ];
         externalHostsV4 = [
           { name = "EnzianGateway"; host = "enzian-gateway.inf.ethz.ch"; }
           { name = "ShigeruVSOS"; host = "shigeru.vsos.ethz.ch"; }
+          { name = "GitHub"; host = "github.com"; }
         ] ++ externalHostsV6;
-        externalToTarget = {name, host}: ''
+        externalHostsThroughGravity = [
+          { name = "114DNS"; host = "114.114.114.114"; }
+          { name = "STF-Workstation"; host = "sgd-dalcoi5-06.ethz.ch"; }
+        ];
+        externalHostToTarget = probe: {name, host}: ''
           ++ ${name}
+          probe = ${probe}
           menu = ${name}
           title = ${name} (${host})
           host = ${host}
         '';
       in ''
-        probe = FPing46
+        probe = FP4
         menu = Top
         title = Network Latency Grapher (iori)
         remark = Latency graphs of hosts in and outside of Gravity, observed from iori @ \
-          Monzoon Networks, Zürich, Switzerland.  Contact the maintainer (linked at the bottom \
+          iWay, Zürich, Switzerland.  Contact the maintainer (linked at the bottom \
           of page) for more hosts to be included.
         + Gravity
         menu = Gravity
         title = Gravity Hosts
         remark = Selected hosts in Gravity.
-        probe = FPing6
         ${concatStringsSep "\n" (map gravityHostToTarget gravityHosts)}
         + External
         menu = External Hosts (v4)
         title = External Hosts from iori over IPv4
         remark = Observation of common IPv4 sites from iori, which uses the provider's default \
           route.  They should give a good estimation of the external provider's connectivity.
-        probe = FPing4
-        ${concatStringsSep "\n" (map externalToTarget externalHostsV4)}
+        ${concatStringsSep "\n" (map (externalHostToTarget "FP4") externalHostsV4)}
         + Gravity-DefaultRoute
         menu = External Hosts (v6 Gravity)
         title = External Hosts from iori over default route from Gravity
         remark = Observation of common IPv6 sites from iori, which uses the default route in \
           Gravity.  As most of major websites have IPv6 access already, they should give a good \
           estimation of the surfing experience of a client on iori.
-        probe = FPing6
-        ${concatStringsSep "\n" (map externalToTarget externalHostsV4)}
+        ${concatStringsSep "\n" (map (externalHostToTarget "FP6") externalHostsV6)}
+        + Gravity-IVI
+        menu = IVI Hosts (v4 Gravity)
+        title = IPv4 hosts as reached over IVI.  ETH hosts go to shigeru, while the Chinese DNS \
+          go to minato.
+        ${concatStringsSep "\n" (map (externalHostToTarget "FP4") externalHostsThroughGravity)}
       '';
     };
 

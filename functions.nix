@@ -10,7 +10,7 @@ rec {
   # host definitions
   gravityHosts = [
     # our nodes
-    { name = "iori";    id = "cb0"; len = 56; remarks = "Monzoon Networks (Zurich)"; }
+    { name = "iori";    id = "cb0"; len = 56; remarks = "iWay (Zurich)"; }
     { name = "minato";  id = "cd0"; len = 56; remarks = "China Unicom (Beijing)"; }
     { name = "kage";    id = "ce0"; len = 60; remarks = "Vultr (Tokyo)"; }
     { name = "shigeru"; id = "ce1"; len = 60; remarks = "ETH VSOS (Zurich)"; }
