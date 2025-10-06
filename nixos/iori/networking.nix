@@ -157,7 +157,7 @@ in
     chinaDNS = {
       enable = true;
       servers = publicDNS;
-      inherit (head dnsToGravity);
+      chinaServer = head dnsToGravity;
       accelAppleGoogle = false;
     };
     localResolver = {
@@ -169,11 +169,6 @@ in
         "/ethz.ch/129.132.250.2"
         "/gravity/sin0.nichi.link"
         "/gravity/sea0.nichi.link"
-      ];
-      addresses = [
-        # block netease ipv6 for cloud music
-        "/163.com/::"
-        "/netease.com/::"
       ];
     };
 
