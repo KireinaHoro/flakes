@@ -8,6 +8,8 @@ let
 in
 
 {
+  imports = [ ../../hm-modules/home-common.nix ];
+
   nixpkgs.config.allowUnfree = true;
   programs = {
     vscode.enable = true;
