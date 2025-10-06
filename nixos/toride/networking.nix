@@ -2,10 +2,6 @@
 
 with pkgs.lib;
 
-let
-  ifName = "eth0";
-in
-
 {
   # networking utils
   environment.systemPackages = with pkgs; [ mtr tcpdump socat ];
@@ -24,12 +20,16 @@ in
 
   systemd.network = {
     networks = pkgs.injectNetworkNames {
-      ${ifName} = {
+      "eth0" = {
         address = [ "192.168.0.2/24" ];
-        routes = [
-          { Gateway = "192.168.0.1"; }
-        ];
+        # only use default route here when the VLAN is broken
+        # routes = [ { Gateway = "192.168.0.1"; } ];
         linkConfig.RequiredForOnline = "routable";
+      };
+      "eth1" = {
+        # Switch to bridge into VLAN 200 (iori gravity)
+        DHCP = "yes";
+        linkConfig.RequiredForOnline = false;
       };
     };
   };
