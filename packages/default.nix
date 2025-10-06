@@ -28,11 +28,16 @@ in {
 
       # use 115200 baud rate for DDR binary
       rock5b-tpl = prev.rkbin.overrideAttrs (oldAttrs: {
+        nativeBuildInputs = with prev; [ python3 libfaketime ];
+
         installPhase = ''
-          sed -i -e '/uart baudrate=/s/$/115200/' tools/ddrbin_param.txt
-          ${prev.python3}/bin/python3 tools/ddrbin_tool.py rk3588 tools/ddrbin_param.txt bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin
           mkdir $out
           cp bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin $out/rock5b-tpl.bin
+
+          sed -i -e '/uart baudrate=/s/$/115200/' tools/ddrbin_param.txt
+          faketime -f '@1980-01-01 00:00:00 x0.001' \
+            python3 tools/ddrbin_tool.py \
+            rk3588 tools/ddrbin_param.txt $out/rock5b-tpl.bin
         '';
       });
 
