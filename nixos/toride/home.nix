@@ -10,6 +10,7 @@
     texlive.combined.scheme-full
     gnumake
     python310Packages.pygments
+    jetbrains.idea-ultimate
   ];
   services.vscode-server.enable = true;
 }

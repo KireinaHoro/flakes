@@ -130,8 +130,6 @@ in
         # block netease ipv6 for cloud music
         "/163.com/::"
         "/netease.com/::"
-        # block youtube for mental health
-        "/youtube.com/#"
       ];
     };
 
