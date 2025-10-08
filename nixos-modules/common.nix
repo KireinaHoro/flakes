@@ -47,7 +47,10 @@ rev: { config, pkgs, lib, ... }:
 
   programs.mosh.enable = true;
 
-  nixpkgs.config.permittedInsecurePackages = [ "squid-7.0.1" ];
+  nixpkgs.config = {
+    permittedInsecurePackages = [ "squid-7.0.1" ];
+    allowUnfree = true;
+  };
 
   boot.enableContainers = false;
 }

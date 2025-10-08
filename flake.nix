@@ -46,7 +46,6 @@
   in flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: let
     pkgs = import nixpkgs {
       inherit system;
-      config.allowUnfree = true;
       overlays = [
         inputs.blog.overlay
         inputs.ranet.overlays.default
