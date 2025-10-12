@@ -37,7 +37,7 @@ in
   };
 
   networking.wireless = {
-    enable = true;
+    enable = false;
     interfaces = [ wifiIfName ];
     secretsFile = config.sops.secrets.wireless-secrets.path;
     networks."FRITZ!Box 4040 ON".pskRaw = "ext:psk_home";
@@ -62,7 +62,10 @@ in
       ${ifName} = {
         DHCP = "yes";
         vlan = [ "${ifName}.200" ];
-        networkConfig.LinkLocalAddressing = "no";
+        networkConfig = {
+          IPv6AcceptRA = true;
+          LinkLocalAddressing = "no";
+        };
       };
       "${ifName}.200" = {
         linkConfig.RequiredForOnline = false;
