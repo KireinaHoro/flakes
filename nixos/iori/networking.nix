@@ -235,20 +235,25 @@ in
         protocol = 6
       '';
       targetConfig = with pkgs; let
-        gravityHostToTarget = h@{name, remarks ? "(no remarks)", ...}: ''
+        gravityHostToTarget = h@{name, remarks ? "(no remarks)", ...}: let
+          prefix = gravityHostToPrefix h;
+          parts = splitString "/" prefix;
+          host = "${elemAt parts 0}1";
+        in ''
           ++ ${name}
           menu = ${name}
           title = ${name} @ ${remarks}
-          remark = Gravity host ${name}.g.jsteward.moe (${gravityHomePrefix h})
+          remark = Gravity host ${name} (${gravityHostToPrefix h})
+          host = ${host}
         '';
         externalHostsV6 = [
           { name = "YouTube"; host = "youtube.com"; }
           { name = "Google"; host = "google.com"; }
-          { name = "GitHub"; host = "github.com"; }
         ];
         externalHostsV4 = [
-          { name = "Enzian Gateway (ETH SG)"; host = "enzian-gateway.inf.ethz.ch"; }
-          { name = "Shigeru VSOS"; host = "shigeru.vsos.ethz.ch"; }
+          { name = "Enzian-Gateway"; host = "enzian-gateway.inf.ethz.ch"; }
+          { name = "Shigeru-VSOS"; host = "shigeru.vsos.ethz.ch"; }
+          { name = "GitHub"; host = "github.com"; }
         ] ++ externalHostsV6;
         externalToTarget = {name, host}: ''
           ++ ${name}
@@ -268,14 +273,14 @@ in
         title = Gravity Hosts
         remark = Selected hosts in Gravity.
         probe = FPing6
-        ${concatStringsSep "\n" (map gravityHostToTarget gravityHosts)}
+        ${concatStrings (map gravityHostToTarget gravityHosts)}
         + External
         menu = External Hosts (v4)
         title = External Hosts from iori over IPv4
         remark = Observation of common IPv4 sites from iori, which uses the provider's default \
           route.  They should give a good estimation of the external provider's connectivity.
         probe = FPing4
-        ${concatStringsSep "\n" (map externalToTarget externalHostsV4)}
+        ${concatStrings (map externalToTarget externalHostsV4)}
         + Gravity-DefaultRoute
         menu = External Hosts (v6 Gravity)
         title = External Hosts from iori over default route from Gravity
@@ -283,7 +288,7 @@ in
           Gravity.  As most of major websites have IPv6 access already, they should give a good \
           estimation of the surfing experience of a client on iori.
         probe = FPing6
-        ${concatStringsSep "\n" (map externalToTarget externalHostsV4)}
+        ${concatStrings (map externalToTarget externalHostsV6)}
       '';
     };
 
