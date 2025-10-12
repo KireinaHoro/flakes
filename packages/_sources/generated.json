@@ -1,7 +1,7 @@
 {
     "dnsmasq-china-list": {
         "cargoLocks": null,
-        "date": "2024-10-27",
+        "date": "2025-10-04",
         "extract": null,
         "name": "dnsmasq-china-list",
         "passthru": null,
@@ -11,12 +11,13 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "rev": "16e4ab4c454898d396e405de6c888207571734c9",
-            "sha256": "sha256-1noSir2jDU4f6KLwz9jKTaf1jQfODF6cVJepejPOFhY=",
+            "rev": "aacfedad744977006e6a3cbc01195432b798ef68",
+            "sha256": "sha256-EO/9JCGqCYjDBCVH/8EgcTPEwrZPib+s5IYnwY82TyM=",
+            "sparseCheckout": [],
             "type": "git",
             "url": "https://github.com/felixonmars/dnsmasq-china-list"
         },
-        "version": "16e4ab4c454898d396e405de6c888207571734c9"
+        "version": "aacfedad744977006e6a3cbc01195432b798ef68"
     },
     "hosts-blocklists": {
         "cargoLocks": null,
@@ -32,10 +33,31 @@
             "name": null,
             "rev": "2ab426e806985d0d3d1c3eb447d7e772a836e10d",
             "sha256": "sha256-nKNz9ux1FPxoL14VZtH/1tfnn67LeXmdVQJz7I9+Srk=",
+            "sparseCheckout": [],
             "type": "git",
             "url": "https://github.com/notracking/hosts-blocklists"
         },
         "version": "2ab426e806985d0d3d1c3eb447d7e772a836e10d"
+    },
+    "myrktop": {
+        "cargoLocks": null,
+        "date": "2025-04-22",
+        "extract": null,
+        "name": "myrktop",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "246d8285aa21ae08bbfeb99ebdb34819561b021f",
+            "sha256": "sha256-X70xgIBhxDs8LSvgOzICWBUON6faY+d0vEVu1xOS378=",
+            "sparseCheckout": [],
+            "type": "git",
+            "url": "https://github.com/mhl221135/myrktop"
+        },
+        "version": "246d8285aa21ae08bbfeb99ebdb34819561b021f"
     },
     "rait": {
         "cargoLocks": null,
@@ -51,6 +73,7 @@
             "name": null,
             "rev": "278188c8bae13165aa70b6a2fbbb99101fd6f4cd",
             "sha256": "sha256-6Y0s5/HUmWrZA6QmV5wYjB1M0Ab/jHM3TSruRpMRwtA=",
+            "sparseCheckout": [],
             "type": "git",
             "url": "https://gitlab.com/NickCao/RAIT"
         },
@@ -58,7 +81,7 @@
     },
     "swan-updown": {
         "cargoLocks": null,
-        "date": "2024-10-27",
+        "date": "2024-11-08",
         "extract": null,
         "name": "swan-updown",
         "passthru": null,
@@ -68,16 +91,17 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "rev": "bc9851409c8b479e6546722ec6448f27a692be78",
-            "sha256": "sha256-MtM+3rzsTXqoR6Qa1BbZQD24X/4ZG1j40gG66gne8Xg=",
+            "rev": "b16d2459003c19d93b0adf3a918207c22d0d7d4f",
+            "sha256": "sha256-Tb3YLgPXzH14W25z9t+KHWEgVMclUMQRqKcyqKMldhE=",
+            "sparseCheckout": [],
             "type": "git",
             "url": "https://github.com/6-6-6/swan-updown"
         },
-        "version": "bc9851409c8b479e6546722ec6448f27a692be78"
+        "version": "b16d2459003c19d93b0adf3a918207c22d0d7d4f"
     },
     "vim-haskell-indent": {
         "cargoLocks": null,
-        "date": "2024-10-27",
+        "date": "2025-04-15",
         "extract": null,
         "name": "vim-haskell-indent",
         "passthru": null,
@@ -87,12 +111,13 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "rev": "bf6a26579b3296ac93f05d073625b54f09a4eddf",
-            "sha256": "sha256-Fqp6BRwfIWrS/ZC2Fg/h8V4y2VSV1sT8klajHwO2qis=",
+            "rev": "67d33a27c3f31f0a31980e532abd6c0dda4d238d",
+            "sha256": "sha256-DMQRtuEm/L6WWDhdfCJAfik4BzUCb00rGBw+m06w9C0=",
+            "sparseCheckout": [],
             "type": "git",
             "url": "https://github.com/itchyny/vim-haskell-indent"
         },
-        "version": "bf6a26579b3296ac93f05d073625b54f09a4eddf"
+        "version": "67d33a27c3f31f0a31980e532abd6c0dda4d238d"
     },
     "vim-ripgrep": {
         "cargoLocks": null,
@@ -110,6 +135,7 @@
             "repo": "vim-ripgrep",
             "rev": "v1.0.3",
             "sha256": "sha256-OvQPTEiXOHI0uz0+6AVTxyJ/TUMg6kd3BYTAbnCI7W8=",
+            "sparseCheckout": [],
             "type": "github"
         },
         "version": "v1.0.3"

@@ -5,42 +5,7 @@
     loader.grub.enable = false;
     loader.generic-extlinux-compatible.enable = true;
 
-    kernelPackages = with pkgs; lib.mkForce (linuxPackagesFor (
-      linux-rock5b.override { argsOverride = old: {
-        structuredExtraConfig = with lib.kernel; old.structuredExtraConfig // {
-          XHCI_HCD = module;
-          XHCI_HCD_PLATFORM = module;
-          OHCI_HCD = module;
-          OHCI_HCD_PLATFORM = module;
-          EHCI_HCD = module;
-          EHCI_HCD_PLATFORM = module;
-          DRM_ROCKCHIP = module;
-          # broken dependency tracking in rockchip kernel
-          TYPEC_DP_ALTMODE = module;
-          ROCKCHIP_RKNPU = no;
-          ROCKCHIP_VOP = no;
-          ROCKCHIP_VOP2 = no;
-          ROCKCHIP_MPP_RKVDEC = no;
-          ROCKCHIP_MPP_RKVDEC2 = no;
-          ROCKCHIP_MPP_RKVENC = no;
-          ROCKCHIP_MPP_RKVENC2 = no;
-          ROCKCHIP_MPP_VDPU1 = no;
-          ROCKCHIP_MPP_VEPU1 = no;
-          ROCKCHIP_MPP_VDPU2 = no;
-          ROCKCHIP_MPP_VEPU2 = no;
-          ROCKCHIP_MPP_IEP2 = no;
-          ROCKCHIP_MPP_JPGDEC = no;
-          ROCKCHIP_MPP_AV1DEC = no;
-          NTFS_FS = module;
-          GPIO_ROCKCHIP = module;
-          VIDEO_ROCKCHIP_HDMIRX = no;
-          # speed-up build
-          DEBUG_INFO_BTF = lib.mkForce no;
-        };
-        kernelPatches = (builtins.map (patch: { inherit patch; }) [
-          ./patches/0002-disable-dp0.patch
-        ]) ++ old.kernelPatches;
-      }; }));
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [];
     kernelParams = lib.mkAfter [
       "console=ttyFIQ0,115200n8"
@@ -50,7 +15,7 @@
     ];
 
     initrd.availableKernelModules = lib.mkForce [ "ext4" "xfs" "nvme" "mmc_block" ];
-    initrd.kernelModules = [ "gpio_rockchip" "rk806-spi" "rk806-core" "rk806-regulator" "pinctrl-rk806" ];
+    initrd.kernelModules = [ "phy_rockchip_naneng_combphy" "fusb302" "tcpm" "rk805_pwrkey" ];
 
     supportedFilesystems = [ "ext4" "xfs" ];
     extraModulePackages = [];

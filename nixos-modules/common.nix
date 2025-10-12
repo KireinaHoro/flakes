@@ -1,14 +1,6 @@
-self: { config, pkgs, lib, ... }:
+rev: { config, pkgs, lib, ... }:
 
 {
-  # shared secrets between all nodes
-  sops.secrets = lib.genAttrs [
-    "rait-operator-key" "rait-registry"
-    "ranet-key" "ranet-registry"
-  ] (_: {
-    sopsFile = ./secrets.yaml;
-  });
-
   networking.domain = "g.jsteward.moe";
 
   users.users.jsteward = {
@@ -23,7 +15,7 @@ self: { config, pkgs, lib, ... }:
     extraConfig = ''StreamLocalBindUnlink yes'';
   };
 
-  system.configurationRevision = if self ? rev then self.rev else "dirty";
+  system.configurationRevision = rev;
 
   nix = {
     settings = {
@@ -37,7 +29,7 @@ self: { config, pkgs, lib, ... }:
   environment = {
     systemPackages = with pkgs; [
       vim wget tmux htop ripgrep bat git
-      direnv nix-direnv pciutils
+      direnv nix-direnv pciutils file
     ];
     interactiveShellInit = ''
       eval "$(direnv hook bash)"
@@ -55,7 +47,10 @@ self: { config, pkgs, lib, ... }:
 
   programs.mosh.enable = true;
 
-  nixpkgs.config.permittedInsecurePackages = [ "squid-6.10" ];
+  nixpkgs.config = {
+    permittedInsecurePackages = [ "squid-7.0.1" ];
+    allowUnfree = true;
+  };
 
   boot.enableContainers = false;
 }

@@ -11,7 +11,14 @@ let
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
-  dnsToGravity = [ "114.114.114.114" "129.132.98.12" "129.132.250.2" ];
+  hostsToGravity = [
+    # Chinese DNS server
+    "114.114.114.114"
+    # ETH DNS servers -- we shouldn't keep pinging these...
+    "129.132.98.12" "129.132.250.2"
+    # ETH workstation (sgd-dalcoi5-06.ethz.ch)
+    "129.132.102.8"
+  ];
   gravityTable = 3500;
   gravityMark = 333;
 in
@@ -27,6 +34,13 @@ in
     hostName = "iori";
     useDHCP = false;
     firewall.enable = false;
+  };
+
+  networking.wireless = {
+    enable = true;
+    interfaces = [ wifiIfName ];
+    secretsFile = config.sops.secrets.wireless-secrets.path;
+    networks."FRITZ!Box 4040 ON".pskRaw = "ext:psk_home";
   };
 
   networking.nftables = {
@@ -48,22 +62,20 @@ in
       ${ifName} = {
         DHCP = "yes";
         vlan = [ "${ifName}.200" ];
-        networkConfig = {
-          LinkLocalAddressing = "ipv4";
-          IPv6AcceptRA = "no";
-        };
+        networkConfig.LinkLocalAddressing = "no";
       };
       "${ifName}.200" = {
-        linkConfig = { RequiredForOnline = false; };
-        networkConfig = { Bridge = "local-devs"; };
+        linkConfig.RequiredForOnline = false;
+        networkConfig.Bridge = "local-devs";
       };
       ${wifiIfName} = {
-        linkConfig = { RequiredForOnline = false; };
-        networkConfig = { Bridge = "local-devs"; };
+        enable = false;
+        DHCP = "yes";
+        networkConfig.IgnoreCarrierLoss = "3s";
       };
       local-devs = {
         address = [ "${localGatewayV4}/24" "${localGatewayV6}/64" ];
-        linkConfig = { RequiredForOnline = false; };
+        linkConfig.RequiredForOnline = false;
         networkConfig = {
           DHCPServer = true;
           IPv6SendRA = true;
@@ -93,26 +105,7 @@ in
     };
     netdevs = pkgs.injectNetdevNames {
       "${ifName}.200" = { netdevConfig = { Kind = "vlan"; }; vlanConfig = { Id = 200; }; };
-      "local-devs" = { netdevConfig = { Kind = "bridge"; }; };
-    };
-  };
-
-  # automatic login to Monzoon Networks
-  systemd.timers."monzoon-login" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnBootSec = "5m";
-      OnUnitActiveSec = "5m";
-      Unit = "monzoon-login.service";
-    };
-  };
-  systemd.services."monzoon-login" = {
-    path = with pkgs; [ curl bash ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${./monzoon-login.sh}";
-      EnvironmentFile = config.sops.secrets.monzoon_env.path;
+      "local-devs" = { netdevConfig.Kind = "bridge"; };
     };
   };
 
@@ -140,7 +133,7 @@ in
         To = s;
         Table = gravityTable;
         Priority = 50;
-      }) dnsToGravity;
+      }) hostsToGravity;
 
       rait = {
         enable = true;
@@ -169,7 +162,7 @@ in
     chinaDNS = {
       enable = true;
       servers = publicDNS;
-      inherit (head dnsToGravity);
+      chinaServer = head hostsToGravity;
       accelAppleGoogle = false;
     };
     localResolver = {
@@ -181,13 +174,6 @@ in
         "/ethz.ch/129.132.250.2"
         "/gravity/sin0.nichi.link"
         "/gravity/sea0.nichi.link"
-      ];
-      addresses = [
-        # block netease ipv6 for cloud music
-        "/163.com/::"
-        "/netease.com/::"
-        # block youtube for mental health
-        "/youtube.com/#"
       ];
     };
 
@@ -225,14 +211,14 @@ in
       probeConfig = ''
         + FPing
         binary = ${config.security.wrapperDir}/fping
-        ++ FPing46
-        ++ FPing4
+        packetsize = 1000
+        ++ FP4
         protocol = 4
-        ++ FPing6
+        ++ FP6
         protocol = 6
-        ++ GravityPing
+        ++ GP6
+        protocol = 6
         binary = ${config.security.wrapperDir}/fping-gravity
-        protocol = 6
       '';
       targetConfig = with pkgs; let
         gravityHostToTarget = h@{name, remarks ? "(no remarks)", ...}: let
@@ -241,6 +227,7 @@ in
           host = "${elemAt parts 0}1";
         in ''
           ++ ${name}
+          probe = GP6
           menu = ${name}
           title = ${name} @ ${remarks}
           remark = Gravity host ${name} (${gravityHostToPrefix h})
@@ -251,75 +238,52 @@ in
           { name = "Google"; host = "google.com"; }
         ];
         externalHostsV4 = [
-          { name = "Enzian-Gateway"; host = "enzian-gateway.inf.ethz.ch"; }
-          { name = "Shigeru-VSOS"; host = "shigeru.vsos.ethz.ch"; }
+          { name = "EnzianGateway"; host = "enzian-gateway.inf.ethz.ch"; }
+          { name = "ShigeruVSOS"; host = "shigeru.vsos.ethz.ch"; }
           { name = "GitHub"; host = "github.com"; }
         ] ++ externalHostsV6;
-        externalToTarget = {name, host}: ''
+        externalHostsThroughGravity = [
+          { name = "114DNS"; host = "114.114.114.114"; }
+          { name = "STF-Workstation"; host = "sgd-dalcoi5-06.ethz.ch"; }
+        ];
+        externalHostToTarget = probe: {name, host}: ''
           ++ ${name}
+          probe = ${probe}
           menu = ${name}
           title = ${name} (${host})
           host = ${host}
         '';
       in ''
-        probe = FPing46
+        probe = FP4
         menu = Top
         title = Network Latency Grapher (iori)
         remark = Latency graphs of hosts in and outside of Gravity, observed from iori @ \
-          Monzoon Networks, Zürich, Switzerland.  Contact the maintainer (linked at the bottom \
+          iWay, Zürich, Switzerland.  Contact the maintainer (linked at the bottom \
           of page) for more hosts to be included.
         + Gravity
         menu = Gravity
         title = Gravity Hosts
         remark = Selected hosts in Gravity.
-        probe = FPing6
         ${concatStrings (map gravityHostToTarget gravityHosts)}
         + External
         menu = External Hosts (v4)
         title = External Hosts from iori over IPv4
         remark = Observation of common IPv4 sites from iori, which uses the provider's default \
           route.  They should give a good estimation of the external provider's connectivity.
-        probe = FPing4
-        ${concatStrings (map externalToTarget externalHostsV4)}
+        ${concatStringsSep "\n" (map (externalHostToTarget "FP4") externalHostsV4)}
         + Gravity-DefaultRoute
         menu = External Hosts (v6 Gravity)
         title = External Hosts from iori over default route from Gravity
         remark = Observation of common IPv6 sites from iori, which uses the default route in \
           Gravity.  As most of major websites have IPv6 access already, they should give a good \
           estimation of the surfing experience of a client on iori.
-        probe = FPing6
-        ${concatStrings (map externalToTarget externalHostsV6)}
+        ${concatStrings (map (externalHostToTarget "FP6") externalHostsV6)}
+        + Gravity-IVI
+        menu = IVI Hosts (v4 Gravity)
+        title = IPv4 hosts as reached over IVI.  ETH hosts go to shigeru, while the Chinese DNS \
+          go to minato.
+        ${concatStrings (map (externalHostToTarget "FP4") externalHostsThroughGravity)}
       '';
-    };
-
-    hostapd = {
-      # disabled in favour of NetGear device
-      enable = false;
-      radios = {
-        ${wifiIfName} = {
-          countryCode = "CH";
-          band = "2g";
-          channel = 11;
-          wifi6.enable = true;
-          networks = let
-            # we don't bother with sops for the wifi password
-            password = "Project$Dark$Velvet";
-          in {
-            ${wifiIfName} = {
-              ssid = "JSteward Tech";
-              authentication = {
-                mode = "wpa3-sae-transition";
-                saePasswords = [ { inherit password; } ];
-                wpaPassword = password;
-              };
-              settings = {
-                # Garmin Index S2 only supports wpa2-sha256, but we still want wpa3-sae
-                wpa_key_mgmt = pkgs.lib.mkForce "WPA-PSK SAE";
-              };
-            };
-          };
-        };
-      };
     };
 
     squid = {

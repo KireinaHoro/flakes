@@ -1,8 +1,8 @@
-{ username, standalone ? false }: { config, pkgs, lib, ...  }:
+{ pkgs, lib, username, standalone, ... }:
+with builtins;
+with lib;
 
-let
-homeConfUpper = if standalone then config else config.home-manager.users."${username}";
-homeConf = { lib, ... }: {
+{
   home = {
     inherit username;
     stateVersion = "24.05";
@@ -12,24 +12,19 @@ homeConf = { lib, ... }: {
       default-cache-ttl 18000
       enable-ssh-support
     '';
-    sessionPath = [
-      "${homeConfUpper.home.homeDirectory}/.local/bin" # XXX: express with XDG?
-    ];
   };
 
   programs = {
-    ssh = {
+    ssh = with hm.dag; {
       enable = true;
-      forwardAgent = true;
-      compression = true;
-      controlMaster = "auto";
-      controlPersist = "yes";
-      matchBlocks = (let
+      enableDefaultConfig = false;
+      matchBlocks = let
         vncForward = { localForwards = [ {
           bind.port = 59000;
           host.address = "localhost";
           host.port = 5901;
         } ]; };
+        # these are concrete hosts
         actualHosts = {
           "fpga1" = { hostname = "fpga1.inf.ethz.ch"; user = "jsteward"; } // vncForward;
           "workstation" = { hostname = "sgd-dalcoi5-06.ethz.ch"; };
@@ -38,11 +33,11 @@ homeConf = { lib, ... }: {
           "shigeru" = { hostname = "shigeru.g.jsteward.moe"; };
         };
       in actualHosts // {
-        "ethz-sg" = lib.hm.dag.entryAfter (builtins.attrNames actualHosts) {
+        "ethz-sg" = entryAfter (attrNames actualHosts) {
           match = "host *.ethz.ch";
           extraOptions = {
             ControlMaster = "no";
-          } // lib.optionalAttrs standalone {
+          } // optionalAttrs standalone {
             # these only supported in the ubuntu ssh
             GSSAPIAuthentication = "yes";
             GSSAPIDelegateCredentials = "yes";
@@ -68,7 +63,21 @@ homeConf = { lib, ... }: {
           match = "host *.jsteward.moe";
           user = "jsteward";
         };
-      });
+
+        # default config block
+        "*" = {
+          addKeysToAgent = "no";
+          compression = true;
+          controlMaster = "auto";
+          controlPath = "~/.ssh/master-%r@%n:%p";
+          controlPersist = "yes";
+          forwardAgent = true;
+          hashKnownHosts = false;
+          serverAliveInterval = 0;
+          serverAliveCountMax = 3;
+          userKnownHostsFile = "~/.ssh/known_hosts";
+        };
+      };
     };
 
     vim = {
@@ -107,6 +116,9 @@ homeConf = { lib, ... }: {
         " for copying out of the terminal, toggle line number display and control chars expansion
         nnoremap <Leader>N :set invnu invrnu invlist<CR>
 
+        " for pasting verbatim, toggle paste mode
+        nnoremap <Leader>P :set invpaste<CR>
+
         set tabstop=4
         set shiftwidth=4
         set softtabstop=4
@@ -139,7 +151,7 @@ homeConf = { lib, ... }: {
         let g:clang_format#code_style = "llvm"
         let g:clang_format#detect_style_file = 1
         let g:clang_format#auto_format = 1
-        let g:clang_format#auto_format_on_insert_leave = 1
+        " let g:clang_format#auto_format_on_insert_leave = 1
 
         au FileType c,cpp,objc setlocal tabstop=2 shiftwidth=2 softtabstop=2
         au FileType c,cpp,objc nnoremap <buffer><Leader>C :ClangFormatAutoToggle<CR>
@@ -222,6 +234,46 @@ homeConf = { lib, ... }: {
       '';
     };
 
+    tmux = {
+      enable = true;
+      plugins = with pkgs.tmuxPlugins; let
+        maglev = mkTmuxPlugin {
+          pluginName = "maglev";
+          version = "unstable-2017-02-16";
+          src = pkgs.fetchFromGitHub {
+            owner = "caiogondim";
+            repo = "maglev";
+            rev = "0ddafa7487c240d6701188709f641c28a15f5ed1";
+            sha256 = "sha256-jClBSHZws+mr8zTBfwSnm5OG0aDU7mhdSaaRgVQDhHU=";
+          };
+        };
+      in [
+        {
+          plugin = maglev;
+          # maglev checks TPM's plugin list
+          extraConfig = ''
+            set -g @tpm_plugins "tmux-cpu tmux-battery"
+          '';
+        }
+        sensible resurrect continuum yank
+        pain-control copycat open battery cpu
+      ];
+      extraConfig = ''
+        # Start windows and panes at 1, not 0
+        set -g base-index 1
+        set -g pane-base-index 1
+
+        set -g status-position top
+        set -g repeat-time 0
+
+        # escape time to prevent terminal spitting garbage
+        set -s escape-time 50
+
+        setw -g mode-keys vi
+        setw -g mouse on
+      '';
+    };
+
     direnv = {
       enable = true;
       nix-direnv.enable = true;
@@ -259,7 +311,7 @@ homeConf = { lib, ... }: {
         ls = "ls -G --color=auto";
       };
 
-      initExtra = ''
+      initContent = ''
           # TMUX auto attach
           if which tmux >/dev/null 2>&1; then
             case $- in
@@ -280,8 +332,4 @@ homeConf = { lib, ... }: {
     bat.enable = true;
     home-manager.enable = true;
   };
-}; in if standalone then homeConf { inherit lib; } else {
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-  home-manager.users."${username}" = homeConf;
 }

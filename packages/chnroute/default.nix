@@ -1,12 +1,14 @@
 { pkgs, ... }:
 
-pkgs.stdenv.mkDerivation rec {
+pkgs.stdenvNoCC.mkDerivation rec {
   pname = "chnroute";
-  version = "20210720";
+  version = "20251004";
 
   src = pkgs.fetchurl {
-    url = "https://ftp.apnic.net/stats/apnic/2021/delegated-apnic-${version}.gz";
-    sha256 = "sha256-3Y1EK47IVi1s7rasswSx6QmdS4x8pHX7HWBfZey0OJ4=";
+    url = let
+      year = builtins.substring 0 4 version;
+    in "https://ftp.apnic.net/stats/apnic/${year}/delegated-apnic-${version}.gz";
+    sha256 = "sha256-gv4sA5tvnWosiSH5CrvhmfWL89p+DVJb3s3AYye0HgM=";
   };
 
   buildInputs = [ pkgs.gawk ];

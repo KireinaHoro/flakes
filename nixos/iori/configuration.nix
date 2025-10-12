@@ -5,7 +5,7 @@
     defaultSopsFile = ./secrets.yaml;
     secrets = {
       rait-node-key = {};
-      monzoon_env = {};
+      wireless-secrets = {};
     };
   };
 
@@ -13,7 +13,10 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  environment.systemPackages = with pkgs; [ xfsprogs stow gnupg lm_sensors dig iw ];
+  environment.systemPackages = with pkgs; [
+    xfsprogs stow gnupg dig iw
+    lm_sensors myrktop
+  ];
 
   users.users.root.openssh.authorizedKeys.keys =
     config.users.users.jsteward.openssh.authorizedKeys.keys;

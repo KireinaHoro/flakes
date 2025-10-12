@@ -1,6 +1,6 @@
 { source, pkgs, lib }:
 
-pkgs.stdenv.mkDerivation rec {
+pkgs.stdenvNoCC.mkDerivation rec {
   inherit (source) pname version src;
 
   installPhase = ''

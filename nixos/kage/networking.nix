@@ -43,12 +43,7 @@ in
   };
 
   services = {
-    # workaround in https://github.com/NixOS/nixpkgs/pull/275031#issuecomment-1891052685
-    dovecot2.sieve = {
-      plugins = [ "sieve_imapsieve" "sieve_extprograms" ];
-      extensions = [ "fileinto" ];
-      globalExtensions = [ "+vnd.dovecot.pipe" "+vnd.dovecot.environment" ];
-    };
+    fail2ban.enable = true;
 
     vnstat = { enable = true; };
 
@@ -111,9 +106,8 @@ in
       enable = true;
       hostName = "webmail.jsteward.moe";
       extraConfig = ''
-       # starttls needed for authentication, so the fqdn required to match
-       # the certificate
-       $config['smtp_server'] = "tls://${config.mailserver.fqdn}";
+       $config['imap_host'] = "ssl://${config.mailserver.fqdn}:993";
+       $config['smtp_host'] = "ssl://${config.mailserver.fqdn}:465";
        $config['smtp_user'] = "%u";
        $config['smtp_pass'] = "%p";
       '';
@@ -132,6 +126,7 @@ in
   };
 
   mailserver = {
+    stateVersion = 3;
     enable = true;
     fqdn = "mail.jsteward.moe";
     domains = [ "jsteward.moe" ];
@@ -146,7 +141,6 @@ in
       enable = true;
       autoIndex = true;
       autoIndexExclude = [ "\\Junk" ];
-      indexAttachments = false;
       enforced = "body";
       memoryLimit = 500;
     };

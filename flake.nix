@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs";
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
-    ssh-to-pgp = { url = "github:Mic92/ssh-to-pgp/1.1.2"; inputs.nixpkgs.follows = "nixpkgs"; };
+    ssh-to-pgp = { url = "github:Mic92/ssh-to-pgp"; inputs.nixpkgs.follows = "nixpkgs"; };
     flake-utils.url = "github:numtide/flake-utils";
     blog = {
       url = "github:KireinaHoro/jsteward.moe";
@@ -28,6 +28,13 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
@@ -39,7 +46,6 @@
   in flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: let
     pkgs = import nixpkgs {
       inherit system;
-      config.allowUnfree = true;
       overlays = [
         inputs.blog.overlay
         inputs.ranet.overlays.default
@@ -62,12 +68,11 @@
         inputs.sops-nix.packages.${system}.sops-import-keys-hook
         inputs.ssh-to-pgp.packages.${system}.ssh-to-pgp
         nvfetcher
-        rait
         openssl
       ];
     };
   }) // {
-    nixosModules = import ./modules self;
+    nixosModules = import ./nixos-modules (if self ? rev then self.rev else "dirty");
     overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
     nixosConfigurations = findConfs ./nixos;
     darwinConfigurations = findConfs ./darwin;

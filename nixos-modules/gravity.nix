@@ -90,11 +90,6 @@ in
     # backbone selection
     rait = {
       enable = mkEnableOption "rait for WireGuard backbone";
-      secretNames = {
-        operatorKey = mkOption { type = types.str; default = "rait-operator-key"; };
-        nodeKey = mkOption { type = types.str; default = "rait-node-key"; };
-        registry = mkOption { type = types.str; default = "rait-registry"; };
-      };
       transports = mkOption {
         type = types.listOf (types.submodule { options = {
           family = mkOption { type = types.enum [ "ip4" "ip6" ]; };
@@ -107,10 +102,6 @@ in
     };
     ranet = {
       enable = mkEnableOption "ranet for IPsec backbone";
-      secretNames = {
-        key = mkOption { type = types.str; default = "ranet-key"; };
-        registry = mkOption { type = types.str; default = "ranet-registry"; };
-      };
       organization = mkOption { type = types.str; default = "jsteward"; };
       viciSocket = mkOption {
         type = types.str;
@@ -161,10 +152,16 @@ in
         message = "dangerous prefix that may collide with rait"; }
     ];
 
+    # rait-node-key is provided by node, everything else by this module
+    sops.secrets = lib.genAttrs [
+      "rait-operator-key" "rait-registry"
+      "ranet-key" "ranet-registry"
+    ] (_: { sopsFile = ./gravity-secrets.yaml; });
+
     sops.templates."rait.conf".content = mkIf cfg.rait.enable ''
-      registry = "${config.sops.placeholder.${cfg.rait.secretNames.registry}}"
-      private_key = "${config.sops.placeholder.${cfg.rait.secretNames.nodeKey}}"
-      operator_key = "${config.sops.placeholder.${cfg.rait.secretNames.operatorKey}}"
+      registry = "${config.sops.placeholder.rait-registry}"
+      private_key = "${config.sops.placeholder.rait-node-key}"
+      operator_key = "${config.sops.placeholder.rait-operator-key}"
       namespace = "${cfg.netns}"
 
 
@@ -252,8 +249,8 @@ in
     } // backbonePart);
     systemd.services.gravity-ranet-sync = mkIf cfg.ranet.enable ({
       serviceConfig = with pkgs; let
-        registryUrlFile = config.sops.secrets.${cfg.ranet.secretNames.registry}.path;
-        keyFile = config.sops.secrets.${cfg.ranet.secretNames.key}.path;
+        registryUrlFile = config.sops.secrets.ranet-registry.path;
+        keyFile = config.sops.secrets.ranet-key.path;
         registryFile = "/run/secrets/ranet-registry.reg";
         configFile = jsonEmitter "ranet.conf" {
           organization = cfg.ranet.organization;
@@ -293,6 +290,11 @@ in
           (swanctl "--load-all --noprompt")
         ];
         Restart = "on-abnormal";
+        CPUAccounting = true;
+        MemoryAccounting = true;
+        MemoryMax = "30%";
+        CPUQuota = "50%";
+        CPUWeight = 20;
       };
       environment = {
         STRONGSWAN_CONF = pkgs.writeText "strongswan.conf" ''
@@ -356,7 +358,7 @@ in
           # babeld enables forwarding automatically inside the namespace; bird does not
           "${ip} netns exec ${cfg.netns} ${procps}/bin/sysctl -w net.ipv6.conf.all.forwarding=1"
         ];
-        ExecStart = "${bird}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
+        ExecStart = "${bird2}/bin/bird -s ${cfg.bird.socket} -c ${writeText "bird2.conf" (let
           interfacePatterns = concatStringsSep ", "
             (map (pattern: "\"${pattern}\"") (
               optional cfg.ranet.enable "${cfg.ranet.gravityIfPrefix}*" ++
@@ -395,8 +397,8 @@ in
             };
           }
         '')}";
-        ExecStop = "${bird}/bin/birdc -s ${cfg.bird.socket} down";
-        ExecReload = "${bird}/bin/birdc -s ${cfg.bird.socket} configure";
+        ExecStop = "${bird2}/bin/birdc -s ${cfg.bird.socket} down";
+        ExecReload = "${bird2}/bin/birdc -s ${cfg.bird.socket} configure";
         Restart = "on-failure";
         RestartSec = 5;
       };

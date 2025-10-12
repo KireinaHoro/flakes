@@ -1,6 +1,7 @@
 { self, nixpkgs, inputs }:
 
-nixpkgs.lib.nixosSystem {
+with nixpkgs;
+lib.nixosSystem {
   system = "x86_64-linux";
   modules = with self.nixosModules; [
     commonConfigurations
@@ -13,7 +14,17 @@ nixpkgs.lib.nixosSystem {
     inputs.sops-nix.nixosModules.sops
 
     inputs.home-manager.nixosModules.home-manager
-    (defaultHome { username = "jsteward"; })
-    ./home.nix
+    {
+      home-manager = {
+        useUserPackages = true;
+        useGlobalPkgs = true;
+        users.jsteward = import ./home.nix;
+        extraSpecialArgs = {
+          inherit inputs;
+          username = "jsteward";
+          standalone = false;
+        };
+      };
+    }
   ];
 }

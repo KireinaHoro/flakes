@@ -5,7 +5,10 @@ inputs.home-manager.lib.homeManagerConfiguration {
   modules = with self.nixosModules; [
     { nixpkgs.overlays = [ self.overlays.default ]; }
 
-    (defaultHome { username = "pengxu"; standalone = true; })
     ./home.nix
   ];
+  extraSpecialArgs = {
+    username = "pengxu";
+    standalone = true;
+  };
 }

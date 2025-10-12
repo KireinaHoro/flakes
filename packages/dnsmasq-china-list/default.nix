@@ -1,6 +1,6 @@
 { source, pkgs, lib, server ? "114.114.114.114", accelAppleGoogle ? true }:
 
-pkgs.stdenv.mkDerivation rec {
+pkgs.stdenvNoCC.mkDerivation rec {
   inherit (source) pname version src;
 
   buildPhase = ''
