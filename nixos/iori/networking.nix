@@ -64,7 +64,7 @@ in
         vlan = [ "${ifName}.200" ];
         networkConfig = {
           IPv6AcceptRA = true;
-          LinkLocalAddressing = "no";
+          LinkLocalAddressing = "ipv6";
         };
       };
       "${ifName}.200" = {
