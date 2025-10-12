@@ -60,18 +60,16 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "no";
+        DHCP = "yes";
         vlan = [ "${ifName}.200" ];
-        networkConfig = {
-          LinkLocalAddressing = "no";
-          IPv6AcceptRA = "no";
-        };
+        networkConfig.LinkLocalAddressing = "no";
       };
       "${ifName}.200" = {
         linkConfig.RequiredForOnline = false;
         networkConfig.Bridge = "local-devs";
       };
       ${wifiIfName} = {
+        enable = false;
         DHCP = "yes";
         networkConfig.IgnoreCarrierLoss = "3s";
       };
