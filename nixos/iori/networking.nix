@@ -140,12 +140,19 @@ in
 
       rait = {
         enable = true;
-        transports = [ { family = "ip4"; sendPort = 57778; mtu = 1420; } ];
+        transports = [
+          { family = "ip4"; sendPort = 57778; mtu = 1420; }
+          { family = "ip6"; sendPort = 57779; mtu = 1400;
+            address = "iori.jsteward.moe"; }
+        ];
       };
       ranet = {
         enable = true;
         localIf = ifName;
-        endpoints = [ { address_family = "ip4"; } ];
+        endpoints = [
+          { address_family = "ip4"; }
+          { address_family = "ip6"; address = "iori.jsteward.moe"; }
+        ];
       };
 
       bird.enable = true;
