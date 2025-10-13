@@ -129,7 +129,6 @@ in
 
     gravity = {
       enable = true;
-      defaultRoute = true; # we do not have IPv6
       inherit gravityTable;
       # upstream recursive DNS into gravity
       extraRoutePolicies = map (s: {
