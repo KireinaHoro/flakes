@@ -42,7 +42,7 @@ in
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
         address = [ "192.33.91.158/24" "2001:67c:10ec:49c3::19e/118" ];
-        gateway = [ "192.33.91.1" ];
+        gateway = [ "192.33.91.1" "2001:67c:10ec:49c3::1" ];
         domains = [ "ethz.ch" ];
         dns = [ "129.132.98.12" "129.132.250.2" ];
       };
