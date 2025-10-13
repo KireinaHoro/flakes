@@ -250,6 +250,7 @@ in
           { name = "EnzianGateway"; host = "enzian-gateway.inf.ethz.ch"; }
           { name = "ShigeruVSOS"; host = "shigeru.vsos.ethz.ch"; }
           { name = "GitHub"; host = "github.com"; }
+          { name = "FRITZ!Box"; host = "192.168.178.1"; }
         ] ++ externalHostsV6;
         externalHostsThroughGravity = [
           { name = "114DNS"; host = "114.114.114.114"; }
