@@ -83,10 +83,6 @@ in
             }
           '' else ""}
 
-          chain forward {
-            type filter hook forward priority 0;
-            ip saddr 10.160.0.0/12 tcp flags syn / syn,rst tcp option maxseg size set 1360
-          }
           chain prerouting {
             type filter hook prerouting priority 0;
             ${if cfg.enableV4 then ''
