@@ -22,7 +22,6 @@ in
         table inet divi {
           chain forward {
             type filter hook forward priority 0;
-            ip saddr 10.208.0.0/12 tcp flags syn / syn,rst tcp option maxseg size set 1360
             oifname "divi" ip6 saddr != { 2a0c:b641:69c::/48, 2001:470:4c22::/48 } reject
           }
         }

@@ -10,7 +10,7 @@ let
   localGatewayV6 = "${localPrefixV6}::1";
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
-  useWifiForWAN = true;
+  useWifiForWAN = false;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   hostsToGravity = [
     # Chinese DNS server
@@ -61,7 +61,7 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = if useWifiForWAN "no" else "yes";
+        DHCP = if useWifiForWAN then "no" else "yes";
         vlan = [ "${ifName}.200" ];
         networkConfig = {
           IPv6AcceptRA = ! useWifiForWAN;
@@ -139,8 +139,7 @@ in
       }) hostsToGravity;
 
       rait = {
-        # disable due to MTU issues
-        enable = false;
+        enable = true;
         transports = [
           { family = "ip4"; sendPort = 57778; mtu = 1420; }
           { family = "ip6"; sendPort = 57779; mtu = 1400;
