@@ -10,6 +10,7 @@ let
   localGatewayV6 = "${localPrefixV6}::1";
   ifName = "enP4p65s0";
   wifiIfName = "wlP2p33s0";
+  useWifiForWAN = true;
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   hostsToGravity = [
     # Chinese DNS server
@@ -37,7 +38,7 @@ in
   };
 
   networking.wireless = {
-    enable = false;
+    enable = useWifiForWAN;
     interfaces = [ wifiIfName ];
     secretsFile = config.sops.secrets.wireless-secrets.path;
     networks."FRITZ!Box 4040 ON".pskRaw = "ext:psk_home";
@@ -60,10 +61,10 @@ in
   systemd.network = {
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "yes";
+        DHCP = if useWifiForWAN "no" else "yes";
         vlan = [ "${ifName}.200" ];
         networkConfig = {
-          IPv6AcceptRA = true;
+          IPv6AcceptRA = ! useWifiForWAN;
           LinkLocalAddressing = "ipv6";
         };
       };
@@ -72,7 +73,7 @@ in
         networkConfig.Bridge = "local-devs";
       };
       ${wifiIfName} = {
-        enable = false;
+        enable = useWifiForWAN;
         DHCP = "yes";
         networkConfig.IgnoreCarrierLoss = "3s";
       };
@@ -138,7 +139,8 @@ in
       }) hostsToGravity;
 
       rait = {
-        enable = true;
+        # disable due to MTU issues
+        enable = false;
         transports = [
           { family = "ip4"; sendPort = 57778; mtu = 1420; }
           { family = "ip6"; sendPort = 57779; mtu = 1400;
