@@ -48,6 +48,8 @@ rec {
     { prefix = "192.33.104.0"; len = 22; }
     { prefix = "148.187.192.0"; len = 19; }
     { prefix = "129.132.0.0"; len = 16; }
+    # enzian blade machines
+    { prefix = "10.111.1.0"; len = 24; }
   ];
 
   userToSops = user: with user; {
