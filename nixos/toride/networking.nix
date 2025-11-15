@@ -37,6 +37,9 @@ with pkgs.lib;
   services = {
     vnstat = { enable = true; };
 
-    openssh.settings.PasswordAuthentication = false;
+    openssh.settings = {
+      PasswordAuthentication = false;
+      X11Forwarding = true;
+    };
   };
 }
