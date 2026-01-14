@@ -5,7 +5,7 @@
 
   home = {
     packages = with pkgs; [
-      coreutils clang git
+      coreutils clang git gtkwave
       texlive.combined.scheme-full
     ];
   };
