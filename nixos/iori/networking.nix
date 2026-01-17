@@ -51,6 +51,8 @@ in
           type filter hook forward priority 100;
           oifname "${ifName}" ip saddr != { 10.160.0.0/12, 10.208.0.0/12 } log prefix "Unknown source to WAN: " drop
           oifname "${ifName}" ip6 saddr != ${localPrefixV6}::/64 log prefix "Unknown source to WAN: " drop
+          meta nfproto ipv4 tcp flags syn / syn,rst tcp option maxseg size set 1360;
+          meta nfproto ipv6 tcp flags syn / syn,rst tcp option maxseg size set 1340;
         }
       }
     '';

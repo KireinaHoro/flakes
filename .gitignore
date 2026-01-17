@@ -4,3 +4,4 @@ result*
 *.swp
 *.orig
 .DS_Store
+.deploy-gc
