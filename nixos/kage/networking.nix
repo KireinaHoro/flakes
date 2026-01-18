@@ -124,14 +124,24 @@ in
           enableACME = true;
           locations."/" = { root = pkgs.jstewardMoe; };
         };
+        "mail.jsteward.moe" = {
+          forceSSL = true;
+          enableACME = true;
+          globalRedirect = "webmail.jsteward.moe";
+        };
       };
     };
   };
+
+  security.acme.certs."jsteward.moe".extraDomainNames = [
+    config.mailserver.fqdn
+  ];
 
   mailserver = {
     stateVersion = 3;
     enable = true;
     fqdn = "mail.jsteward.moe";
+    x509.useACMEHost = "jsteward.moe";
     domains = [ "jsteward.moe" ];
     loginAccounts = {
       "i@jsteward.moe" = {
@@ -139,7 +149,6 @@ in
         aliases = [ "postmaster@jsteward.moe" "abuse@jsteward.moe" ];
       };
     };
-    certificateScheme = "acme-nginx";
     fullTextSearch = {
       enable = true;
       autoIndex = true;
