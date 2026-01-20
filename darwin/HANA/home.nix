@@ -10,8 +10,5 @@
     ];
   };
 
-  # disable GUI for vim
-  programs.vim.packageConfigurable = pkgs.vim;
-
   programs.neovim.enable = true;
 }

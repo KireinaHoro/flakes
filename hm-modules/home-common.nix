@@ -83,6 +83,8 @@ with lib;
     vim = {
       enable = true;
       defaultEditor = true;
+      # disable GUI
+      packageConfigurable = pkgs.vim;
       plugins = with pkgs.vimPlugins; [
         vim-airline
         vim-clang-format
