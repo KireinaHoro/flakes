@@ -53,6 +53,7 @@ rec {
     { prefix = "10.110.0.0"; len = 16; }
     { prefix = "10.1.212.0"; len = 24; }
     { prefix = "10.253.74.0"; len = 24; }
+    { prefix = "192.168.39.248"; len = 32; } # let-vdi-cns-1.d.ethz.ch
   ];
 
   userToSops = user: with user; {
