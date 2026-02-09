@@ -208,7 +208,13 @@ in
       listenAddrs = [ "${remoteAccess4Prefix}.1" "${local4Prefix}.254" ];
       logQueries = true;
       configDirs = [ "${pkgs.hosts-blocklists}/dnsmasq" ];
-      servers = [ "/suki.moe/${config.services.chinaDNS.chinaServer}" ];
+      servers = [
+        "/suki.moe/${config.services.chinaDNS.chinaServer}"
+        "/ethz.ch/129.132.98.12"
+        "/ethz.ch/129.132.250.2"
+        "/gravity/sin0.nichi.link"
+        "/gravity/sea0.nichi.link"
+      ];
     };
 
     squid = {
