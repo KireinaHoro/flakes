@@ -169,7 +169,7 @@ in
     chinaRoute = {
       fwmark = gravityMark;
       enableV4 = true;
-      extraV4 = map ({ prefix, len }: "${prefix}/${toString len}") pkgs.ethzV4Addrs;
+      extraV4 = pkgs.ethzV4PrefixStrs;
     };
     chinaDNS = {
       enable = true;

@@ -55,6 +55,7 @@ rec {
     { prefix = "10.253.74.0"; len = 24; }
     { prefix = "192.168.39.248"; len = 32; } # let-vdi-cns-1.d.ethz.ch
   ];
+  ethzV4PrefixStrs = map ({ prefix, len }: "${prefix}/${toString len}") ethzV4Addrs;
 
   userToSops = user: with user; {
     owner = name;

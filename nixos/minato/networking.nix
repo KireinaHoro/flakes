@@ -182,13 +182,13 @@ in
       inherit ifName;
     };
 
-    ivi = {
+    ivi = with pkgs; {
       enable = true;
       default = "nick_sin";
       # map ETH to shigeru
       extraConfig = concatStringsSep "\n" (map
-        (pkgs.gravityHostByName "shigeru" pkgs.gravityHostToIviDestMap)
-        pkgs.ethzV4Addrs
+        (gravityHostByName "shigeru" gravityHostToIviDestMap)
+        ethzV4Addrs
       );
     };
 
@@ -197,6 +197,8 @@ in
       enableV6 = true;
       prefix6 = "${localPrefix}::/64";
       fwmark = gravityMark;
+      # send ETH hosts into gravity
+      extraV4 = pkgs.ethzV4PrefixStrs;
     };
 
     chinaDNS = {
