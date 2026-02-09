@@ -337,11 +337,4 @@ in
       configFile = config.sops.secrets.inadyn-cfg.path;
     };
   };
-
-  systemd.services = {
-    "inadyn".serviceConfig = {
-      # disable IPv4 access for inadyn
-      RestrictAddressFamilies = mkForce "AF_INET6 AF_NETLINK";
-    };
-  };
 }
