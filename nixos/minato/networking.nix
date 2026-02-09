@@ -12,7 +12,14 @@ let
   remoteAccessPort = 31675;
   ifName = "enp0s25";
 
-  publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
+  # DNS servers that has to be queried through gravity/ivi
+  # these get a IP rule to lookup 3500
+  gravityDNS = [
+    # Google DNS
+    "2001:4860:4860::8888" "8.8.8.8"
+    # ETH
+    "129.132.98.12" "129.132.250.2"
+  ];
 
   gravityMark = 333;
   gravityTable = 3500;
@@ -95,7 +102,7 @@ in
             Priority = 100;
           }
           { To = "${localPrefix}::/64"; Priority = 100; }
-        ] ++ map (s: { To = s; Table = gravityTable; }) publicDNS;
+        ] ++ map (s: { To = s; Table = gravityTable; }) gravityDNS;
       };
       remote-access = {
         address = [ "${remoteAccess4Prefix}.1/24" "${remoteAccessPrefix}::1/64" ];
@@ -197,13 +204,11 @@ in
       enableV6 = true;
       prefix6 = "${localPrefix}::/64";
       fwmark = gravityMark;
-      # send ETH hosts into gravity
-      extraV4 = pkgs.ethzV4PrefixStrs;
     };
 
     chinaDNS = {
       enable = true;
-      servers = publicDNS;
+      servers = take 2 gravityDNS;
       chinaServer = "192.168.0.1";
     };
     localResolver = {
