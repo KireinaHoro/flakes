@@ -341,22 +341,5 @@ in
       # disable IPv4 access for inadyn
       RestrictAddressFamilies = mkForce "AF_INET6 AF_NETLINK";
     };
-    "forward-wg-ipv4" = {
-      serviceConfig = let
-        bash = "${pkgs.bash}/bin/bash";
-        socat = "${pkgs.socat}/bin/socat";
-      in {
-        ExecStartPre = [
-          # send a dummy packet
-          "${bash} -c \"echo a | ${socat} -T6 -d - udp4:$HOST:$PORT,reuseaddr,sourceport=4444\""
-        ];
-        ExecStart = "${bash} -c \"${socat} -4 -d -T6 udp4:127.0.0.1:${toString remoteAccessPort} udp4:$HOST:$PORT,keepalive,reuseaddr,sourceport=4444\"";
-        EnvironmentFile = config.sops.secrets.forward_wg_ipv4.path;
-        Restart = "always";
-        RestartSec = 1;
-      };
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-    };
   };
 }

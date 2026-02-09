@@ -5,7 +5,6 @@
     defaultSopsFile = ./secrets.yaml;
     secrets = with pkgs; {
       rait-node-key = {};
-      forward_wg_ipv4 = userToSops config.users.users.forward_ipv4;
       remote-access-priv = userToSops config.users.users.systemd-network;
       inadyn-cfg = userToSops config.users.users.inadyn;
     };
@@ -22,13 +21,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   users.users.jsteward.shell = pkgs.zsh;
-
-  # port forwarding user
-  users.users.forward_ipv4 = {
-    group = "forward_ipv4";
-    isSystemUser = true;
-  };
-  users.groups.forward_ipv4 = {};
 
   nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
   environment.systemPackages = with pkgs; [ gnupg dig ];
