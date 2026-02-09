@@ -7,6 +7,7 @@
     packages = with pkgs; [
       coreutils clang git gtkwave
       texlive.combined.scheme-full
+      yubikey-manager
     ];
   };
 
