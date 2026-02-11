@@ -5,9 +5,9 @@
 
   home = {
     packages = with pkgs; [
-      coreutils clang git gtkwave
+      coreutils clang git gtkwave python3
       texlive.combined.scheme-full
-      yubikey-manager
+      yubikey-manager smartmontools baobab
     ];
   };
 
