@@ -28,7 +28,7 @@ rev: { config, pkgs, lib, ... }:
 
   environment = {
     systemPackages = with pkgs; [
-      vim wget tmux htop ripgrep bat git
+      vim wget tmux htop ripgrep bat git git-lfs
       direnv nix-direnv pciutils file
     ];
     interactiveShellInit = ''
