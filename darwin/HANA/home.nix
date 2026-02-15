@@ -8,6 +8,7 @@
       coreutils clang git gtkwave python3
       texlive.combined.scheme-full
       yubikey-manager smartmontools baobab
+      imagemagick htop
     ];
   };
 
