@@ -28,11 +28,17 @@ in
       $DRY_RUN_CMD ln -snf $VERBOSE_ARG ${workDir}/flakes ${xdgConfigHome}/home-manager
     '';
 
+    # add shell script from idea
+    sessionPath = [
+      "${homeDirectory}/.local/share/JetBrains/Toolbox/scripts"
+    ];
+
     packages = with pkgs; [
       texlive.combined.scheme-full librsvg
       texlivePackages.fontawesome
       ffmpeg-headless
       typst pdf2svg
+      clang-tools
       gh
       nix-search-cli
       shellcheck
