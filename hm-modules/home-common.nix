@@ -6,7 +6,7 @@ with lib;
   home = {
     inherit username;
     stateVersion = "24.05";
-    packages = with pkgs; [ ripgrep ];
+    packages = with pkgs; [ ripgrep trzsz-ssh uv ];
     file.".gnupg/gpg-agent.conf".text = ''
       max-cache-ttl 18000
       default-cache-ttl 18000
@@ -323,6 +323,16 @@ with lib;
 
           # iTerm2 integration
           test -e "$HOME/.iterm2_shell_integration.zsh" && source "$HOME/.iterm2_shell_integration.zsh"
+
+          # iTerm2 send file
+          alias download="bash <(base64 -d <<<'IyEvYmluL2Jhc2gKaWYgWyAkIyAtbHQgMSBdOyB0aGVuCiAgZWNobyAiVXNhZ2U6ICQwIGZpbGUg
+          Li4uIgogIGV4aXQgMQpmaQpmb3IgZmlsZW5hbWUgaW4gIiRAIgpkbwogIGlmIFsgISAtciAiJGZp
+          bGVuYW1lIiBdIDsgdGhlbgogICAgZWNobyBGaWxlICRmaWxlbmFtZSBkb2VzIG5vdCBleGlzdCBv
+          ciBpcyBub3QgcmVhZGFibGUuCiAgICBjb250aW51ZQogIGZpCgogIGZpbGVuYW1lNjQ9JChlY2hv
+          IC1uICIkZmlsZW5hbWUiIHwgYmFzZTY0KQogIGZpbGVzaXplPSggJCh3YyAtYyAiJHtmaWxlbmFt
+          ZX0iKSApCiAgcHJpbnRmICJcMDMzXTEzMzc7RmlsZT1uYW1lPSR7ZmlsZW5hbWU2NH07c2l6ZT0k
+          e2ZpbGVzaXplWzBdfToiCiAgYmFzZTY0IDwgIiRmaWxlbmFtZSIKICBwcmludGYgJ1xhJwpkb25l
+          Cg==')"
       '';
     };
 
