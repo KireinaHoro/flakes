@@ -7,11 +7,19 @@
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     ssh-to-pgp = { url = "github:Mic92/ssh-to-pgp"; inputs.nixpkgs.follows = "nixpkgs"; };
     flake-utils.url = "github:numtide/flake-utils";
+    resume = {
+      url = "github:KireinaHoro/resume";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     blog = {
       url = "github:KireinaHoro/jsteward.moe";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
+        resume.follows = "resume";
       };
     };
     simple-nixos-mailserver = {
@@ -46,7 +54,6 @@
     pkgs = import nixpkgs {
       inherit system;
       overlays = [
-        inputs.blog.overlay
         inputs.ranet.overlays.default
         self.overlays.default
       ];
@@ -72,7 +79,11 @@
     };
   }) // {
     nixosModules = import ./nixos-modules (if self ? rev then self.rev else "dirty");
-    overlays.default = final: prev: nixpkgs.lib.composeExtensions this.overlay (import ./functions.nix) final prev;
+    overlays.default = composeManyExtensions [
+      this.overlay
+      (import ./functions.nix)
+      (final: prev: { jstewardMoe = inputs.blog.packages.${system}.default; })
+    ];
     nixosConfigurations = findConfs ./nixos;
     darwinConfigurations = findConfs ./darwin;
     homeConfigurations = findConfs ./standalone;
