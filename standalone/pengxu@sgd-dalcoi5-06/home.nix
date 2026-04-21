@@ -13,7 +13,11 @@ in
   nixpkgs.config.allowUnfree = true;
   programs = {
     vscode.enable = true;
-    neovim.enable = true;
+    neovim = {
+      enable = true;
+      withPython3 = false;
+      withRuby = false;
+    };
   };
 
   home = {

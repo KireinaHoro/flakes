@@ -48,22 +48,28 @@
   with builtins;
   with nixpkgs.lib;
   let
-    this = import ./packages { inherit nixpkgs; };
-    findConfs = typeDir: mapAttrs (k: _: import (typeDir + "/${k}") { inherit self nixpkgs inputs; }) (readDir typeDir);
+    findConfsWithFilter = filter: f: decls: let
+        allConfs = readDir decls;
+        filteredConfs = filterAttrs (k: v: filter k && v == "directory") allConfs;
+      in mapAttrs (k: _: f k (import (decls + "/${k}") inputs)) filteredConfs;
+    findConfs = f: findConfsWithFilter (_: true) (_: conf: f conf);
+    deployConfs = findConfsWithFilter
+      (v: elem v [ "kage" "shigeru" "nagisa" "iori" "hama" ])
+      (k: conf: {
+        sshUser = "root";
+        hostname = "${k}.jsteward.moe";
+        profiles.system.path =
+          inputs.deploy-rs.lib.${conf.system}.activate.nixos
+            (nixosSystem conf);
+      }) ./nixos;
+    ourPkgDecls = import ./packages;
   in flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: let
-    pkgs = import nixpkgs {
-      inherit system;
-      overlays = [
-        inputs.ranet.overlays.default
-        self.overlays.default
-      ];
-    };
+    pkgs = import nixpkgs { inherit system; };
   in rec {
-    packages = this.packages pkgs;
-    checks = packages // (inputs.deploy-rs.lib.${system}.deployChecks {
+    packages = (ourPkgDecls pkgs).packages;
+    checks = inputs.deploy-rs.lib.${system}.deployChecks {
       nodes = pkgs.lib.filterAttrs (name: cfg: cfg.profiles.system.path.system == system) self.deploy.nodes;
-    });
-    legacyPackages = pkgs;
+    };
     devShells.default = with pkgs; mkShell {
       sources = attrValues self.inputs;
       # import sops keys
@@ -78,20 +84,23 @@
       ];
     };
   }) // {
-    nixosModules = import ./nixos-modules (if self ? rev then self.rev else "dirty");
+    nixosModules = import ./nixos-modules self;
+    nixosConfigurations = findConfs nixosSystem ./nixos;
+    darwinConfigurations = findConfs inputs.nix-darwin.lib.darwinSystem ./darwin;
+    # all home-manager-only configurations are x86_64-linux
+    homeConfigurations = findConfs (conf:
+      inputs.home-manager.lib.homeManagerConfiguration
+        (conf // { pkgs = nixpkgs.legacyPackages.x86_64-linux; })) ./standalone;
+    deploy.nodes = deployConfs;
     overlays.default = composeManyExtensions [
-      this.overlay
       (import ./functions.nix)
-      (final: prev: { jstewardMoe = inputs.blog.packages.${system}.default; })
+      (final: prev: let
+        our = ourPkgDecls prev;
+      in {
+        jstewardMoe = inputs.blog.packages.${prev.stdenvNoCC.hostPlatform.system}.default;
+        vimPlugins = prev.vimPlugins // our.vimPlugins;
+      } // our.packages)
+      inputs.ranet.overlays.default
     ];
-    nixosConfigurations = findConfs ./nixos;
-    darwinConfigurations = findConfs ./darwin;
-    homeConfigurations = findConfs ./standalone;
-    deploy.nodes = genAttrs [ "kage" "shigeru" "nagisa" "iori" "hama" ] (n: {
-      sshUser = "root";
-      hostname = "${n}.jsteward.moe";
-      profiles.system.path =
-        inputs.deploy-rs.lib.${self.nixosConfigurations.${n}.pkgs.system}.activate.nixos self.nixosConfigurations.${n};
-    });
   };
 }

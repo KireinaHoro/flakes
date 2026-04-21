@@ -1,9 +1,8 @@
-{ self, nixpkgs, inputs }:
+inputs:
 
-inputs.home-manager.lib.homeManagerConfiguration {
-  pkgs = nixpkgs.legacyPackages.x86_64-linux;
-  modules = with self.nixosModules; [
-    { nixpkgs.overlays = [ self.overlays.default ]; }
+{
+  modules = [
+    { nixpkgs.overlays = [ inputs.self.overlays.default ]; }
 
     ./home.nix
   ];

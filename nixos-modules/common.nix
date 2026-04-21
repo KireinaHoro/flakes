@@ -1,4 +1,4 @@
-rev: { config, pkgs, lib, ... }:
+self: { config, pkgs, lib, ... }:
 
 {
   networking.domain = "g.jsteward.moe";
@@ -15,7 +15,7 @@ rev: { config, pkgs, lib, ... }:
     extraConfig = ''StreamLocalBindUnlink yes'';
   };
 
-  system.configurationRevision = rev;
+  system.configurationRevision = if self ? rev then self.rev else "dirty";
 
   nix = {
     settings = {
@@ -51,9 +51,12 @@ rev: { config, pkgs, lib, ... }:
 
   programs.mosh.enable = true;
 
-  nixpkgs.config = {
-    permittedInsecurePackages = [ "squid-7.0.1" ];
-    allowUnfree = true;
+  nixpkgs = {
+    config = {
+      permittedInsecurePackages = [ "squid-7.0.1" ];
+      allowUnfree = true;
+    };
+    overlays = [ self.overlays.default ];
   };
 
   boot.enableContainers = false;
