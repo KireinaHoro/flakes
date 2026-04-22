@@ -9,8 +9,8 @@
   home.packages = with pkgs; [
     texlive.combined.scheme-full
     gnumake
-    python310Packages.pygments
-    jetbrains.idea-ultimate
+    python314Packages.pygments
+    jetbrains.idea
   ];
   services.vscode-server.enable = true;
 }

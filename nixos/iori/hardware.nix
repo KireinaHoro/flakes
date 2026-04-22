@@ -40,11 +40,13 @@
     };
     "/tmp" = {
       device = "/data/tmp";
+      fsType = "none";
       options = [ "bind" ];
       depends = [ "/data" ];
     };
     "/nix/store" = {
       device = "/data/nix-store";
+      fsType = "none";
       options = [ "bind" "ro" "noatime" "discard" ];
       depends = [ "/data" ];
     };
