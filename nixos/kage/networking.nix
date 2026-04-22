@@ -105,6 +105,7 @@ in
       '';
     };
 
+    /*
     roundcube = {
       enable = true;
       hostName = "webmail.jsteward.moe";
@@ -115,6 +116,7 @@ in
        $config['smtp_pass'] = "%p";
       '';
     };
+    */
 
     nginx = {
       enable = true;
@@ -124,15 +126,18 @@ in
           enableACME = true;
           locations."/" = { root = pkgs.jstewardMoe; };
         };
+        /*
         "mail.jsteward.moe" = {
           forceSSL = true;
           enableACME = true;
           globalRedirect = "webmail.jsteward.moe";
         };
+        */
       };
     };
   };
 
+  /*
   security.acme.certs."jsteward.moe".extraDomainNames = [
     config.mailserver.fqdn
   ];
@@ -177,4 +182,5 @@ in
       '';
     };
   };
+  */
 }
