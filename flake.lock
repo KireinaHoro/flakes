@@ -271,11 +271,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776931309,
-        "narHash": "sha256-HMtvithnic5wX5szl8kJhUVxrraiwONr45djTMyK8Rg=",
+        "lastModified": 1776932403,
+        "narHash": "sha256-mBO1/qmP/Sj+IvaT7tpCmCG6IkbEZqyDTY3jCySiT9o=",
         "owner": "KireinaHoro",
         "repo": "resume",
-        "rev": "1c1d84a40187af69626783ca16e675df44d24e7f",
+        "rev": "970aec3533aaab7df02689f19aeb7b6ee01442b1",
         "type": "github"
       },
       "original": {
