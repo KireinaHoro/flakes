@@ -29,11 +29,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776779458,
-        "narHash": "sha256-DWIXSWHRKrJlexwLw7DIY7wg4P9jA3xyFHD/rw5qgZ8=",
+        "lastModified": 1776953194,
+        "narHash": "sha256-iEHAQnmDQy03nu5JZwCJPSsCdKp0MNVzCF2F+ColHDI=",
         "owner": "KireinaHoro",
         "repo": "jsteward.moe",
-        "rev": "041843f3e5e2ea40627586a9a01f53b582ee70c7",
+        "rev": "f9afcabf11dd67fe8be2f9e2440c34c41293cba0",
         "type": "github"
       },
       "original": {
