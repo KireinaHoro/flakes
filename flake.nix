@@ -76,12 +76,11 @@
       sopsPGPKeyDirs = [ "./keys/hosts" "./keys/users" ];
 
       nativeBuildInputs = [
-        inputs.deploy-rs.packages.${system}.deploy-rs
         inputs.sops-nix.packages.${system}.sops-import-keys-hook
         inputs.ssh-to-pgp.packages.${system}.ssh-to-pgp
         nvfetcher
         openssl
-      ];
+      ] ++ optional (!stdenv.isDarwin) inputs.deploy-rs.packages.${system}.deploy-rs;
     };
   }) // {
     nixosModules = import ./nixos-modules self;
