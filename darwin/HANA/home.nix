@@ -14,9 +14,13 @@
       texlive.combined.scheme-full
       yubikey-manager smartmontools baobab
       imagemagick htop mtr
-      darktable darktable-app
+      darktable-app
     ];
   };
 
-  programs.neovim.enable = true;
+  programs.neovim = {
+    enable = true;
+    withPython3 = false;
+    withRuby = false;
+  };
 }

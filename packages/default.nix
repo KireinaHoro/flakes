@@ -28,8 +28,8 @@ in {
         sha256 = "0xknckv85j1jiark6skvmd6pcy86dcim45jh319nh30q4rr6mjc1";
       };
     in pkgs.runCommand "darktable-app" {} ''
-      mkdir -p $out/Darktable.app
-      cd $out/Darktable.app
+      mkdir -p $out/Applications/Darktable.app
+      cd $out/Applications/Darktable.app
 
       mkdir -p Contents/MacOS
       cp ${pkgs.darktable}/bin/darktable Contents/MacOS/
