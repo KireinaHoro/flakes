@@ -28,6 +28,13 @@
     };
     home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
     nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs"; };
+    mac-app-util = {
+      url = "github:XYenon/mac-app-util";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     ranet = {
       url = "github:NickCao/ranet";
       inputs = {
@@ -80,7 +87,9 @@
         inputs.ssh-to-pgp.packages.${system}.ssh-to-pgp
         nvfetcher
         openssl
-      ] ++ optional (!stdenv.isDarwin) inputs.deploy-rs.packages.${system}.deploy-rs;
+      ]
+      ++ optional (!stdenv.isDarwin) inputs.deploy-rs.packages.${system}.deploy-rs
+      ++ optional stdenv.isDarwin inputs.mac-app-util.packages.${system}.default;
     };
   }) // {
     nixosModules = import ./nixos-modules self;

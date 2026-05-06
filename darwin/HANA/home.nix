@@ -1,7 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
-  imports = [ ../../hm-modules/home-common.nix ];
+  imports = [
+    ../../hm-modules/home-common.nix
+    inputs.mac-app-util.homeManagerModules.default
+  ];
 
   home = {
     packages = with pkgs; [
@@ -10,7 +13,8 @@
       gtkwave python3
       texlive.combined.scheme-full
       yubikey-manager smartmontools baobab
-      imagemagick htop mtr darktable
+      imagemagick htop mtr
+      darktable darktable-app
     ];
   };
 

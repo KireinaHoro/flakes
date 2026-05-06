@@ -21,6 +21,66 @@ in {
     package = import (./. + "/${name}");
     args = intersectAttrs (functionArgs package) { source = sources.${name}; };
   in pkgs.callPackage package args) // rec {
+    # create macOS bundle for darktable
+    darktable-app = let
+      icon = fetchurl {
+        url = https://github.com/darktable-org/darktable/raw/refs/heads/master/packaging/macosx/Icons.icns;
+        sha256 = "0xknckv85j1jiark6skvmd6pcy86dcim45jh319nh30q4rr6mjc1";
+      };
+    in pkgs.runCommand "darktable-app" {} ''
+      mkdir -p $out/Darktable.app
+      cd $out/Darktable.app
+
+      mkdir -p Contents/MacOS
+      cp ${pkgs.darktable}/bin/darktable Contents/MacOS/
+
+      mkdir Contents/Resources
+      cp ${icon} Contents/Resources/Icons.icns
+
+      cat > Contents/Info.plist << EOF
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>CFBundleDevelopmentRegion</key>
+          <string>English</string>
+          <key>CFBundleExecutable</key>
+          <string>darktable</string>
+          <key>CFBundleIconFile</key>
+          <string>Icons.icns</string>
+          <key>CFBundleIdentifier</key>
+          <string>org.darktable</string>
+          <key>CFBundleInfoDictionaryVersion</key>
+          <string>6.0</string>
+          <key>CFBundleName</key>
+          <string>darktable</string>
+          <key>CFBundlePackageType</key>
+          <string>APPL</string>
+          <key>CFBundleShortVersionString</key>
+          <string>${pkgs.darktable.version}</string>
+          <key>CFBundleSignature</key>
+          <string>drkt</string>
+          <key>CFBundleVersion</key>
+          <string>${pkgs.darktable.version}</string>
+          <key>NSPrincipalClass</key>
+          <string>NSApplication</string>
+          <key>CFBundleDocumentTypes</key>
+          <array>
+            <dict>
+              <key>CFBundleTypeRole</key>
+              <string>Viewer</string>
+              <key>LSItemContentTypes</key>
+              <array>
+                <string>public.image</string>
+                <string>public.directory</string>
+              </array>
+            </dict>
+          </array>
+        </dict>
+      </plist>
+      EOF
+    '';
+
     # apply NickCao's ETX Babel patch
     bird2 = pkgs.bird2.overrideAttrs (old: rec {
       patches = old.patches ++ [ (fetchurl {
