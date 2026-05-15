@@ -137,6 +137,7 @@ in
             '';
           };
           locations."~* \\.(avif|css|js|woff2?|png|jpg|jpeg|svg|pdf)$" = {
+            root = pkgs.jstewardMoe;
             extraConfig = ''
               add_header Cache-Control "public, max-age=604800, stale-while-revalidate=2592000" always;
             '';
