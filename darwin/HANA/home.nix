@@ -14,7 +14,8 @@
       texlive.combined.scheme-full
       yubikey-manager smartmontools baobab
       imagemagick htop mtr
-      darktable-app
+      darktable-app exiftool
+      nodejs_24 # for Chrome MCP
     ];
   };
 
