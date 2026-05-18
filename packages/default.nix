@@ -95,7 +95,7 @@ in {
 
       installPhase = ''
         mkdir $out
-        cp bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin $out/rock5b-tpl.bin
+        cp bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.19.bin $out/rock5b-tpl.bin
 
         sed -i -e '/uart baudrate=/s/$/115200/' tools/ddrbin_param.txt
         faketime -f '@1980-01-01 00:00:00 x0.001' \
