@@ -8,6 +8,7 @@
       aria2-env = {};
       mailbox-passwd-hash = {};
       toride-backup-key = {};
+      mcp-nutrition-db-tunnel-apikey = {};
     };
   };
 
