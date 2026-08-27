@@ -7,8 +7,11 @@ inputs:
     ./configuration.nix
     ./hardware.nix
     ./networking.nix
+    ./nutrition.nix
 
     gravity divi ivi
     inputs.sops-nix.nixosModules.sops
+    inputs.mcp-nutrition-db.nixosModules.default
+    inputs.openai-secure-tunnel-nix.nixosModules.default
   ];
 }
