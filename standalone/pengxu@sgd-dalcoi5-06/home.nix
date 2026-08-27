@@ -43,7 +43,7 @@ in
       ffmpeg-headless
       typst pdf2svg
       clang-tools
-      gh
+      gh git-lfs
       nix-search-cli
       shellcheck
     ];
