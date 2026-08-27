@@ -7,11 +7,14 @@ with lib;
     inherit username;
     stateVersion = "24.05";
     packages = with pkgs; [ ripgrep trzsz-ssh uv ];
-    file.".gnupg/gpg-agent.conf".text = ''
-      max-cache-ttl 18000
-      default-cache-ttl 18000
-      enable-ssh-support
-    '';
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    maxCacheTtl = 18000;
+    defaultCacheTtl = 18000;
+    enableSshSupport = true;
+    pinentry.package = pkgs.pinentry-curses;
   };
 
   programs = {
