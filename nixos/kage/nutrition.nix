@@ -23,10 +23,14 @@ in
 
   services.openai-tunnel-client.instances.nutrition = {
     enable = true;
-    apiKeyFile = config.sops.secrets.mcp-nutrition-db-tunnel-apikey.path;
     settings = {
       config_version = 1;
-      control_plane.tunnel_id = tunnelId;
+      control_plane = {
+        tunnel_id = tunnelId;
+        # The client resolves one secret reference layer only. Point it at the
+        # systemd credential directly instead of nesting file: inside env:.
+        api_key = "file:/run/credentials/tunnel-client-nutrition.service/control-plane-api-key";
+      };
       health.listen_addr = "127.0.0.1:8788";
       admin_ui.open_browser = false;
       log = {
@@ -45,5 +49,8 @@ in
   systemd.services.tunnel-client-nutrition = {
     requires = [ "mcp-nutrition-db.service" ];
     after = [ "mcp-nutrition-db.service" ];
+    serviceConfig.LoadCredential = [
+      "control-plane-api-key:${config.sops.secrets.mcp-nutrition-db-tunnel-apikey.path}"
+    ];
   };
 }
