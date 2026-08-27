@@ -49,6 +49,15 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    mcp-nutrition-db = {
+      url = "github:KireinaHoro/mcp-nutrition-db";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.openai-secure-tunnel-nix.follows = "openai-secure-tunnel-nix";
+    };
+    openai-secure-tunnel-nix = {
+      url = "github:nakasyou/openai-secure-tunnel-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
