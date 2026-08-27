@@ -105,19 +105,6 @@ in
       '';
     };
 
-    /*
-    roundcube = {
-      enable = true;
-      hostName = "webmail.jsteward.moe";
-      extraConfig = ''
-       $config['imap_host'] = "ssl://${config.mailserver.fqdn}:993";
-       $config['smtp_host'] = "ssl://${config.mailserver.fqdn}:465";
-       $config['smtp_user'] = "%u";
-       $config['smtp_pass'] = "%p";
-      '';
-    };
-    */
-
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -146,51 +133,4 @@ in
       };
     };
   };
-
-  /*
-  security.acme.certs."jsteward.moe".extraDomainNames = [
-    config.mailserver.fqdn
-  ];
-
-  mailserver = {
-    stateVersion = 3;
-    enable = true;
-    fqdn = "mail.jsteward.moe";
-    x509.useACMEHost = "jsteward.moe";
-    domains = [ "jsteward.moe" ];
-    loginAccounts = {
-      "i@jsteward.moe" = {
-        hashedPasswordFile = config.sops.secrets.mailbox-passwd-hash.path;
-        aliases = [ "postmaster@jsteward.moe" "abuse@jsteward.moe" ];
-      };
-    };
-    fullTextSearch = {
-      enable = true;
-      autoIndex = true;
-      autoIndexExclude = [ "\\Junk" ];
-      enforced = "body";
-      memoryLimit = 500;
-    };
-    indexDir = "/var/lib/dovecot/indices";
-  };
-
-  # backup vmail and dkim
-  systemd.timers."mail-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnBootSec = "1d";
-      OnUnitActiveSec = "1d";
-      Unit = "mail-backup.service";
-    };
-  };
-  systemd.services."mail-backup" = {
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = with pkgs; ''
-        ${rsync}/bin/rsync -azhe"${openssh}/bin/ssh -o IdentityFile=${backupSecret} -o StrictHostKeyChecking=no" /var/vmail /var/dkim ${backupHost}:backups/
-      '';
-    };
-  };
-  */
 }

@@ -10,7 +10,5 @@ inputs:
 
     gravity divi ivi
     inputs.sops-nix.nixosModules.sops
-
-    inputs.simple-nixos-mailserver.nixosModule
   ];
 }
