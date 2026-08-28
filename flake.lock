@@ -188,17 +188,14 @@
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "openai-secure-tunnel-nix": [
-          "openai-secure-tunnel-nix"
         ]
       },
       "locked": {
-        "lastModified": 1787841971,
-        "narHash": "sha256-QFWqd+tqy+Jev3rhVkKPqjeT/olBprr+SbzJ2dlDFsg=",
+        "lastModified": 1787899118,
+        "narHash": "sha256-4W/8TB36Ue8tDJN5pPy3voT19dqqBAMgqt9WtAySO9o=",
         "owner": "KireinaHoro",
         "repo": "mcp-nutrition-db",
-        "rev": "d377874e85aa49ddf0cae9b1c0a2d448622efd96",
+        "rev": "e90178e5f2650fa4c945f893bd25ddff153ec728",
         "type": "github"
       },
       "original": {

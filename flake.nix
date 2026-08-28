@@ -48,7 +48,6 @@
     mcp-nutrition-db = {
       url = "github:KireinaHoro/mcp-nutrition-db";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.openai-secure-tunnel-nix.follows = "openai-secure-tunnel-nix";
     };
     openai-secure-tunnel-nix = {
       url = "github:nakasyou/openai-secure-tunnel-nix";
@@ -93,6 +92,7 @@
         nvfetcher
         openssl
       ]
+      ++ optional (!stdenv.isDarwin) inputs.openai-secure-tunnel-nix.packages.${system}.tunnel-client
       ++ optional (!stdenv.isDarwin) inputs.deploy-rs.packages.${system}.deploy-rs
       ++ optional stdenv.isDarwin inputs.mac-app-util.packages.${system}.default;
     };
