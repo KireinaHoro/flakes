@@ -38,6 +38,7 @@ in
     ];
 
     packages = with pkgs; [
+      codex
       texlive.combined.scheme-full librsvg
       texlivePackages.fontawesome
       ffmpeg-headless

@@ -38,13 +38,7 @@
         flake-utils.follows = "flake-utils";
       };
     };
-    vscode-server = {
-      url = "github:nix-community/nixos-vscode-server";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
     mcp-nutrition-db = {
       url = "github:KireinaHoro/mcp-nutrition-db";
       inputs.nixpkgs.follows = "nixpkgs";
