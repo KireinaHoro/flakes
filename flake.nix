@@ -86,9 +86,9 @@
         nvfetcher
         openssl
       ]
-      ++ optional (!stdenv.isDarwin) inputs.openai-secure-tunnel-nix.packages.${system}.tunnel-client
-      ++ optional (!stdenv.isDarwin) inputs.deploy-rs.packages.${system}.deploy-rs
-      ++ optional stdenv.isDarwin inputs.mac-app-util.packages.${system}.default;
+      ++ optional (!stdenv.hostPlatform.isDarwin) inputs.openai-secure-tunnel-nix.packages.${system}.tunnel-client
+      ++ optional (!stdenv.hostPlatform.isDarwin) inputs.deploy-rs.packages.${system}.deploy-rs
+      ++ optional stdenv.hostPlatform.isDarwin inputs.mac-app-util.packages.${system}.default;
     };
   }) // {
     nixosModules = import ./nixos-modules self;
