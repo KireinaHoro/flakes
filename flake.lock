@@ -191,11 +191,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789285943,
-        "narHash": "sha256-oXwwpnnQTq0QCDiipDCwMCZ7EFFRsNOTv1JtwzI9RqQ=",
+        "lastModified": 1789579719,
+        "narHash": "sha256-RGPjJojU1ktfRpp8R1OR8b522JByM6isquQyYuTY0gI=",
         "owner": "KireinaHoro",
         "repo": "mcp-nutrition-db",
-        "rev": "5d73b0a266485ceddd77eac9aad5862902a213b5",
+        "rev": "652e73e6ecd44c03040055ee1940546ec381e3b7",
         "type": "github"
       },
       "original": {
