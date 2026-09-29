@@ -9,6 +9,7 @@
       mailbox-passwd-hash = {};
       toride-backup-key = {};
       mcp-nutrition-db-tunnel-apikey = {};
+      mcp-nutrition-db-garmin-session = {};
     };
   };
 
