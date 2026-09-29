@@ -191,11 +191,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790673681,
-        "narHash": "sha256-G7JrNtfj8U76znAqGzLGDZYjZz6HGO/KTHUsogWa2xI=",
+        "lastModified": 1790686053,
+        "narHash": "sha256-4rfPuBdXK17qZ/coUV3zLc/eMjZ7caBLt2x7cVzX7i4=",
         "owner": "KireinaHoro",
         "repo": "mcp-nutrition-db",
-        "rev": "f623a3853895c4beaec2e92aea56337a52edf84a",
+        "rev": "4a67b042d3f75df2d63f2ac0d48f7bc742d5a844",
         "type": "github"
       },
       "original": {
@@ -248,15 +248,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1788856594,
-        "narHash": "sha256-HmaHhKsOne7ag69WSxyXP+rppi8sC6VPTxLp2BFMw+A=",
+        "lastModified": 1790578696,
+        "narHash": "sha256-ZoxIApko70jCdbH3l20HWXOBaT2HZd87orzd2yJ9dVE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d2b1aa48e319ab38e7a357b9212235ec3393eab0",
+        "rev": "7a0f122f5090cf4c2ade2a13a0e229d4e19ba71f",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -368,11 +369,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788337237,
-        "narHash": "sha256-gkSH8VUtCo6hnysNmb9DbTuDepH2t5pv+QWjP75xKAk=",
+        "lastModified": 1790498116,
+        "narHash": "sha256-rs9meAYxW3zzrh43yaW7htrqCD+X9+pupDPHN86fumI=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "fbf759290e0cb0a98dfc813a4eb7d53ad1dacb57",
+        "rev": "5efb5a6f4f5ab192817d28557dd4d650fa14d866",
         "type": "github"
       },
       "original": {

@@ -12,6 +12,11 @@ in
     logLevel = "info";
     stateDirectory = "mcp-nutrition-db";
 
+    garmin = {
+      enable = true;
+      credentialsFile = config.sops.secrets.mcp-nutrition-db-garmin-session.path;
+    };
+
     backup = {
       enable = true;
       directory = "/var/backup/mcp-nutrition-db";

@@ -2,7 +2,7 @@
   description = "KireinaHoro's Nix universe";
 
   inputs = rec {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     deploy-rs = { url = "github:serokell/deploy-rs"; inputs.nixpkgs.follows = "nixpkgs"; };
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     ssh-to-pgp = { url = "github:Mic92/ssh-to-pgp"; inputs.nixpkgs.follows = "nixpkgs"; };
