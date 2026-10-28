@@ -266,6 +266,7 @@ with lib;
 
         set -g status-position top
         set -g repeat-time 0
+        set -g pane-border-status top
 
         # escape time to prevent terminal spitting garbage
         set -s escape-time 50
