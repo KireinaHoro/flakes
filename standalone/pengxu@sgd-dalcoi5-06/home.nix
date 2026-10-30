@@ -32,9 +32,11 @@ in
       $DRY_RUN_CMD ln -snf $VERBOSE_ARG ${workDir}/flakes ${xdgConfigHome}/home-manager
     '';
 
-    # add shell script from idea
     sessionPath = [
+      # shell scripts from idea
       "${homeDirectory}/.local/share/JetBrains/Toolbox/scripts"
+      # claude code
+      "${homeDirectory}/.local/bin"
     ];
 
     packages = with pkgs; [
