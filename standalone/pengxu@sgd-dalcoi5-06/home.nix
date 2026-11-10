@@ -34,9 +34,9 @@ in
 
     sessionPath = [
       # shell scripts from idea
-      "${homeDirectory}/.local/share/JetBrains/Toolbox/scripts"
+      "$HOME/.local/share/JetBrains/Toolbox/scripts"
       # claude code
-      "${homeDirectory}/.local/bin"
+      "$HOME/.local/bin"
     ];
 
     packages = with pkgs; [
