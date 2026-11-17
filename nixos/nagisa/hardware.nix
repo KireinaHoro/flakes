@@ -9,6 +9,12 @@
 
   boot.initrd.kernelModules = [ "nvme" ];
 
+  fileSystems."/srv/shared" = {
+    device = "/dev/disk/by-uuid/b40044f5-e119-4187-8d6d-f697278298aa";
+    fsType = "ext4";
+    options = [ "nofail" "noexec" ];
+  };
+
   # No custom-image quota on the free tier: attach a clone of a boot volume to
   # a running VM as a block volume, write the image onto it, then swap it in
   # as the boot volume:
