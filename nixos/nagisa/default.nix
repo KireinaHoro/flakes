@@ -1,7 +1,7 @@
 inputs:
 
 {
-  system = "aarch64-linux";
+  system = "x86_64-linux";
   modules = with inputs.self.nixosModules; [
     commonConfigurations
     ./configuration.nix

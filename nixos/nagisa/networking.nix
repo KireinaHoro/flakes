@@ -6,7 +6,9 @@ let
   my = pkgs.gravityHostByName config.networking.hostName;
   gravityMe = my ({id, ...}: "${pkgs.gravityHomePrefix}:${id}0::1");
 
-  ifName = "enp0s3";
+  # the VNIC's kernel name depends on the shape (enp0s3 on A1, ens3 on x86
+  # paravirtualized, ...); pin it so ranet's localIf stays stable
+  ifName = "wan0";
   publicDNS = [ "2001:4860:4860::8888" "8.8.8.8" ];
   chinaServer = "114.114.114.114";
   gravityTable = 3500;
@@ -24,13 +26,20 @@ in
   };
 
   systemd.network = {
+    links."10-${ifName}" = {
+      matchConfig.Path = "pci-*";
+      linkConfig.Name = ifName;
+    };
     networks = pkgs.injectNetworkNames {
       ${ifName} = {
-        DHCP = "ipv4";
+        # OCI hands out the VNIC's IPv6 address via DHCPv6 and the default
+        # route (via the fe80:: VCN router) via RA; both need a link-local.
+        DHCP = "yes";
         networkConfig = {
-          LinkLocalAddressing = "ipv4";
-          IPv6AcceptRA = "no";
+          LinkLocalAddressing = "yes";
+          IPv6AcceptRA = true;
         };
+        ipv6AcceptRAConfig.DHCPv6Client = "always";
       };
     };
   };
@@ -96,7 +105,7 @@ in
         "nagisa.g.jsteward.moe" = {
           listen = [
             { addr = "[${gravityMe}]"; port = 8080; ssl = true; }
-            { addr = "10.0.0.248"; port = 8080; ssl = true; } # public IPv4
+            { addr = "10.0.0.239"; port = 8080; ssl = true; } # public IPv4 (VNIC private address)
           ];
           forceSSL = true;
           useACMEHost = "nagisa.jsteward.moe";
