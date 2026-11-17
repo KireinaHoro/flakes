@@ -9,6 +9,12 @@
 
   boot.initrd.kernelModules = [ "nvme" ];
 
+  # The OCI module ends with console=ttyAMA0 (aarch64), which doesn't exist on
+  # x86 and leaves tty1 as /dev/console.  Repeating ttyS0 last makes it the
+  # preferred console, so stage-1 and systemd status also go to the OCI serial
+  # console connection (kernel messages go to tty1 as well either way).
+  boot.kernelParams = lib.mkAfter [ "console=ttyS0,115200" ];
+
   fileSystems."/srv/shared" = {
     device = "/dev/disk/by-uuid/b40044f5-e119-4187-8d6d-f697278298aa";
     fsType = "ext4";
