@@ -19,10 +19,7 @@
 
     supportedFilesystems = [ "ext4" "xfs" ];
     extraModulePackages = [];
-    initrd.systemd = {
-      enable = true;
-      emergencyAccess = true;
-    };
+    initrd.systemd.emergencyAccess = true;
   };
 
   system.stateVersion = "23.05";
