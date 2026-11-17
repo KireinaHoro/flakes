@@ -54,18 +54,12 @@ in
       # defaultRoute = true;
       inherit gravityTable;
 
-      rait = {
-        enable = true;
-        transports = [
-          { family = "ip4"; sendPort = 59999; mtu = 1420;
-            address = "nagisa.jsteward.moe"; }
-        ];
-      };
       ranet = {
         enable = true;
         localIf = ifName;
         endpoints = [
           { address_family = "ip4"; address = "nagisa.jsteward.moe"; }
+          { address_family = "ip6"; address = "nagisa.jsteward.moe"; }
         ];
       };
 
